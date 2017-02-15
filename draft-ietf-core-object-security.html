@@ -292,7 +292,7 @@ address {
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 CoAP Header"/>
 <link href="#rfc.section.4.3" rel="Chapter" title="4.3 CoAP Options"/>
 <link href="#rfc.section.4.3.1" rel="Chapter" title="4.3.1 Class E Options"/>
-<link href="#rfc.section.4.3.2" rel="Chapter" title="4.3.2 Class A Options"/>
+<link href="#rfc.section.4.3.2" rel="Chapter" title="4.3.2 Class U Options"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 The COSE Object"/>
 <link href="#rfc.section.5.1" rel="Chapter" title="5.1 Plaintext"/>
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Additional Authenticated Data"/>
@@ -335,7 +335,7 @@ address {
 
   <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-object-security-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-1-25" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-2-15" />
   <meta name="dct.abstract" content="This memo defines Object Security of CoAP (OSCOAP), a method for application layer protection of message exchanges with the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE) format. OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure binding between CoAP request and response messages. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this memo." />
   <meta name="description" content="This memo defines Object Security of CoAP (OSCOAP), a method for application layer protection of message exchanges with the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE) format. OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure binding between CoAP request and response messages. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this memo." />
 
@@ -359,7 +359,7 @@ address {
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
-  <td class="left">Expires: July 29, 2017</td>
+  <td class="left">Expires: August 19, 2017</td>
   <td class="right">Ericsson AB</td>
 </tr>
 <tr>
@@ -372,7 +372,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">January 25, 2017</td>
+  <td class="right">February 15, 2017</td>
 </tr>
 
     	
@@ -392,7 +392,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 29, 2017.</p>
+<p>This Internet-Draft will expire on August 19, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -419,7 +419,7 @@ address {
 <li>4.2.   <a href="#rfc.section.4.2">CoAP Header</a></li>
 <li>4.3.   <a href="#rfc.section.4.3">CoAP Options</a></li>
 <ul><li>4.3.1.   <a href="#rfc.section.4.3.1">Class E Options</a></li>
-<li>4.3.2.   <a href="#rfc.section.4.3.2">Class A Options</a></li>
+<li>4.3.2.   <a href="#rfc.section.4.3.2">Class U Options</a></li>
 </ul></ul><li>5.   <a href="#rfc.section.5">The COSE Object</a></li>
 <ul><li>5.1.   <a href="#rfc.section.5.1">Plaintext</a></li>
 <li>5.2.   <a href="#rfc.section.5.2">Additional Authenticated Data</a></li>
@@ -661,12 +661,12 @@ Verify request with   |                       |
 <p id="rfc.section.4.2.p.4">The sending endpoint SHALL copy the header fields from the unprotected CoAP message to the protected CoAP message. The receiving endpoint SHALL copy the header fields from the protected CoAP message to the unprotected CoAP message. Both sender and receiver inserts the CoAP version number and header field Code in the AAD of the COSE object (see section <a href="#AAD">Section 5.2</a>).</p>
 <h1 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a> <a href="#coap-options" id="coap-options">CoAP Options</a></h1>
 <p id="rfc.section.4.3.p.1">As with the message fields described in the previous sections, CoAP options may be encrypted and integrity protected, integrity protected only, or neither encrypted nor integrity protected.</p>
-<p id="rfc.section.4.3.p.2">Most options are encrypted and integrity protected (see <a href="#protected-coap-options">Figure 4</a>), and thus inner message fields. But to allow certain proxy operations, some options have outer values and require special processing. Indeed, certain options may or must have both an inner value and a potentially different outer value, where the inner value is intended for the destination endpoint and the outer value is intended for the proxy.</p>
+<p id="rfc.section.4.3.p.2">Most options are encrypted and integrity protected (see <a href="#protected-coap-options">Figure 4</a>), and thus inner message fields. But to allow certain proxy operations, some options have outer values and are not encrypted nor integrity protected, while others require special processing. Indeed, certain options may or must have both an inner value and a potentially different outer value, where the inner value is intended for the destination endpoint and the outer value is intended for the proxy.</p>
 <div id="rfc.figure.4"/>
 <div id="protected-coap-options"/>
 <pre>
 +----+---+---+---+---+----------------+--------+--------+---+---+
-| No.| C | U | N | R | Name           | Format | Length | E | A |
+| No.| C | U | N | R | Name           | Format | Length | E | U |
 +----+---+---+---+---+----------------+--------+--------+---+---+
 |  1 | x |   |   | x | If-Match       | opaque | 0-8    | x |   |
 |  3 | x | x | - |   | Uri-Host       | string | 1-255  |   | x |
@@ -689,7 +689,7 @@ Verify request with   |                       |
 | 60 |   |   | x |   | Size1          | uint   | 0-4    | * |   |
 +----+---+---+---+---+----------------+--------+--------+---+---+
       C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable,
-  E=Encrypt and Integrity Protect, A=Integrity Protect, *=Special
+  E=Encrypt and Integrity Protect, U=Unprotected, *=Special
 </pre>
 <p class="figure">Figure 4: Protection of CoAP Options</p>
 <p id="rfc.section.4.3.p.3">A summary of how options are protected and processed is shown in <a href="#protected-coap-options">Figure 4</a>. The CoAP options are partitioned into two classes:</p>
@@ -697,7 +697,7 @@ Verify request with   |                       |
 
 <ul>
   <li>E - options which are encrypted and integrity protected, and</li>
-  <li>A - options which are only integrity protected.</li>
+  <li>U - options which are neither encrypted nor integrity protected.</li>
 </ul>
 <p id="rfc.section.4.3.p.5">Options within each class are protected and processed in a similar way, but certain options which require special processing as described in the subsections and indicated by a '*' in <a href="#protected-coap-options">Figure 4</a>.</p>
 <p id="rfc.section.4.3.p.6">Unless specified otherwise, CoAP options not listed in <a href="#protected-coap-options">Figure 4</a> SHALL be encrypted and integrity protected and processed as class E options.</p>
@@ -723,15 +723,15 @@ Verify request with   |                       |
 <p id="rfc.section.4.3.1.3.p.5">The protected CoAP message may be fragmented by the sending endpoint or proxy as defined in <a href="#RFC7959">[RFC7959]</a>, in which case the outer Block options are being used. The outer Block options SHALL neither be encrypted nor integrity protected.</p>
 <p id="rfc.section.4.3.1.3.p.6">An endpoint receiving a message with an outer Block option SHALL first process this option according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the protected CoAP message has been received, or the cumulated message size of the exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the protected CoAP message continues as defined in this document (see <a href="#verif-coap-req">Section 6.3</a> and <a href="#verif-coap-resp">Section 6.5</a>).</p>
 <p id="rfc.section.4.3.1.3.p.7">If the unprotected CoAP message contains Block options, the receiving endpoint processes this according to <a href="#RFC7959">[RFC7959]</a>.</p>
-<h1 id="rfc.section.4.3.2"><a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#class-a" id="class-a">Class A Options</a></h1>
-<p id="rfc.section.4.3.2.p.1">Options in this class are used to support forward proxy operations. Class A options SHALL only have outer values and SHALL NOT be encrypted. In order for the destination endpoint to verify the Uri, class A options SHALL be integrity protected.</p>
-<p id="rfc.section.4.3.2.p.2">Uri-Host, Uri-Port, Proxy-Scheme and Proxy-Uri are class A options. When Uri-Host, Uri-Port, Proxy-Scheme options are present, Proxy-Uri is not used <a href="#RFC7252">[RFC7252]</a>. Proxy-Uri is processed like the other class A options after a pre-processing step (see <a href="#proxy-uri">Section 4.3.2.1</a>.</p>
-<p id="rfc.section.4.3.2.p.3">Except for Proxi-Uri, the sending endpoint SHALL copy the class A option from the unprotected CoAP message to the protected CoAP message. The class A options are inserted in the AAD of the COSE object (see unencrypted-Uri <a href="#AAD">Section 5.2</a>).</p>
+<h1 id="rfc.section.4.3.2"><a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#class-u" id="class-u">Class U Options</a></h1>
+<p id="rfc.section.4.3.2.p.1">Options in this class are used to support forward proxy operations. Class U options SHALL only have outer values and SHALL NOT be encrypted nor integrity protected.</p>
+<p id="rfc.section.4.3.2.p.2">Uri-Host, Uri-Port, Proxy-Scheme and Proxy-Uri are class U options. When Uri-Host, Uri-Port, Proxy-Scheme options are present, Proxy-Uri is not used <a href="#RFC7252">[RFC7252]</a>. Proxy-Uri is processed like the other class U options after a pre-processing step (see <a href="#proxy-uri">Section 4.3.2.1</a>.</p>
+<p id="rfc.section.4.3.2.p.3">Except for Proxi-Uri, the sending endpoint SHALL copy the class U option from the unprotected CoAP message to the protected CoAP message.</p>
 <h1 id="rfc.section.4.3.2.1"><a href="#rfc.section.4.3.2.1">4.3.2.1.</a> <a href="#proxy-uri" id="proxy-uri">Proxy-Uri</a></h1>
-<p id="rfc.section.4.3.2.1.p.1">Proxy-Uri, when present, is split by OSCOAP into class A options and privacy sensitive class E options, which are processed accordingly. When Proxy-Uri is used in the unprotected CoAP message, Uri-* are not present <a href="#RFC7252">[RFC7252]</a>.</p>
-<p id="rfc.section.4.3.2.1.p.2">The sending endpoint SHALL first decompose the Proxy-Uri value of the unprotected CoAP message into the unencrypted-Uri (<a href="#AAD">Section 5.2</a>) and Uri-Path/Query options according to section 6.4 of <a href="#RFC7252">[RFC7252]</a>.</p>
+<p id="rfc.section.4.3.2.1.p.1">Proxy-Uri, when present, is split by OSCOAP into class U options and privacy sensitive class E options, which are processed accordingly. When Proxy-Uri is used in the unprotected CoAP message, Uri-* are not present <a href="#RFC7252">[RFC7252]</a>.</p>
+<p id="rfc.section.4.3.2.1.p.2">The sending endpoint SHALL first decompose the Proxy-Uri value of the unprotected CoAP message into the unencrypted-Uri (composed of the request scheme (Proxy-Scheme if present), Uri-Host and Uri-Port if present) and Uri-Path/Query options according to section 6.4 of <a href="#RFC7252">[RFC7252]</a>.</p>
 <p id="rfc.section.4.3.2.1.p.3">Uri-Path and Uri-Query are class E options and SHALL be protected and processed as if obtained from the unprotected CoAP message, see <a href="#class-e">Section 4.3.1</a>.</p>
-<p id="rfc.section.4.3.2.1.p.4">The value of the Proxy-Uri option of the protected CoAP message SHALL be replaced with unencrypted-Uri and SHALL be protected and processed as a class A option, see <a href="#class-a">Section 4.3.2</a>.</p>
+<p id="rfc.section.4.3.2.1.p.4">The value of the Proxy-Uri option of the protected CoAP message SHALL be replaced with unencrypted-Uri and MUST be processed as a class U option, see <a href="#class-u">Section 4.3.2</a>.</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#sec-obj-cose" id="sec-obj-cose">The COSE Object</a></h1>
 <p id="rfc.section.5.p.1">This section defines how to use the COSE format <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a> to wrap and protect data in the unprotected CoAP message. OSCOAP uses the COSE_Encrypt0 structure with an Authenticated Encryption with Additional Data (AEAD) algorithm.</p>
 <p id="rfc.section.5.p.2">The AEAD algorithm AES-CCM-64-64-128 defined in Section 10.2 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a> is mandatory to implement. For AES-CCM-64-64-128 the length of Sender Key and Recipient Key SHALL be 128 bits, the length of nonce, Sender IV, and Recipient IV SHALL be 7 bytes, and the maximum Sequence Number SHALL be 2^56-1. The nonce is constructed as described in Section 3.1 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>, i.e. by padding the Partial IV (Sequence Number in network byte order) with zeroes and XORing it with the context IV (Sender IV or Recipient IV).</p>
@@ -803,8 +803,18 @@ Verify request with   |                       |
 <ul>
   <li>the "context" parameter, which has value "Encrypted"</li>
   <li>the "protected" parameter, which includes the "protected" part of the "Headers" field;</li>
-  <li>the "external_aad" is a serialized CBOR array <a href="#aad">Figure 6</a> where the exact content is different in requests (external_aad_req) and responses (external_aad_resp). It contains:  <ul><li>ver: uint, contains the CoAP version number, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a></li><li>code: uint, contains is the CoAP Code of the unprotected CoAP message, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a>.</li><li>alg: int, contains the Algorithm from the security context used for the exchange (see <a href="#sec-context-def-section">Section 3.1</a>);</li><li>unencrypted-uri: tstr with tag URI, contains the part of the URI which is not encrypted, and is composed of the request scheme (Proxy-Scheme if present), Uri-Host and Uri-Port (if present) options according to the method described in Section 6.5 of <a href="#RFC7252">[RFC7252]</a>, if the message is a CoAP request;</li><li>cid : bstr, contains the cid for the request (which is same as the cid for the response).</li><li>id : bstr, is the identifier for the endpoint sending the request and verifying the response; which means that for the endpoint sending the response, the id has value Recipient ID, while for the endpoint receiving the response, id has the value Sender ID.</li><li>seq : bstr, is the value of the "Partial IV" in the COSE object of the request (see Section 5).</li><li>tag-previous-block: bstr, contains the AEAD Tag of the message containing the previous block in the sequence, as enumerated by Block1 in the case of a request and Block2 in the case of a response, if the message is fragmented using a block option <a href="#RFC7959">[RFC7959]</a>.</li></ul></li>
+  <li>the "external_aad" is a serialized CBOR array <a href="#aad">Figure 6</a> where the exact content is different in requests (external_aad_req) and responses (external_aad_resp). It contains:  <ul><li>ver: uint, contains the CoAP version number, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a></li><li>code: uint, contains is the CoAP Code of the unprotected CoAP message, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a>.</li><li>alg: int, contains the Algorithm from the security context used for the exchange (see <a href="#sec-context-def-section">Section 3.1</a>);</li></ul></li>
 </ul>
+<p/>
+
+<ul>
+  <li>cid : bstr, contains the cid for the request (which is same as the cid for the response).</li>
+  <li>id : bstr, is the identifier for the endpoint sending the request and verifying the response; which means that for the endpoint sending the response, the id has value Recipient ID, while for the endpoint receiving the response, id has the value Sender ID.</li>
+  <li>seq : bstr, is the value of the "Partial IV" in the COSE object of the request (see Section 5).</li>
+</ul>
+<pre>
+* tag-previous-block: bstr, contains the AEAD Tag of the message containing the previous block in the sequence, as enumerated by Block1 in the case of a request and Block2 in the case of a response, if the message is fragmented using a block option {{RFC7959}}.
+</pre>
 <div id="rfc.figure.6"/>
 <div id="aad"/>
 <pre>
@@ -814,7 +824,7 @@ external_aad_req = [
    ver : uint,
    code : uint,
    alg : int,
-   unencrypted-uri : uri,
+&lt;!--   unencrypted-uri : uri, --&gt;
    ? tag-previous-block : bstr
 ]
 
@@ -829,7 +839,7 @@ external_aad_resp = [
 ]
 </pre>
 <p class="figure">Figure 6: External AAD (external_aad)</p>
-<p id="rfc.section.5.2.p.3">The encryption process is described in Section 5.3 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>.</p>
+<p id="rfc.section.5.2.p.4">The encryption process is described in Section 5.3 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>.</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#coap-protected-generate" id="coap-protected-generate">Protecting CoAP Messages</a></h1>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#replay-protection-section" id="replay-protection-section">Replay and Freshness Protection</a></h1>
 <p id="rfc.section.6.1.p.1">In order to protect from replay of messages and verify freshness, a CoAP endpoint SHALL maintain a Sender Sequence Number and a Recipient Replay Window in the security context. An endpoint uses the Sender Sequence Number to protect messages to send and the Recipient Replay Window to verify received messages, as described in <a href="#sec-context-section">Section 3</a>.</p>
@@ -840,7 +850,6 @@ external_aad_resp = [
 <p id="rfc.section.6.1.p.6">If the CoAP client receives a response with the Object-Security option, then the client SHALL verify the integrity of the response, using the Tid of its own associated request in the AAD, as described in <a href="#verif-coap-resp">Section 6.5</a>.</p>
 <h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#protected-coap-formatting-req" id="protected-coap-formatting-req">Protecting the Request</a></h1>
 <p id="rfc.section.6.2.p.1">Given an unprotected CoAP request, including header, options and payload, the client SHALL perform the following steps to create a protected CoAP request using a security context associated with the target resource (see <a href="#cid-est">Section 3.2.2</a>).</p>
-<p id="rfc.section.6.2.p.2">When using Uri-Host or Proxy-Uri in the construction of the request, the &lt;host&gt; value MUST be a reg-name (<a href="#RFC3986">[RFC3986]</a>), and not an IP-literal or IPv4address, for canonicalization of the destination address.</p>
 <p/>
 
 <ol>
@@ -857,7 +866,7 @@ external_aad_resp = [
 
 <ol>
   <li>Verify the Sequence Number in the Partial IV parameter, as described in <a href="#replay-protection-section">Section 6.1</a>. If it cannot be verified that the Sequence Number has not been received before, the server MUST stop processing the request.</li>
-  <li>Recreate the Additional Authenticated Data, as described in <a href="#sec-obj-cose">Section 5</a>.  <ul><li>If the block option is used, the AAD includes the AEAD Tag from the previous block received (from the second block and following) <a href="#AAD">Section 5.2</a>. This means that the endpoint MUST store the Tag of each last-received block to compute the following.</li><li>Note that the server's &lt;host&gt; value MUST be a reg-name (<a href="#RFC3986">[RFC3986]</a>), and not an IP-literal or IPv4address.</li></ul></li>
+  <li>Recreate the Additional Authenticated Data, as described in <a href="#sec-obj-cose">Section 5</a>.  <ul><li>If the block option is used, the AAD includes the AEAD Tag from the previous block received (from the second block and following) <a href="#AAD">Section 5.2</a>. This means that the endpoint MUST store the Tag of each last-received block to compute the following.  </li></ul></li>
   <li>Compose the AEAD nonce by XORing the Recipient IV (context IV) with the padded Partial IV parameter, received in the COSE Object.</li>
   <li>Retrieve the Recipient Key.</li>
   <li>Verify and decrypt the message. If the verification fails, the server MUST stop processing the request.</li>
@@ -1063,7 +1072,7 @@ external_aad_resp = [
       <td class="reference">
         <b id="I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</b>
       </td>
-      <td class="top"><a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="http://tools.ietf.org/html/draft-ietf-ace-oauth-authz-04">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-04, October 2016.</td>
+      <td class="top"><a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="http://tools.ietf.org/html/draft-ietf-ace-oauth-authz-05">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-05, February 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1075,7 +1084,7 @@ external_aad_resp = [
       <td class="reference">
         <b id="I-D.ietf-core-coap-tcp-tls">[I-D.ietf-core-coap-tcp-tls]</b>
       </td>
-      <td class="top"><a>Bormann, C.</a>, <a>Lemay, S.</a>, <a>Tschofenig, H.</a>, <a>Hartke, K.</a>, <a>Silverajan, B.</a> and <a>B. Raymor</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-coap-tcp-tls-05">CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets</a>", Internet-Draft draft-ietf-core-coap-tcp-tls-05, October 2016.</td>
+      <td class="top"><a>Bormann, C.</a>, <a>Lemay, S.</a>, <a>Tschofenig, H.</a>, <a>Hartke, K.</a>, <a>Silverajan, B.</a> and <a>B. Raymor</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-coap-tcp-tls-06">CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets</a>", Internet-Draft draft-ietf-core-coap-tcp-tls-06, February 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1220,7 +1229,7 @@ Client  Proxy  Server
    |      |      |
 </pre>
 <p class="figure">Figure 10: Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicate a COSE object. The brackets { ... } indicate encrypted data.</p>
-<p id="rfc.section.B.1.p.2">Since the unprotected request message (GET) has no payload, the Object-Security option carries the COSE object as its value.  Since the unprotected response message (Content) has payload ("OFF"), the COSE object (indicated with [ &#8230; ]) is carried as the CoAP payload.</p>
+<p id="rfc.section.B.1.p.2">Since the unprotected request message (GET) doesn't allow payload, the Object-Security option carries the COSE object as its value.  Since the unprotected response message (Content) allows payload ("OFF"), the COSE object (indicated with [ &#8230; ]) is carried as the CoAP payload.</p>
 <p id="rfc.section.B.1.p.3">The COSE header of the request contains a Context Identifier (cid:5fdc), indicating which security context was used to protect the message and a Sequence Number (seq:42).</p>
 <p id="rfc.section.B.1.p.4">The option Uri-Path (alarm_status) and payload ("OFF") are formatted as indicated in <a href="#sec-obj-cose">Section 5</a>, and encrypted in the COSE Cipher Text (indicated with { &#8230; }).</p>
 <p id="rfc.section.B.1.p.5">The server verifies that the Sequence Number has not been received before (see <a href="#replay-protection-section">Section 6.1</a>). The client verifies that the Sequence Number has not been received before and that the response message is generated as a response to the sent request message (see <a href="#replay-protection-section">Section 6.1</a>).</p>
@@ -1280,7 +1289,7 @@ Client  Proxy  Server
    |      |      |
 </pre>
 <p class="figure">Figure 11: Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicates COSE object. The bracket { ... } indicates encrypted data.</p>
-<p id="rfc.section.B.2.p.2">Since the unprotected request message (GET) allows no payload, the COSE object (indicated with [ &#8230; ]) is carried in the Object-Security option value. Since the unprotected response message (Content) has payload, the Object-Security option is empty, and the COSE object is carried as the payload.</p>
+<p id="rfc.section.B.2.p.2">Since the unprotected request message (GET) doesn't allow payload, the COSE object (indicated with [ &#8230; ]) is carried in the Object-Security option value. Since the unprotected response message (Content) allows payload, the Object-Security option is empty, and the COSE object is carried as the payload.</p>
 <p id="rfc.section.B.2.p.3">The COSE header of the request contains a Context Identifier (cid:ca), indicating which security context was used to protect the message and a Sequence Number (seq:15b7).</p>
 <p id="rfc.section.B.2.p.4">The options Observe, Content-Format and the payload are formatted as indicated in <a href="#sec-obj-cose">Section 5</a>, and encrypted in the COSE ciphertext (indicated with { &#8230; }).</p>
 <p id="rfc.section.B.2.p.5">The server verifies that the Sequence Number has not been received before (see <a href="#replay-protection-section">Section 6.1</a>). The client verifies that the Sequence Number has not been received before and that the response message is generated as a response to the subscribe request.</p>
