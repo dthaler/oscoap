@@ -338,26 +338,26 @@ Selander, et al.        Expires September 4, 2017               [Page 6]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-                .------------.           .------------.
-                |  Common,   |           |  Common,   |
-                |  Sender,   |           |  Recipient,|
-                |  Recipient |           |  Sender    |
-                '------------'           '------------'
-                    Client                   Server
-                       |                       |
- Retrieve context for  | request:              |
-  target resource      | [Token = Token1,      |
- Protect request with  |  kid = SID, ...]      |
-   Sender Context      +---------------------->| Retrieve context with
-                       |                       |  context with RID = SID
-                       |                       | Verify request with
-                       |                       |  Recipient Context
-                       | response:             | Protect response with
-                       | [Token = Token1, ...] |  Sender Context
- Retrieve context with |<----------------------+
-  Token = Token1       |                       |
- Verify request with   |                       |
-  Recipient Context    |                       |
+                  .------------.           .------------.
+                  |  Common,   |           |  Common,   |
+                  |  Sender,   |           |  Recipient,|
+                  |  Recipient |           |  Sender    |
+                  '------------'           '------------'
+                      Client                   Server
+                         |                       |
+   Retrieve context for  | request:              |
+    target resource      | [Token = Token1,      |
+   Protect request with  |  kid = SID, ...]      |
+     Sender Context      +---------------------->| Retrieve context with
+                         |                       |  with RID = SID
+                         |                       | Verify request with
+                         |                       |  Recipient Context
+                         | response:             | Protect response with
+                         | [Token = Token1, ...] |  Sender Context
+   Retrieve context with |<----------------------+
+    Token = Token1       |                       |
+   Verify request with   |                       |
+    Recipient Context    |                       |
 
             Figure 3: Retrieval and use of the Security Context
 
