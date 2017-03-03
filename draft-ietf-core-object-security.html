@@ -543,6 +543,7 @@ Verify request with   |                       |
   <li>Recipient IV. Byte string containing the IV to verify messages received. Derived from Common Context and Recipient ID. Length is determined by Algorithm. Its value is immutable once the security context is established.</li>
   <li>Replay Window. The replay window to verify requests and observe responses received.</li>
 </ul>
+<p id="rfc.section.3.1.p.8">An endpoint may free up memory by not storing the Sender Key, Sender IV, Recipient Key, Recipient IV and deriving them from the Common Context when needed. Alternatively, an endpoint may free up memory by not storing the Master Secret and Master Salt after the other parameters have been derived.</p>
 <h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#context-derivation" id="context-derivation">Derivation of Security Context Parameters</a></h1>
 <p id="rfc.section.3.2.p.1">This section describes how to derive the initial parameters in the security context, given a small set of input parameters. We also give indications on how applications should select the input parameters.</p>
 <p id="rfc.section.3.2.p.2">The following input parameters SHALL be pre-established:</p>
