@@ -399,7 +399,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
       determined by Algorithm.  Its value is immutable once the security
       context is established.
 
-   o  Sender Sequence Number.  Non-negative integer enumerating the COSE
+   o  Sequence Number.  Non-negative integer enumerating the COSE
       objects that the endpoint sends using the context.  Used as
       partial IV [I-D.ietf-cose-msg] to generate unique nonces for the
       AEAD.  Maximum value is determined by Algorithm.
@@ -418,8 +418,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
       messages received.  Length is determined by Algorithm.  Its value
       is immutable once the security context is established.
 
-   o  Recipient Replay Window.  The replay protection window for
-      messages received.
+   o  Replay Window.  The replay protection window for messages
+      received.
 
 3.2.  Derivation of Security Context Parameters
 
