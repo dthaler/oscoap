@@ -417,8 +417,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
       received.  Length is determined by Algorithm.  Its value is
       immutable once the security context is established.
 
-   o  Replay Window (OPTIONAL).  The replay window to verify requests
-      and observe responses received.
+   o  Replay Window.  The replay window to verify requests and observe
+      responses received.
 
 3.2.  Derivation of Security Context Parameters
 
