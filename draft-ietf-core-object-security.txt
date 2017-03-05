@@ -401,7 +401,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
       responses received.
 
    An endpoint may free up memory by not storing the Sender Key, Sender
-   IV, Recipient Key, Recipient IV and deriving them from the Common
+   IV, Recipient Key, and Recipient IV, deriving them from the Common
    Context when needed.  Alternatively, an endpoint may free up memory
    by not storing the Master Secret and Master Salt after the other
    parameters have been derived.
@@ -457,7 +457,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    How the input parameters are pre-established, is application
    specific.  The EDHOC protocol [I-D.selander-ace-cose-ecdhe] enables
    the establishment of input parameters with the property of forward
-   secrecy, and negotiation of KDF and AEAD, it thus provides all
+   secrecy and negotiation of KDF and AEAD, it thus provides all
    necessary pre-requisite steps for using OSCOAP as defined here.
 
 3.2.1.  Derivation of Sender Key/IV, Recipient Key/IV
