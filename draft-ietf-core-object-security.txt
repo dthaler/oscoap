@@ -75,10 +75,10 @@ Table of Contents
      3.1.  Security Context Definition . . . . . . . . . . . . . . .   6
      3.2.  Derivation of Security Context Parameters . . . . . . . .   8
      3.3.  Requirements on the Security Context Parameters . . . . .  10
-   4.  Protected Resources . . . . . . . . . . . . . . . . . . . . .  10
-   5.  Protected CoAP Message Fields . . . . . . . . . . . . . . . .  11
+   4.  URI Schemes and Resources . . . . . . . . . . . . . . . . . .  10
+   5.  Protected CoAP Message Fields . . . . . . . . . . . . . . . .  10
      5.1.  CoAP Payload  . . . . . . . . . . . . . . . . . . . . . .  11
-     5.2.  CoAP Header . . . . . . . . . . . . . . . . . . . . . . .  12
+     5.2.  CoAP Header . . . . . . . . . . . . . . . . . . . . . . .  11
      5.3.  CoAP Options  . . . . . . . . . . . . . . . . . . . . . .  12
    6.  The COSE Object . . . . . . . . . . . . . . . . . . . . . . .  17
      6.1.  Plaintext . . . . . . . . . . . . . . . . . . . . . . . .  18
@@ -532,27 +532,27 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    The same Master Salt MAY be used with several Master Secrets.
 
-4.  Protected Resources
+4.  URI Schemes and Resources
 
-   TODO:
+   The use of OSCOAP does not affect the URI scheme and OSCOAP can
+   therefore be used with any URI scheme defined for CoAP.  The set of
+   resources and methods that requires OSCOAP is decided by the
+   application.  The set of resources and methods that can be used with
+   a certain security context is decided by the application.  For each
+   resource and method, clients need to be able to retrieve the correct
+   security context to use.  For each resource and method, servers need
+   to be able to determine whether the security context is authorized.
+   A server receiving an unprotected request to a resource and method
+   requiring OSCOAP SHALL reject the message with error code 4.01
+   (Unauthorized).  A server receiving a protected request with a
+   security context not authorized for use with the resource and method
+   SHALL reject the message with error code 4.01 (Unauthorized).
 
-   In the same phase during which the Sender ID and Recipient ID are
-   established in the endpoint, the application informs the endpoint
-   what resources can be accessed using the corresponding security
-   contexts.  Resources that are accessed with OSCOAP are called
-   "protected" resources.  The set of resources that can be accessed
-   using a certain security context is decided by the application
-   (resource, host, etc.).  The client SHALL save the association
-   resource-SID, in order to be able to retrieve the correct security
-   context to access a protected resource.  The server SHALL save the
-   association resource-RID, in order to determine whether a particular
-   resource may be accessed using a certain context.
+5.  Protected CoAP Message Fields
 
-   A CoAP server receiving an unprotected CoAP request to access a
-   protected resource SHALL reject the message with error code 4.01
-   (Unauthorized).
-
-
+   OSCOAP transforms an unprotected CoAP message into a protected CoAP
+   message, and vice versa.  This section defines how the unprotected
+   CoAP message fields are protected.  OSCOAP protects as much of the
 
 
 
@@ -562,11 +562,6 @@ Selander, et al.        Expires September 6, 2017              [Page 10]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-5.  Protected CoAP Message Fields
-
-   OSCOAP transforms an unprotected CoAP message into a protected CoAP
-   message, and vice versa.  This section defines how the unprotected
-   CoAP message fields are protected.  OSCOAP protects as much of the
    unprotected CoAP message as possible, while still allowing forward
    proxy operations [I-D.hartke-core-e2e-security-reqs].
 
@@ -607,7 +602,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    recreates the payload of the unprotected CoAP message (see
    Section 8.2 and Section 8.4).
 
+5.2.  CoAP Header
 
+   Many CoAP header fields are required to be read and changed during a
+   normal message exchange or when traversing a proxy and thus cannot be
+   protected between the endpoints, e.g.  CoAP message layer fields such
+   as Message ID.
 
 
 
@@ -617,13 +617,6 @@ Selander, et al.        Expires September 6, 2017              [Page 11]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
-
-5.2.  CoAP Header
-
-   Many CoAP header fields are required to be read and changed during a
-   normal message exchange or when traversing a proxy and thus cannot be
-   protected between the endpoints, e.g.  CoAP message layer fields such
-   as Message ID.
 
    The CoAP header field Code MUST be sent in plaintext to support
    RESTful processing, but MUST be integrity protected to prevent an
@@ -653,6 +646,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    have both an inner value and a potentially different outer value,
    where the inner value is intended for the destination endpoint and
    the outer value is intended for the proxy.
+
+
+
+
+
+
+
 
 
 
@@ -1155,10 +1155,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 8.3.  Protecting the Response
 
-   A server receiving a valid request with a protected CoAP message
-   (i.e. containing an Object-Security option) SHALL respond with a
-   protected CoAP message.
-
    Given an unprotected CoAP response, including header, options, and
    payload, the server SHALL perform the following steps to create a
    protected CoAP response, using the security context identified by the
@@ -1169,7 +1165,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
        *  The AEAD nonce is created by XORing the Sender IV (context IV)
           and the padded Sender Sequence Number.
 
+   2.  Format the protected CoAP message as an ordinary CoAP message,
+       with the following Header, Options, and Payload based on the
+       unprotected CoAP message:
 
+       *  The CoAP header is the same as the unprotected CoAP message.
 
 
 
@@ -1177,12 +1177,6 @@ Selander, et al.        Expires September 6, 2017              [Page 21]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
-
-   2.  Format the protected CoAP message as an ordinary CoAP message,
-       with the following Header, Options, and Payload based on the
-       unprotected CoAP message:
-
-       *  The CoAP header is the same as the unprotected CoAP message.
 
        *  The CoAP options which are of class E are removed, except any
           special option (labelled '*') that is present which has its
@@ -1227,16 +1221,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    7.  If the message verifies, update the Recipient Replay Window, as
        described in Section 7.
 
+   8.  Restore the unprotected response by adding any decrypted options
+       or payload from the plaintext.  Any class E options (Section 5)
+       are overwritten.  The Object-Security option is removed.
+
+
+
 
 
 Selander, et al.        Expires September 6, 2017              [Page 22]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
-
-   8.  Restore the unprotected response by adding any decrypted options
-       or payload from the plaintext.  Any class E options (Section 5)
-       are overwritten.  The Object-Security option is removed.
 
 9.  Security Considerations
 
@@ -1282,6 +1278,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    [I-D.ietf-ace-oauth-authz].  An OSCOAP profile of ACE is described in
    [I-D.seitz-ace-oscoap-profile].
 
+   The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is
+   selected for broad applicability in terms of message size (2^64
+   blocks) and maximum no. messages (2^56-1).  Compatibility with CCM*
+
 
 
 
@@ -1290,9 +1290,6 @@ Selander, et al.        Expires September 6, 2017              [Page 23]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-   The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is
-   selected for broad applicability in terms of message size (2^64
-   blocks) and maximum no. messages (2^56-1).  Compatibility with CCM*
    is achieved by using the algorithm AES-CCM-16-64-128
    [I-D.ietf-cose-msg].
 
@@ -1338,6 +1335,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    all messages are the same length.  For example using 0 and 1 instead
    of 'yes' and 'no'.  2) Use a character which is not part of the
    responses to pad to a fixed length.  For example, pad with a space to
+   three characters.  3) Use the PKCS #7 style padding scheme where m
+   bytes are appended each having the value of m.  For example,
+
 
 
 
@@ -1346,8 +1346,6 @@ Selander, et al.        Expires September 6, 2017              [Page 24]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-   three characters.  3) Use the PKCS #7 style padding scheme where m
-   bytes are appended each having the value of m.  For example,
    appending a 0 to "YES" and two 1's to "NO".  This style of padding
    means that all values need to be padded.
 
@@ -1383,6 +1381,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    The "application/oscon" media type is added to the Media Types
    registry:
+
+
 
 
 

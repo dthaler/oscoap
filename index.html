@@ -284,7 +284,7 @@ address {
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Security Context Definition"/>
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Derivation of Security Context Parameters"/>
 <link href="#rfc.section.3.3" rel="Chapter" title="3.3 Requirements on the Security Context Parameters"/>
-<link href="#rfc.section.4" rel="Chapter" title="4 Protected Resources"/>
+<link href="#rfc.section.4" rel="Chapter" title="4 URI Schemes and Resources"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Protected CoAP Message Fields"/>
 <link href="#rfc.section.5.1" rel="Chapter" title="5.1 CoAP Payload"/>
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 CoAP Header"/>
@@ -402,7 +402,7 @@ address {
 <ul><li>3.1.   <a href="#rfc.section.3.1">Security Context Definition</a></li>
 <li>3.2.   <a href="#rfc.section.3.2">Derivation of Security Context Parameters</a></li>
 <li>3.3.   <a href="#rfc.section.3.3">Requirements on the Security Context Parameters</a></li>
-</ul><li>4.   <a href="#rfc.section.4">Protected Resources</a></li>
+</ul><li>4.   <a href="#rfc.section.4">URI Schemes and Resources</a></li>
 <li>5.   <a href="#rfc.section.5">Protected CoAP Message Fields</a></li>
 <ul><li>5.1.   <a href="#rfc.section.5.1">CoAP Payload</a></li>
 <li>5.2.   <a href="#rfc.section.5.2">CoAP Header</a></li>
@@ -606,10 +606,8 @@ Verify request with   |                       |
 <p id="rfc.section.3.3.p.1">As collisions may lead to the loss of both confidentiality and integrity, Sender ID SHALL be unique in the set of all security contexts using the same Master Secret. Normally (e.g. when using EDHOC) Sender IDs can be very short. Note that Sender IDs of different lengths can be used with the same Master Secret. E.g. the SID with value 0x00 is different from the SID with the value 0x0000. If Sender ID uniqueness cannot be guaranteed, random Sender IDs MUST be used. Random Sender IDs MUST be long enough so that the probability of collisions is negligible.</p>
 <p id="rfc.section.3.3.p.2">To enable retrieval of the right Recipient Context, the Recipient ID SHOULD be unique in the sets of all Recipient Contexts used by an endpoint.</p>
 <p id="rfc.section.3.3.p.3">The same Master Salt MAY be used with several Master Secrets.</p>
-<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#resources" id="resources">Protected Resources</a></h1>
-<p id="rfc.section.4.p.1">TODO:</p>
-<p id="rfc.section.4.p.2">In the same phase during which the Sender ID and Recipient ID are established in the endpoint, the application informs the endpoint what resources can be accessed using the corresponding security contexts. Resources that are accessed with OSCOAP are called &#8220;protected&#8221; resources. The set of resources that can be accessed using a certain security context is decided by the application (resource, host, etc.). The client SHALL save the association resource-SID, in order to be able to retrieve the correct security context to access a protected resource. The server SHALL save the association resource-RID, in order to determine whether a particular resource may be accessed using a certain context.</p>
-<p id="rfc.section.4.p.3">A CoAP server receiving an unprotected CoAP request to access a protected resource SHALL reject the message with error code 4.01 (Unauthorized).</p>
+<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#resources" id="resources">URI Schemes and Resources</a></h1>
+<p id="rfc.section.4.p.1">The use of OSCOAP does not affect the URI scheme and OSCOAP can therefore be used with any URI scheme defined for CoAP. The set of resources and methods that requires OSCOAP is decided by the application. The set of resources and methods that can be used with a certain security context is decided by the application. For each resource and method, clients need to be able to retrieve the correct security context to use. For each resource and method, servers need to be able to determine whether the security context is authorized. A server receiving an unprotected request to a resource and method requiring OSCOAP SHALL reject the message with error code 4.01 (Unauthorized). A server receiving a protected request with a security context not authorized for use with the resource and method SHALL reject the message with error code 4.01 (Unauthorized).</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#coap-headers-and-options" id="coap-headers-and-options">Protected CoAP Message Fields</a></h1>
 <p id="rfc.section.5.p.1">OSCOAP transforms an unprotected CoAP message into a protected CoAP message, and vice versa. This section defines how the unprotected CoAP message fields are protected. OSCOAP protects as much of the unprotected CoAP message as possible, while still allowing forward proxy operations <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>.</p>
 <p id="rfc.section.5.p.2">This section also outlines how the message fields are processed and transferred, a detailed description is provided in <a href="#coap-protected-generate">Section 8</a>. Message fields of the unprotected CoAP message are either transferred in the header/options part of the protected CoAP message, or in the plaintext of the COSE object. Depending on which, the location of the message field in the protected CoAP message is called &#8220;outer&#8221; or &#8220;inner&#8221;:</p>
@@ -794,8 +792,7 @@ external_aad = [
   <li>Restore the unprotected request by adding any decrypted options or payload from the plaintext. Any outer E options (<a href="#coap-headers-and-options">Section 5</a>) are overwritten. The Object-Security option is removed.</li>
 </ol>
 <h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> <a href="#protected-coap-formatting-resp" id="protected-coap-formatting-resp">Protecting the Response</a></h1>
-<p id="rfc.section.8.3.p.1">A server receiving a valid request with a protected CoAP message (i.e. containing an Object-Security option) SHALL respond with a protected CoAP message.</p>
-<p id="rfc.section.8.3.p.2">Given an unprotected CoAP response, including header, options, and payload, the server SHALL perform the following steps to create a protected CoAP response, using the security context identified by the Context Identifier of the received request:</p>
+<p id="rfc.section.8.3.p.1">Given an unprotected CoAP response, including header, options, and payload, the server SHALL perform the following steps to create a protected CoAP response, using the security context identified by the Context Identifier of the received request:</p>
 <p/>
 
 <ol>
