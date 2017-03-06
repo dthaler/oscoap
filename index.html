@@ -491,7 +491,7 @@ Client                                           Server
      C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable
 </pre>
 <p class="figure">Figure 2: The Object-Security Option</p>
-<p id="rfc.section.2.p.2">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP proxy SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age">Section 5.3.1.1</a>.</p>
+<p id="rfc.section.2.p.2">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP endpoint SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age">Section 5.3.1.1</a>.</p>
 <p id="rfc.section.2.p.3">The protection is achieved by means of a COSE object (see <a href="#cose-object">Section 6</a>) included in the protected CoAP message. The placement of the COSE object depends on whether the method/response code allows payload (see <a href="#RFC7252">[RFC7252]</a>):</p>
 <p/>
 
@@ -628,7 +628,7 @@ Verify request with   |                       |
   <li>Inner message field = message field included in the plaintext of the COSE object of the protected CoAP message (see <a href="#plaintext">Section 6.1</a>)</li>
   <li>Outer message field = message field included in the header or options part of the protected CoAP message</li>
 </ul>
-<p id="rfc.section.5.p.4">The inner message fields are by definition encrypted and integrity protected by the COSE object. The outer message fields are not encrypted and thus visible to a proxy, but may be integrity protected by including the message field values in the AAD of the COSE object (see <a href="#AAD">Section 6.2</a>).</p>
+<p id="rfc.section.5.p.4">The inner message fields are by definition encrypted and integrity protected by the COSE object. The outer message fields are not encrypted and thus visible to an intermediary, but may be integrity protected by including the message field values in the AAD of the COSE object (see <a href="#AAD">Section 6.2</a>).</p>
 <p id="rfc.section.5.p.5">Note that, even though the message formats are slightly different, OSCOAP complies with CoAP over unreliable transport <a href="#RFC7252">[RFC7252]</a> as well as CoAP over reliable transport <a href="#I-D.ietf-core-coap-tcp-tls">[I-D.ietf-core-coap-tcp-tls]</a>.</p>
 <h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#coap-payload" id="coap-payload">CoAP Payload</a></h1>
 <p id="rfc.section.5.1.p.1">The CoAP Payload SHALL be encrypted and integrity protected, and thus is an inner message field.</p>
@@ -688,7 +688,7 @@ Verify request with   |                       |
 <p id="rfc.section.5.3.1.p.4">Except for the Block options <a href="#block-options">Section 5.3.1.2</a>, the receiving endpoint SHALL discard any outer options of class E from the protected CoAP message and SHALL replace it with the value from the COSE object when present (see <a href="#verif-coap-req">Section 8.2</a> and <a href="#verif-coap-resp">Section 8.4</a>).</p>
 <h1 id="rfc.section.5.3.1.1"><a href="#rfc.section.5.3.1.1">5.3.1.1.</a> <a href="#max-age" id="max-age">Max-Age</a></h1>
 <p id="rfc.section.5.3.1.1.p.1">An inner Max-Age option is used as defined in <a href="#RFC7252">[RFC7252]</a> taking into account that it is not accessible to proxies.</p>
-<p id="rfc.section.5.3.1.1.p.2">Since OSCOAP binds CoAP responses to requests, a cached response would not be possible to use for any other request. To avoid unnecessary caching in proxies not recognizing the Object-Security, a server MAY add an outer Max-Age option with value zero to protected CoAP responses (see Section 5.6.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
+<p id="rfc.section.5.3.1.1.p.2">Since OSCOAP binds CoAP responses to requests, a cached response would not be possible to use for any other request. To avoid unnecessary caching, a server MAY add an outer Max-Age option with value zero to protected CoAP responses (see Section 5.6.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
 <p id="rfc.section.5.3.1.1.p.3">The outer Max-Age option is not integrity protected.</p>
 <h1 id="rfc.section.5.3.1.2"><a href="#rfc.section.5.3.1.2">5.3.1.2.</a> <a href="#block-options" id="block-options">The Block Options</a></h1>
 <p id="rfc.section.5.3.1.2.p.1">TODO: Update processing to support multiple concurrently proceeding requests</p>
