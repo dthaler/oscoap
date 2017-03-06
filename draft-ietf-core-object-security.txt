@@ -763,10 +763,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    account that it is not accessible to proxies.
 
    Since OSCOAP binds CoAP responses to requests, a cached response
-   would not be possible to use for any other request.  To prevent
-   caching in proxies not recognizing the Object-Security, a server MAY
-   add an outer Max-Age option with value zero to protected CoAP
-   responses (see Section 5.6.1 of [RFC7252]).
+   would not be possible to use for any other request.  To avoid
+   unnecessary caching in proxies not recognizing the Object-Security, a
+   server MAY add an outer Max-Age option with value zero to protected
+   CoAP responses (see Section 5.6.1 of [RFC7252]).
 
    The outer Max-Age option is not integrity protected.
 
@@ -1548,8 +1548,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
               Bormann, C., Lemay, S., Tschofenig, H., Hartke, K.,
               Silverajan, B., and B. Raymor, "CoAP (Constrained
               Application Protocol) over TCP, TLS, and WebSockets",
-              draft-ietf-core-coap-tcp-tls-06 (work in progress),
-              February 2017.
+              draft-ietf-core-coap-tcp-tls-07 (work in progress), March
+              2017.
 
    [I-D.mattsson-core-coap-actuators]
               Mattsson, J., Fornehed, J., Selander, G., and F.
