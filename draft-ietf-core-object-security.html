@@ -331,7 +331,7 @@ address {
 
   <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-object-security-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-06" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-07" />
   <meta name="dct.abstract" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
   <meta name="description" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
 
@@ -355,7 +355,7 @@ address {
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 7, 2017</td>
+  <td class="left">Expires: September 8, 2017</td>
   <td class="right">Ericsson AB</td>
 </tr>
 <tr>
@@ -368,7 +368,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">March 06, 2017</td>
+  <td class="right">March 07, 2017</td>
 </tr>
 
     	
@@ -388,7 +388,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 7, 2017.</p>
+<p>This Internet-Draft will expire on September 8, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -640,7 +640,7 @@ Verify request with   |                       |
 <h1 id="rfc.section.5.1"><a href="#rfc.section.5.1">5.1.</a> <a href="#coap-payload" id="coap-payload">CoAP Payload</a></h1>
 <p id="rfc.section.5.1.p.1">The CoAP Payload SHALL be encrypted and integrity protected (Class E), and thus is an inner message field.</p>
 <p id="rfc.section.5.1.p.2">The sending endpoint writes the payload of the unprotected CoAP message into the plaintext of the COSE object (see <a href="#protected-coap-formatting-req">Section 8.1</a> and <a href="#protected-coap-formatting-resp">Section 8.3</a>).</p>
-<p id="rfc.section.5.1.p.3">The receiving endpoint verifies and decrypts the COSE object, and recreates the payload of the unprotected CoAP message (see <a href="#verif-coap-req">Section 8.2</a> and <a href="#verif-coap-resp">Section 8.4</a>).</p>
+<p id="rfc.section.5.1.p.3">The receiving endpoint verifies and decrypts the COSE object, and recreates the payload of the unprotected CoAP message.</p>
 <h1 id="rfc.section.5.2"><a href="#rfc.section.5.2">5.2.</a> <a href="#coap-header" id="coap-header">CoAP Header</a></h1>
 <p id="rfc.section.5.2.p.1">Many CoAP header fields are required to be read and changed during a normal message exchange or when traversing a proxy and thus cannot be protected between the endpoints, e.g. CoAP message layer fields such as Message ID.</p>
 <p id="rfc.section.5.2.p.2">The CoAP header field Code MUST be sent in plaintext to support RESTful processing, but MUST be integrity protected to prevent an intermediary from changing, e.g. from GET to DELETE (Class I).  The CoAP version number MUST be integrity protected to prevent potential future version-based attacks (Class I). Note that while the version number is not sent in each CoAP message over reliable transport <a href="#I-D.ietf-core-coap-tcp-tls">[I-D.ietf-core-coap-tcp-tls]</a>, its value is known to client and server.</p>
@@ -686,7 +686,7 @@ U=Unprotected, *=Special
 <p id="rfc.section.5.3.1.p.1">For options in class E (see <a href="#protected-coap-options">Figure 4</a>) the option value in the unprotected CoAP message, if present, SHALL be encrypted and integrity protected between the endpoints.  Hence the actions resulting from the use of such options is analogous to communicating in a protected manner with the endpoint. For example, a client using an ETag option will not be served by a proxy.</p>
 <p id="rfc.section.5.3.1.p.2">The sending endpoint SHALL write the class E option from the unprotected CoAP message into the plaintext of the COSE object (see <a href="#protected-coap-formatting-req">Section 8.1</a> and <a href="#protected-coap-formatting-resp">Section 8.3</a>).</p>
 <p id="rfc.section.5.3.1.p.3">Except for the special options described in the subsections, the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change or remove the value of an outer option.</p>
-<p id="rfc.section.5.3.1.p.4">Except for the Block options <a href="#block-options">Section 5.3.1.2</a>, the receiving endpoint SHALL discard any outer options of class E from the protected CoAP message and SHALL replace it with the value from the COSE object when present (see <a href="#verif-coap-req">Section 8.2</a> and <a href="#verif-coap-resp">Section 8.4</a>).</p>
+<p id="rfc.section.5.3.1.p.4">Except for the Block options <a href="#block-options">Section 5.3.1.2</a>, the receiving endpoint SHALL discard any outer options of class E from the protected CoAP message and SHALL replace it with the value from the COSE object when present.</p>
 <h1 id="rfc.section.5.3.1.1"><a href="#rfc.section.5.3.1.1">5.3.1.1.</a> <a href="#max-age" id="max-age">Max-Age</a></h1>
 <p id="rfc.section.5.3.1.1.p.1">An inner Max-Age option, like other class E options, is used as defined in <a href="#RFC7252">[RFC7252]</a> taking into account that it is not accessible to proxies.</p>
 <p id="rfc.section.5.3.1.1.p.2">Since OSCOAP binds CoAP responses to requests, a cached response would not be possible to use for any other request. To avoid unnecessary caching, a server MAY add an outer Max-Age option with value zero to protected CoAP responses (see Section 5.6.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
@@ -699,7 +699,7 @@ U=Unprotected, *=Special
 <p id="rfc.section.5.3.1.2.p.5">There SHALL be a security policy defining a maximum unfragmented message size for inner Block options such that messages exceeding this size SHALL be fragmented by the sending endpoint.</p>
 <p id="rfc.section.5.3.1.2.p.6">In addition to the processing defined for the inner Block options inherent to class E options, the AEAD Tag from each block SHALL be included in the calculation of the Tag for the next block (see <a href="#AAD">Section 6.2</a>), so that each block in the order being sent can be verified as it arrives.</p>
 <p id="rfc.section.5.3.1.2.p.7">The protected CoAP message may be fragmented by the sending endpoint or proxy as defined in <a href="#RFC7959">[RFC7959]</a>, in which case the outer Block options are being used. The outer Block options SHALL neither be encrypted nor integrity protected.</p>
-<p id="rfc.section.5.3.1.2.p.8">An endpoint receiving a message with an outer Block option SHALL first process this option according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the protected CoAP message has been received, or the cumulated message size of the exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the protected CoAP message continues as defined in this document (see <a href="#verif-coap-req">Section 8.2</a> and <a href="#verif-coap-resp">Section 8.4</a>).</p>
+<p id="rfc.section.5.3.1.2.p.8">An endpoint receiving a message with an outer Block option SHALL first process this option according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the protected CoAP message has been received, or the cumulated message size of the exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the protected CoAP message continues as defined in this document.</p>
 <p id="rfc.section.5.3.1.2.p.9">If the unprotected CoAP message contains Block options, the receiving endpoint processes this according to <a href="#RFC7959">[RFC7959]</a>.</p>
 <h1 id="rfc.section.5.3.2"><a href="#rfc.section.5.3.2">5.3.2.</a> <a href="#class-i" id="class-i">Class I Options</a></h1>
 <p id="rfc.section.5.3.2.p.1">Except for the special options described in the subsections, for options in Class I (see <a href="#protected-coap-options">Figure 4</a>) the option value SHALL only be integrity protected between the endpoints. Class I options are serialized with delta encoding  in the external_aad (<a href="#AAD">Section 6.2</a>).</p>
@@ -827,19 +827,18 @@ external_aad = [
   <li>Store the association Token - Security Context. The Client SHALL be able to find the correct security context used to protect the request and verify the response with use of the Token of the message exchange.</li>
   <li>Increment the Sender Sequence Number by one.</li>
 </ol>
-<h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#verif-coap-req" id="verif-coap-req">Verifying the Request</a></h1>
-<p id="rfc.section.8.2.p.1">A CoAP server receiving a message containing the Object-Security option and a outer Block option SHALL first process this option according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the protected CoAP message has been received, see <a href="#block-options">Section 5.3.1.2</a>.</p>
-<p id="rfc.section.8.2.p.2">A CoAP server receiving a message containing the Object-Security option SHALL perform the following steps, using the Recipient Context identified by the &#8220;kid&#8221; parameter in the received COSE object:</p>
+<h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#proc-request-server" id="proc-request-server">Verifying the Request</a></h1>
+<p id="rfc.section.8.2.p.1">A server receiving a request containing the Object-Security option SHALL perform the following steps:</p>
 <p/>
 
 <ol>
-  <li>Verify the Sequence Number in the Partial IV parameter, as described in <a href="#sequence-numbers">Section 7</a>. If it cannot be verified that the Sequence Number has not been received before, the server MUST stop processing the request.</li>
-  <li>Recreate the Additional Authenticated Data, as described in <a href="#cose-object">Section 6</a>.</li>
-  <li>Compose the AEAD nonce by XORing the Recipient IV (context IV) with the padded Partial IV parameter, received in the COSE Object.</li>
-  <li>Retrieve the Recipient Key.</li>
-  <li>Verify and decrypt the message. If the verification fails, the server MUST stop processing the request.</li>
-  <li>If the message verifies, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 7</a>.</li>
-  <li>Restore the unprotected request by adding any decrypted options or payload from the plaintext. Any outer E options (<a href="#coap-headers-and-options">Section 5</a>) are overwritten. The Object-Security option is removed.</li>
+  <li>Process outer Block options according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the request has been received, see Section <a href="#block-options">Section 5.3.1.2</a>.</li>
+  <li>Retrieve the Recipient Context associated with the Recipient ID in the &#8220;kid&#8221; parameter of the COSE object.</li>
+  <li>Verify the Sequence Number in the Partial IV parameter, as described in <a href="#sequence-numbers">Section 7</a>.</li>
+  <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 6</a>.</li>
+  <li>Compose the AEAD nonce by XORing the context IV (Recipient IV) with the padded Partial IV parameter, received in the COSE Object.</li>
+  <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the server MUST stop processing the request and SHOULD send an 4.01 error message.</li><li>If decryption suceeds, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 7</a>.</li></ul></li>
+  <li>Add decrypted options or payload to the unprotected overwriting any outer E options (see <a href="#coap-headers-and-options">Section 5</a>). The Object-Security option is removed.</li>
 </ol>
 <h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> <a href="#protected-coap-formatting-resp" id="protected-coap-formatting-resp">Protecting the Response</a></h1>
 <p id="rfc.section.8.3.p.1">Given an unprotected CoAP response, including header, options, and payload, the server SHALL perform the following steps to create a protected CoAP response, using the security context identified by the Context Identifier of the received request:</p>
