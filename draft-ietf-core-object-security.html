@@ -816,7 +816,6 @@ external_aad = [
 <h1 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> <a href="#delay-and-mismatch-attacks" id="delay-and-mismatch-attacks">Delay and Mismatch Attacks</a></h1>
 <p id="rfc.section.7.5.p.1">In order to prevent response delay and mismatch attacks <a href="#I-D.mattsson-core-coap-actuators">[I-D.mattsson-core-coap-actuators]</a> from on-path attackers and compromised proxies, OSCOAP binds responses to the request by including the request&#8217;s ID (Sender ID or Recipient ID) and sequence number in the AAD of the response. The server therefore needs to store the request&#8217;s ID (Sender ID or Recipient ID) and sequence number until all responses has been sent.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#processing" id="processing">Processing</a></h1>
-<p id="rfc.section.8.p.1">TODO: Update include new Observe processing</p>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#protected-coap-formatting-req" id="protected-coap-formatting-req">Protecting the Request</a></h1>
 <p id="rfc.section.8.1.p.1">Given an unprotected CoAP request, including header, options and payload, the client SHALL perform the following steps to create a protected CoAP request using a security context associated with the target resource (see <a href="#context">Section 3</a>).</p>
 <p/>
@@ -832,13 +831,13 @@ external_aad = [
 <p/>
 
 <ol>
-  <li>Process outer Block options according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the request has been received, see Section <a href="#block-options">Section 5.3.1.2</a>.</li>
-  <li>Retrieve the Recipient Context associated with the Recipient ID in the &#8220;kid&#8221; parameter of the COSE object.</li>
-  <li>Verify the Sequence Number in the Partial IV parameter, as described in <a href="#sequence-numbers">Section 7</a>.</li>
+  <li>Process outer Block options according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the request have been received, see <a href="#block-options">Section 5.3.1.2</a>.</li>
+  <li>Retrieve the Recipient Context associated with the Recipient ID in the &#8216;kid&#8217; parameter of the COSE object.</li>
+  <li>Verify the Sequence Number in the &#8216;Partial IV&#8217; parameter, as described in <a href="#sequence-numbers">Section 7</a>.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 6</a>.</li>
-  <li>Compose the AEAD nonce by XORing the context IV (Recipient IV) with the padded Partial IV parameter, received in the COSE Object.</li>
+  <li>Compose the AEAD nonce by XORing the context IV (Recipient IV) with the padded &#8216;Partial IV&#8217; parameter, received in the COSE Object.</li>
   <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the server MUST stop processing the request and SHOULD send an 4.01 error message.</li><li>If decryption suceeds, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 7</a>.</li></ul></li>
-  <li>Add decrypted options or payload to the unprotected overwriting any outer E options (see <a href="#coap-headers-and-options">Section 5</a>). The Object-Security option is removed.</li>
+  <li>Add decrypted options or payload to the unprotected request, overwriting any outer E options (see <a href="#coap-headers-and-options">Section 5</a>). The Object-Security option is removed.</li>
 </ol>
 <h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> <a href="#protected-coap-formatting-resp" id="protected-coap-formatting-resp">Protecting the Response</a></h1>
 <p id="rfc.section.8.3.p.1">Given an unprotected CoAP response, including header, options, and payload, the server SHALL perform the following steps to create a protected CoAP response, using the security context identified by the Context Identifier of the received request:</p>
@@ -849,19 +848,18 @@ external_aad = [
   <li>Format the protected CoAP message as an ordinary CoAP message, with the following Header, Options, and Payload based on the unprotected CoAP message: <ul><li>The CoAP header is the same as the unprotected CoAP message.</li><li>The CoAP options which are of class E are removed, except any special option (labelled &#8216;*&#8217;) that is present which has its outer value (<a href="#coap-headers-and-options">Section 5</a>). The Object-Security option is added.</li><li>If the message type of the unprotected CoAP message does not allow Payload, then the value of the Object-Security option is the COSE object. If the message type of the unprotected CoAP message allows Payload, then the Object-Security option is empty and the Payload of the protected CoAP message is the COSE object.</li></ul></li>
   <li>Increment the Sender Sequence Number by one.</li>
 </ol>
-<h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> <a href="#verif-coap-resp" id="verif-coap-resp">Verifying the Response</a></h1>
-<p id="rfc.section.8.4.p.1">A CoAP client receiving a message containing the Object-Security option SHALL perform the following steps, using the security context identified by the Token of the received response:</p>
+<h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> <a href="#proc-resp-client" id="proc-resp-client">Verifying the Response</a></h1>
+<p id="rfc.section.8.4.p.1">A client receiving a response containing the Object-Security option SHALL perform the following steps:</p>
 <p/>
 
 <ol>
-  <li>If the message contain an outer Block option the client SHALL process this option according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the protected CoAP message has been received, see <a href="#block-options">Section 5.3.1.2</a>.</li>
-  <li>Verify the Sequence Number in the Partial IV parameter as described in <a href="#sequence-numbers">Section 7</a>. If it cannot be verified that the Sequence Number has not been received before, the client MUST stop processing the response.</li>
-  <li>Recreate the Additional Authenticated Data as described in <a href="#cose-object">Section 6</a>.</li>
-  <li>Compose the AEAD nonce by XORing the Recipient IV (context IV) with the Partial IV parameter, received in the COSE Object.</li>
-  <li>Retrieve the Recipient Key.</li>
-  <li>Verify and decrypt the message. If the verification fails, the client MUST stop processing the response.</li>
-  <li>If the message verifies, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 7</a>.</li>
-  <li>Restore the unprotected response by adding any decrypted options or payload from the plaintext. Any class E options (<a href="#coap-headers-and-options">Section 5</a>) are overwritten. The Object-Security option is removed.</li>
+  <li>Process outer Block options according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the protected CoAP message have been received, see <a href="#block-options">Section 5.3.1.2</a>.</li>
+  <li>Retrieve the Recipient Context associated with the Token.</li>
+  <li>If Observe is used, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers">Section 7</a>.</li>
+  <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 6</a>.</li>
+  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the context IV (Recipient IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the context IV (Recipient IV with the first bit flipped) with the padded Partial IV parameter from the response.</li></ul></li>
+  <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the client MUST stop processing the response and SHOULD send an 4.01 error message.</li><li>If decryption succeeds and Observe is used, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 7</a>.</li></ul></li>
+  <li>Add decrypted options or payload to the unprotected response overwriting any outer E options (see <a href="#coap-headers-and-options">Section 5</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the sequence number.</li></ul></li>
 </ol>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#sec-considerations" id="sec-considerations">Security Considerations</a></h1>
 <p id="rfc.section.9.p.1">In scenarios with intermediary nodes such as proxies or brokers, transport layer security such as DTLS only protects data hop-by-hop. As a consequence the intermediary nodes can read and modify information. The trust model where all intermediate nodes are considered trustworthy is problematic, not only from a privacy perspective, but also from a security perspective, as the intermediaries are free to delete resources on sensors and falsify commands to actuators (such as &#8220;unlock door&#8221;, &#8220;start fire alarm&#8221;, &#8220;raise bridge&#8221;). Even in the rare cases, where all the owners of the intermediary nodes are fully trusted, attacks and data breaches make such an architecture brittle.</p>
