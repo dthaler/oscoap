@@ -817,7 +817,8 @@ external_aad = [
 <p id="rfc.section.7.5.p.1">In order to prevent response delay and mismatch attacks <a href="#I-D.mattsson-core-coap-actuators">[I-D.mattsson-core-coap-actuators]</a> from on-path attackers and compromised proxies, OSCOAP binds responses to the request by including the request&#8217;s ID (Sender ID or Recipient ID) and sequence number in the AAD of the response. The server therefore needs to store the request&#8217;s ID (Sender ID or Recipient ID) and sequence number until all responses has been sent.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#processing" id="processing">Processing</a></h1>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#protected-coap-formatting-req" id="protected-coap-formatting-req">Protecting the Request</a></h1>
-<p id="rfc.section.8.1.p.1">Given an unprotected CoAP request, including header, options and payload, the client SHALL perform the following steps to create a protected CoAP request using a security context associated with the target resource (see <a href="#context">Section 3</a>).</p>
+<p id="rfc.section.8.1.p.1">TODO: Update</p>
+<p id="rfc.section.8.1.p.2">Given an unprotected CoAP request, including header, options and payload, the client SHALL perform the following steps to create a protected CoAP request using a security context associated with the target resource (see <a href="#context">Section 3</a>).</p>
 <p/>
 
 <ol>
@@ -840,7 +841,8 @@ external_aad = [
   <li>Add decrypted options or payload to the unprotected request, overwriting any outer E options (see <a href="#coap-headers-and-options">Section 5</a>). The Object-Security option is removed.</li>
 </ol>
 <h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> <a href="#protected-coap-formatting-resp" id="protected-coap-formatting-resp">Protecting the Response</a></h1>
-<p id="rfc.section.8.3.p.1">Given an unprotected CoAP response, including header, options, and payload, the server SHALL perform the following steps to create a protected CoAP response, using the security context identified by the Context Identifier of the received request:</p>
+<p id="rfc.section.8.3.p.1">TODO: Update</p>
+<p id="rfc.section.8.3.p.2">Given an unprotected CoAP response, including header, options, and payload, the server SHALL perform the following steps to create a protected CoAP response, using the security context identified by the Context Identifier of the received request:</p>
 <p/>
 
 <ol>

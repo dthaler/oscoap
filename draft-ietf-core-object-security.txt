@@ -97,15 +97,15 @@ Table of Contents
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  25
    10. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  27
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  27
-     11.1.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  27
+     11.1.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  28
      11.2.  Media Type Registrations . . . . . . . . . . . . . . . .  28
      11.3.  CoAP Content Format Registration . . . . . . . . . . . .  29
-   12. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  29
-   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
-     13.1.  Normative References . . . . . . . . . . . . . . . . . .  29
-     13.2.  Informative References . . . . . . . . . . . . . . . . .  30
-   Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  31
-   Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  31
+   12. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  30
+   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
+     13.1.  Normative References . . . . . . . . . . . . . . . . . .  30
+     13.2.  Informative References . . . . . . . . . . . . . . . . .  31
+   Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  32
+   Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  32
 
 
 
@@ -114,15 +114,15 @@ Selander, et al.        Expires September 8, 2017               [Page 2]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  31
-     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  33
+     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  32
+     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  34
    Appendix C.  Object Security of Content (OSCON) . . . . . . . . .  35
      C.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  36
-     C.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  36
-     C.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  37
-     C.4.  Authenticated Encryption with Additional Data (AEAD)  . .  38
-     C.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  38
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  39
+     C.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  37
+     C.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  38
+     C.4.  Authenticated Encryption with Additional Data (AEAD)  . .  39
+     C.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  39
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  40
 
 1.  Introduction
 
@@ -1205,6 +1205,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 8.1.  Protecting the Request
 
+   TODO: Update
+
    Given an unprotected CoAP request, including header, options and
    payload, the client SHALL perform the following steps to create a
    protected CoAP request using a security context associated with the
@@ -1224,8 +1226,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
        *  If present, the CoAP option Proxy-Uri is decomposed as
           described in Section 5.3.3.2.
-
-
 
 
 
@@ -1296,6 +1296,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 8.3.  Protecting the Response
 
+   TODO: Update
+
    Given an unprotected CoAP response, including header, options, and
    payload, the server SHALL perform the following steps to create a
    protected CoAP response, using the security context identified by the
@@ -1336,8 +1338,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    2.  Retrieve the Recipient Context associated with the Token.
 
-   3.  If Observe is used, verify the Sequence Number in the 'Partial
-       IV' parameter as described in Section 7.
 
 
 
@@ -1345,6 +1345,9 @@ Selander, et al.        Expires September 8, 2017              [Page 24]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
+
+   3.  If Observe is used, verify the Sequence Number in the 'Partial
+       IV' parameter as described in Section 7.
 
    4.  Compose the Additional Authenticated Data, as described in
        Section 6.
@@ -1391,9 +1394,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    DTLS protects hop-by-hop the entire CoAP message, including header,
    options, and payload.  OSCOAP protects end-to-end the payload, and
    all information in the options and header, that is not required for
-   forwarding (see Section 5).  DTLS and OSCOAP can be combined, thereby
-   enabling end-to-end security of CoAP payload, in combination with
-
 
 
 
@@ -1402,6 +1402,8 @@ Selander, et al.        Expires September 8, 2017              [Page 25]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
+   forwarding (see Section 5).  DTLS and OSCOAP can be combined, thereby
+   enabling end-to-end security of CoAP payload, in combination with
    hop-by-hop protection of the entire CoAP message, during transport
    between end-point and intermediary node.
 
@@ -1447,8 +1449,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    from attacks replacing blocks from a different message with the same
    block number between same endpoints and same resource at roughly the
    same time, the AEAD Tag from the message containing one block is
-   included in the external_aad of the message containing the next
-   block.
 
 
 
@@ -1457,6 +1457,9 @@ Selander, et al.        Expires September 8, 2017              [Page 26]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
+
+   included in the external_aad of the message containing the next
+   block.
 
    The unencrypted block options allow for arbitrary proxy fragmentation
    operations that cannot be verified by the endpoints, but can by
@@ -1500,10 +1503,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    Note to RFC Editor: Please replace all occurrences of "[[this
    document]]" with the RFC number of this specification.
 
-11.1.  CoAP Option Numbers Registry
 
-   The Object-Security option is added to the CoAP Option Numbers
-   registry:
 
 
 
@@ -1513,6 +1513,11 @@ Selander, et al.        Expires September 8, 2017              [Page 27]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
+
+11.1.  CoAP Option Numbers Registry
+
+   The Object-Security option is added to the CoAP Option Numbers
+   registry:
 
              +--------+-----------------+-------------------+
              | Number | Name            | Reference         |
@@ -1524,6 +1529,46 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    The "application/oscon" media type is added to the Media Types
    registry:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 28]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
        Type name: application
 
@@ -1562,14 +1607,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
        Author: Goeran Selander, goran.selander@ericsson.com
 
-
-
-
-Selander, et al.        Expires September 8, 2017              [Page 28]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
 11.3.  CoAP Content Format Registration
 
    The "application/oscon" content format is added to the CoAP Content
@@ -1580,6 +1617,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
          +-------------------+----------+----+-------------------+
          | application/oscon | -        | 70 | [[this document]] |
          +-------------------+----------+----+-------------------+
+
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 29]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
 12.  Acknowledgments
 
@@ -1616,16 +1661,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
               Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
               October 2013, <http://www.rfc-editor.org/info/rfc7049>.
 
-
-
-
-
-
-Selander, et al.        Expires September 8, 2017              [Page 29]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
               DOI 10.17487/RFC7252, June 2014,
@@ -1635,6 +1670,17 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
               Application Protocol (CoAP)", RFC 7641,
               DOI 10.17487/RFC7641, September 2015,
               <http://www.rfc-editor.org/info/rfc7641>.
+
+
+
+
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 30]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
    [RFC7959]  Bormann, C. and Z. Shelby, Ed., "Block-Wise Transfers in
               the Constrained Application Protocol (CoAP)", RFC 7959,
@@ -1673,15 +1719,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
               draft-ietf-core-coap-tcp-tls-07 (work in progress), March
               2017.
 
-
-
-
-
-Selander, et al.        Expires September 8, 2017              [Page 30]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    [I-D.mattsson-core-coap-actuators]
               Mattsson, J., Fornehed, J., Selander, G., and F.
               Palombini, "Controlling Actuators with CoAP", draft-
@@ -1692,6 +1729,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
               Seitz, L. and F. Palombini, "OSCOAP profile of ACE",
               draft-seitz-ace-oscoap-profile-01 (work in progress),
               October 2016.
+
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 31]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
    [I-D.selander-ace-cose-ecdhe]
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
@@ -1730,16 +1775,24 @@ B.1.  Secure Access to Sensor
    the request, CoAP option Uri-Path is encrypted and integrity
    protected, and the CoAP header fields Code and Version are integrity
    protected (see Section 5).  In the response, the CoAP Payload is
+   encrypted and integrity protected, and the CoAP header fields Code
+   and Version are integrity protected.
 
 
 
-Selander, et al.        Expires September 8, 2017              [Page 31]
+
+
+
+
+
+
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 32]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
-
-   encrypted and integrity protected, and the CoAP header fields Code
-   and Version are integrity protected.
 
       Client  Proxy  Server
          |      |      |
@@ -1784,19 +1837,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    (cid:5fdc), indicating which security context was used to protect the
    message and a Sequence Number (seq:42).
 
-
-
-
-
-
-Selander, et al.        Expires September 8, 2017              [Page 32]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    The option Uri-Path (alarm_status) and payload ("OFF") are formatted
    as indicated in Section 6, and encrypted in the COSE Cipher Text
    (indicated with { ... }).
+
+
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 33]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
    The server verifies that the Sequence Number has not been received
    before (see Section 7).  The client verifies that the Sequence Number
@@ -1842,18 +1894,18 @@ B.2.  Secure Subscribe to Sensor
       | 2.05 |      |           Token: 0x83
       |      |      |         Max-Age: 0
       |      |      |         Observe: 1
-
-
-
-Selander, et al.        Expires September 8, 2017              [Page 33]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
       |      |      | Object-Security: -
       |      |      |         Payload: [seq:32c2, {Observe:1,
       |      |      |                   Content-Format:0, "220"}, <Tag>]
      ...    ...    ...
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 34]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
+
       |      |      |
       |      |<-----+            Code: 2.05 (Content)
       |      | 2.05 |           Token: 0xbe
@@ -1895,17 +1947,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    has not been received before and that the response message is
    generated as a response to the subscribe request.
 
-
-
-
-
-
-
-Selander, et al.        Expires September 8, 2017              [Page 34]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
 Appendix C.  Object Security of Content (OSCON)
 
    TODO: This section needs to be updated.
@@ -1913,6 +1954,14 @@ Appendix C.  Object Security of Content (OSCON)
    OSCOAP protects message exchanges end-to-end between a certain client
    and a certain server, targeting the security requirements for forward
    proxy of [I-D.hartke-core-e2e-security-reqs].  In contrast, many use
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 35]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
+
    cases require one and the same message to be protected for, and
    verified by, multiple endpoints, see caching proxy section of
    [I-D.hartke-core-e2e-security-reqs].  Those security requirements can
@@ -1953,15 +2002,6 @@ Appendix C.  Object Security of Content (OSCON)
    The scenarios in Sections 3.3 - 3.5 of
    [I-D.hartke-core-e2e-security-reqs] assume multiple recipients for a
    particular content.  In this case the use of symmetric keys does not
-
-
-
-
-Selander, et al.        Expires September 8, 2017              [Page 35]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    provide data origin authentication.  Therefore the COSE object should
    in general be protected with a digital signature.
 
@@ -1970,6 +2010,14 @@ C.1.  Overhead OSCON
    In general there are four different kinds of modes that need to be
    supported: message authentication code, digital signature,
    authenticated encryption, and symmetric encryption + digital
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 36]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
+
    signature.  The use of digital signature is necessary for
    applications with many legitimate recipients of a given message, and
    where data origin authentication is required.
@@ -2013,7 +2061,15 @@ C.2.  MAC Only
 
 
 
-Selander, et al.        Expires September 8, 2017              [Page 36]
+
+
+
+
+
+
+
+
+Selander, et al.        Expires September 8, 2017              [Page 37]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2069,7 +2125,7 @@ C.3.  Signature Only
 
 
 
-Selander, et al.        Expires September 8, 2017              [Page 37]
+Selander, et al.        Expires September 8, 2017              [Page 38]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2125,7 +2181,7 @@ C.5.  Symmetric Encryption with Asymmetric Signature (SEAS)
 
 
 
-Selander, et al.        Expires September 8, 2017              [Page 38]
+Selander, et al.        Expires September 8, 2017              [Page 39]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2181,7 +2237,7 @@ Authors' Addresses
 
 
 
-Selander, et al.        Expires September 8, 2017              [Page 39]
+Selander, et al.        Expires September 8, 2017              [Page 40]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2237,4 +2293,4 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
 
-Selander, et al.        Expires September 8, 2017              [Page 40]
+Selander, et al.        Expires September 8, 2017              [Page 41]
