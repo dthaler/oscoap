@@ -578,7 +578,7 @@ Verify request with   |                       |
   <li>AEAD Algorithm (Alg)  <ul><li>Default is AES-CCM-64-64-128 (value 12)</li></ul></li>
   <li>Master Salt  <ul><li>Default is the empty string</li></ul></li>
   <li>Key Derivation Function (KDF)  <ul><li>Default is HKDF SHA-256</li></ul></li>
-  <li>Replay Window Type and Size  <ul><li>Default is DTLS-type replay window with size 64</li></ul></li>
+  <li>Replay Window Type and Size  <ul><li>Default is DTLS-type replay protection with a window size of 32</li></ul></li>
 </ul>
 <p id="rfc.section.3.2.p.5">How the input parameters are pre-established, is application specific. The EDHOC protocol <a href="#I-D.selander-ace-cose-ecdhe">[I-D.selander-ace-cose-ecdhe]</a> enables the establishment of input parameters with the property of forward secrecy and negotiation of KDF and AEAD, it thus provides all necessary pre-requisite steps for using OSCOAP as defined here.</p>
 <h1 id="rfc.section.3.2.1"><a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#derivation-of-sender-keyiv-recipient-keyiv" id="derivation-of-sender-keyiv-recipient-keyiv">Derivation of Sender Key/IV, Recipient Key/IV</a></h1>
@@ -614,7 +614,7 @@ Verify request with   |                       |
 </ul>
 <p id="rfc.section.3.2.1.p.5">For example, if the algorithm AES-CCM-64-64-128 (see Section 10.2 in <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>) is used, L is 16 bytes for keys and 7 bytes for IVs.</p>
 <h1 id="rfc.section.3.2.2"><a href="#rfc.section.3.2.2">3.2.2.</a> <a href="#initial-sequence-numbers-and-replay-window" id="initial-sequence-numbers-and-replay-window">Initial Sequence Numbers and Replay Window</a></h1>
-<p id="rfc.section.3.2.2.p.1">The Sequence Number is initialized to 0. The supported types of replay protection and replay window length is application specific and depends on the lower layers. It is mandatory to support a DTLS-type replay window with size 64. This default Replay Window is initiated as described in Section 4.1.2.6 of <a href="#RFC6347">[RFC6347]</a>.</p>
+<p id="rfc.section.3.2.2.p.1">The Sequence Number is initialized to 0. The supported types of replay protection and replay window length is application specific and depends on the lower layers. Default is DTLS-type replay protection with a window size of 32 initiated as described in Section 4.1.2.6 of <a href="#RFC6347">[RFC6347]</a>.</p>
 <h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> <a href="#context-requirements" id="context-requirements">Requirements on the Security Context Parameters</a></h1>
 <p id="rfc.section.3.3.p.1">As collisions may lead to the loss of both confidentiality and integrity, Sender ID SHALL be unique in the set of all security contexts using the same Master Secret. Normally (e.g. when using EDHOC) Sender IDs can be very short. Note that Sender IDs of different lengths can be used with the same Master Secret. E.g. the SID with value 0x00 is different from the SID with the value 0x0000. If Sender ID uniqueness cannot be guaranteed, random Sender IDs MUST be used. Random Sender IDs MUST be long enough so that the probability of collisions is negligible.</p>
 <p id="rfc.section.3.3.p.2">To enable retrieval of the right Recipient Context, the Recipient ID SHOULD be unique in the sets of all Recipient Contexts used by an endpoint.</p>
