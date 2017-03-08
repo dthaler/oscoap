@@ -303,16 +303,17 @@ address {
 <link href="#rfc.section.8.2" rel="Chapter" title="8.2 Verifying the Request"/>
 <link href="#rfc.section.8.3" rel="Chapter" title="8.3 Protecting the Response"/>
 <link href="#rfc.section.8.4" rel="Chapter" title="8.4 Verifying the Response"/>
-<link href="#rfc.section.9" rel="Chapter" title="9 Security Considerations"/>
-<link href="#rfc.section.10" rel="Chapter" title="10 Privacy Considerations"/>
-<link href="#rfc.section.11" rel="Chapter" title="11 IANA Considerations"/>
-<link href="#rfc.section.11.1" rel="Chapter" title="11.1 CoAP Option Numbers Registry"/>
-<link href="#rfc.section.11.2" rel="Chapter" title="11.2 Media Type Registrations"/>
-<link href="#rfc.section.11.3" rel="Chapter" title="11.3 CoAP Content Format Registration"/>
-<link href="#rfc.section.12" rel="Chapter" title="12 Acknowledgments"/>
-<link href="#rfc.references" rel="Chapter" title="13 References"/>
-<link href="#rfc.references.1" rel="Chapter" title="13.1 Normative References"/>
-<link href="#rfc.references.2" rel="Chapter" title="13.2 Informative References"/>
+<link href="#rfc.section.9" rel="Chapter" title="9 Web Linking"/>
+<link href="#rfc.section.10" rel="Chapter" title="10 Security Considerations"/>
+<link href="#rfc.section.11" rel="Chapter" title="11 Privacy Considerations"/>
+<link href="#rfc.section.12" rel="Chapter" title="12 IANA Considerations"/>
+<link href="#rfc.section.12.1" rel="Chapter" title="12.1 CoAP Option Numbers Registry"/>
+<link href="#rfc.section.12.2" rel="Chapter" title="12.2 Media Type Registrations"/>
+<link href="#rfc.section.12.3" rel="Chapter" title="12.3 CoAP Content Format Registration"/>
+<link href="#rfc.section.13" rel="Chapter" title="13 Acknowledgments"/>
+<link href="#rfc.references" rel="Chapter" title="14 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="14.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="14.2 Informative References"/>
 <link href="#rfc.appendix.A" rel="Chapter" title="A Test Vectors"/>
 <link href="#rfc.appendix.B" rel="Chapter" title="B Examples"/>
 <link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Secure Access to Sensor"/>
@@ -331,7 +332,7 @@ address {
 
   <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-object-security-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-07" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-08" />
   <meta name="dct.abstract" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
   <meta name="description" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
 
@@ -355,7 +356,7 @@ address {
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 8, 2017</td>
+  <td class="left">Expires: September 9, 2017</td>
   <td class="right">Ericsson AB</td>
 </tr>
 <tr>
@@ -368,7 +369,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">March 07, 2017</td>
+  <td class="right">March 08, 2017</td>
 </tr>
 
     	
@@ -388,7 +389,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 8, 2017.</p>
+<p>This Internet-Draft will expire on September 9, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -426,16 +427,17 @@ address {
 <li>8.2.   <a href="#rfc.section.8.2">Verifying the Request</a></li>
 <li>8.3.   <a href="#rfc.section.8.3">Protecting the Response</a></li>
 <li>8.4.   <a href="#rfc.section.8.4">Verifying the Response</a></li>
-</ul><li>9.   <a href="#rfc.section.9">Security Considerations</a></li>
-<li>10.   <a href="#rfc.section.10">Privacy Considerations</a></li>
-<li>11.   <a href="#rfc.section.11">IANA Considerations</a></li>
-<ul><li>11.1.   <a href="#rfc.section.11.1">CoAP Option Numbers Registry</a></li>
-<li>11.2.   <a href="#rfc.section.11.2">Media Type Registrations</a></li>
-<li>11.3.   <a href="#rfc.section.11.3">CoAP Content Format Registration</a></li>
-</ul><li>12.   <a href="#rfc.section.12">Acknowledgments</a></li>
-<li>13.   <a href="#rfc.references">References</a></li>
-<ul><li>13.1.   <a href="#rfc.references.1">Normative References</a></li>
-<li>13.2.   <a href="#rfc.references.2">Informative References</a></li>
+</ul><li>9.   <a href="#rfc.section.9">Web Linking</a></li>
+<li>10.   <a href="#rfc.section.10">Security Considerations</a></li>
+<li>11.   <a href="#rfc.section.11">Privacy Considerations</a></li>
+<li>12.   <a href="#rfc.section.12">IANA Considerations</a></li>
+<ul><li>12.1.   <a href="#rfc.section.12.1">CoAP Option Numbers Registry</a></li>
+<li>12.2.   <a href="#rfc.section.12.2">Media Type Registrations</a></li>
+<li>12.3.   <a href="#rfc.section.12.3">CoAP Content Format Registration</a></li>
+</ul><li>13.   <a href="#rfc.section.13">Acknowledgments</a></li>
+<li>14.   <a href="#rfc.references">References</a></li>
+<ul><li>14.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>14.2.   <a href="#rfc.references.2">Informative References</a></li>
 </ul><li>Appendix A.   <a href="#rfc.appendix.A">Test Vectors</a></li>
 <li>Appendix B.   <a href="#rfc.appendix.B">Examples</a></li>
 <ul><li>B.1.   <a href="#rfc.appendix.B.1">Secure Access to Sensor</a></li>
@@ -863,23 +865,26 @@ external_aad = [
   <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the client MUST stop processing the response and SHOULD send an 4.01 error message.</li><li>If decryption succeeds and Observe is used, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 7</a>.</li></ul></li>
   <li>Add decrypted options or payload to the unprotected response overwriting any outer E options (see <a href="#coap-headers-and-options">Section 5</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the sequence number.</li></ul></li>
 </ol>
-<h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#sec-considerations" id="sec-considerations">Security Considerations</a></h1>
-<p id="rfc.section.9.p.1">In scenarios with intermediary nodes such as proxies or brokers, transport layer security such as DTLS only protects data hop-by-hop. As a consequence the intermediary nodes can read and modify information. The trust model where all intermediate nodes are considered trustworthy is problematic, not only from a privacy perspective, but also from a security perspective, as the intermediaries are free to delete resources on sensors and falsify commands to actuators (such as &#8220;unlock door&#8221;, &#8220;start fire alarm&#8221;, &#8220;raise bridge&#8221;). Even in the rare cases, where all the owners of the intermediary nodes are fully trusted, attacks and data breaches make such an architecture brittle.</p>
-<p id="rfc.section.9.p.2">DTLS protects hop-by-hop the entire CoAP message, including header, options, and payload. OSCOAP protects end-to-end the payload, and all information in the options and header, that is not required for forwarding (see <a href="#coap-headers-and-options">Section 5</a>). DTLS and OSCOAP can be combined, thereby enabling end-to-end security of CoAP payload, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node.</p>
-<p id="rfc.section.9.p.3">The CoAP message layer, however, cannot be protected end-to-end through intermediary devices since the parameters Type and Message ID, as well as Token and Token Length may be changed by a proxy. Moreover, messages that are not possible to verify should for security reasons not always be acknowledged but in some cases be silently dropped. This would not comply with CoAP message layer, but does not have an impact on the application layer security solution, since message layer is excluded from that.</p>
-<p id="rfc.section.9.p.4">The use of COSE to protect CoAP messages as specified in this document requires an established security context. The method to establish the security context described in <a href="#context-derivation">Section 3.2</a> is based on a common shared secret material in client and server, which may be obtained e.g. by using EDHOC <a href="#I-D.selander-ace-cose-ecdhe">[I-D.selander-ace-cose-ecdhe]</a> or the ACE framework <a href="#I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</a>. An OSCOAP profile of ACE is described in <a href="#I-D.seitz-ace-oscoap-profile">[I-D.seitz-ace-oscoap-profile]</a>.</p>
-<p id="rfc.section.9.p.5">The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is selected for broad applicability in terms of message size (2^64 blocks) and maximum no. messages (2^56-1). Compatibility with CCM* is achieved by using the algorithm AES-CCM-16-64-128 <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>.</p>
-<p id="rfc.section.9.p.6">Most AEAD algorithms require a unique nonce for each message, for which the sequence numbers in the COSE message field &#8220;Partial IV&#8221; is used. If the recipient accepts any sequence number larger than the one previously received, then the problem of sequence number synchronization is avoided. With reliable transport it may be defined that only messages with sequence number which are equal to previous sequence number + 1 are accepted. The alternatives to sequence numbers have their issues: very constrained devices may not be able to support accurate time, or to generate and store large numbers of random nonces. The requirement to change key at counter wrap is a complication, but it also forces the user of this specification to think about implementing key renewal.</p>
-<p id="rfc.section.9.p.7">The encrypted block options enable the sender to split large messages into protected blocks such that the receiving node can verify blocks before having received the complete message. In order to protect from attacks replacing blocks from a different message with the same block number between same endpoints and same resource at roughly the same time, the AEAD Tag from the message containing one block is included in the external_aad of the message containing the next block.</p>
-<p id="rfc.section.9.p.8">The unencrypted block options allow for arbitrary proxy fragmentation operations that cannot be verified by the endpoints, but can by policy be restricted in size since the encrypted options allow for secure fragmentation of very large messages. A maximum message size (above which the sending endpoint fragments the message and the receiving endpoint discards the message, if complying to the policy) may be obtained as part of normal resource discovery.</p>
-<p id="rfc.section.9.p.9">Applications need to use a padding scheme if the content of a message can be determined solely from the length of the payload.  As an example, the strings &#8220;YES&#8221; and &#8220;NO&#8221; even if encrypted can be distinguished from each other as there is no padding supplied by the current set of encryption algorithms.  Some information can be determined even from looking at boundary conditions.  An example of this would be returning an integer between 0 and 100 where lengths of 1, 2 and 3 will provide information about where in the range things are. Three different methods to deal with this are: 1) ensure that all messages are the same length.  For example using 0 and 1 instead of &#8216;yes&#8217; and &#8216;no&#8217;.  2) Use a character which is not part of the responses to pad to a fixed length.  For example, pad with a space to three characters.  3) Use the PKCS #7 style padding scheme where m bytes are appended each having the value of m.  For example, appending a 0 to &#8220;YES&#8221; and two 1&#8217;s to &#8220;NO&#8221;.  This style of padding means that all values need to be padded.</p>
-<h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#privacy-considerations" id="privacy-considerations">Privacy Considerations</a></h1>
-<p id="rfc.section.10.p.1">Privacy threats executed through intermediate nodes are considerably reduced by means of OSCOAP. End-to-end integrity protection and encryption of CoAP payload and all options that are not used for forwarding, provide mitigation against attacks on sensor and actuator communication, which may have a direct impact on the personal sphere.</p>
-<p id="rfc.section.10.p.2">CoAP headers sent in plaintext allow for example matching of CON and ACK (CoAP Message Identifier), matching of request and responses (Token) and traffic analysis.</p>
-<h1 id="rfc.section.11"><a href="#rfc.section.11">11.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
-<p id="rfc.section.11.p.1">Note to RFC Editor: Please replace all occurrences of &#8220;[[this document]]&#8221; with the RFC number of this specification.</p>
-<h1 id="rfc.section.11.1"><a href="#rfc.section.11.1">11.1.</a> <a href="#coap-option-numbers-registry" id="coap-option-numbers-registry">CoAP Option Numbers Registry</a></h1>
-<p id="rfc.section.11.1.p.1">The Object-Security option is added to the CoAP Option Numbers registry:</p>
+<h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#web-linking" id="web-linking">Web Linking</a></h1>
+<p id="rfc.section.9.p.1">The use of OSCOAP MAY be indicated by a target attribute &#8220;sec&#8221; in a web link <a href="#RFC5988">[RFC5988]</a> to a CoAP resource. This attribute is a hint indicating that the destination of that link is to be accessed using OSCOAP. Note that this is simply a hint, it does not include any security context material or any other information required to run OSCOAP.</p>
+<p id="rfc.section.9.p.2">A value MUST NOT be given for the &#8220;sec&#8221; attribute; any present value MUST be ignored by parsers. The &#8220;sec&#8221; attribute MUST NOT appear more than once in a given link-value; occurrences after the first MUST be ignored by parsers.</p>
+<h1 id="rfc.section.10"><a href="#rfc.section.10">10.</a> <a href="#sec-considerations" id="sec-considerations">Security Considerations</a></h1>
+<p id="rfc.section.10.p.1">In scenarios with intermediary nodes such as proxies or brokers, transport layer security such as DTLS only protects data hop-by-hop. As a consequence the intermediary nodes can read and modify information. The trust model where all intermediate nodes are considered trustworthy is problematic, not only from a privacy perspective, but also from a security perspective, as the intermediaries are free to delete resources on sensors and falsify commands to actuators (such as &#8220;unlock door&#8221;, &#8220;start fire alarm&#8221;, &#8220;raise bridge&#8221;). Even in the rare cases, where all the owners of the intermediary nodes are fully trusted, attacks and data breaches make such an architecture brittle.</p>
+<p id="rfc.section.10.p.2">DTLS protects hop-by-hop the entire CoAP message, including header, options, and payload. OSCOAP protects end-to-end the payload, and all information in the options and header, that is not required for forwarding (see <a href="#coap-headers-and-options">Section 5</a>). DTLS and OSCOAP can be combined, thereby enabling end-to-end security of CoAP payload, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node.</p>
+<p id="rfc.section.10.p.3">The CoAP message layer, however, cannot be protected end-to-end through intermediary devices since the parameters Type and Message ID, as well as Token and Token Length may be changed by a proxy. Moreover, messages that are not possible to verify should for security reasons not always be acknowledged but in some cases be silently dropped. This would not comply with CoAP message layer, but does not have an impact on the application layer security solution, since message layer is excluded from that.</p>
+<p id="rfc.section.10.p.4">The use of COSE to protect CoAP messages as specified in this document requires an established security context. The method to establish the security context described in <a href="#context-derivation">Section 3.2</a> is based on a common shared secret material in client and server, which may be obtained e.g. by using EDHOC <a href="#I-D.selander-ace-cose-ecdhe">[I-D.selander-ace-cose-ecdhe]</a> or the ACE framework <a href="#I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</a>. An OSCOAP profile of ACE is described in <a href="#I-D.seitz-ace-oscoap-profile">[I-D.seitz-ace-oscoap-profile]</a>.</p>
+<p id="rfc.section.10.p.5">The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is selected for broad applicability in terms of message size (2^64 blocks) and maximum no. messages (2^56-1). Compatibility with CCM* is achieved by using the algorithm AES-CCM-16-64-128 <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>.</p>
+<p id="rfc.section.10.p.6">Most AEAD algorithms require a unique nonce for each message, for which the sequence numbers in the COSE message field &#8220;Partial IV&#8221; is used. If the recipient accepts any sequence number larger than the one previously received, then the problem of sequence number synchronization is avoided. With reliable transport it may be defined that only messages with sequence number which are equal to previous sequence number + 1 are accepted. The alternatives to sequence numbers have their issues: very constrained devices may not be able to support accurate time, or to generate and store large numbers of random nonces. The requirement to change key at counter wrap is a complication, but it also forces the user of this specification to think about implementing key renewal.</p>
+<p id="rfc.section.10.p.7">The encrypted block options enable the sender to split large messages into protected blocks such that the receiving node can verify blocks before having received the complete message. In order to protect from attacks replacing blocks from a different message with the same block number between same endpoints and same resource at roughly the same time, the AEAD Tag from the message containing one block is included in the external_aad of the message containing the next block.</p>
+<p id="rfc.section.10.p.8">The unencrypted block options allow for arbitrary proxy fragmentation operations that cannot be verified by the endpoints, but can by policy be restricted in size since the encrypted options allow for secure fragmentation of very large messages. A maximum message size (above which the sending endpoint fragments the message and the receiving endpoint discards the message, if complying to the policy) may be obtained as part of normal resource discovery.</p>
+<p id="rfc.section.10.p.9">Applications need to use a padding scheme if the content of a message can be determined solely from the length of the payload.  As an example, the strings &#8220;YES&#8221; and &#8220;NO&#8221; even if encrypted can be distinguished from each other as there is no padding supplied by the current set of encryption algorithms.  Some information can be determined even from looking at boundary conditions.  An example of this would be returning an integer between 0 and 100 where lengths of 1, 2 and 3 will provide information about where in the range things are. Three different methods to deal with this are: 1) ensure that all messages are the same length.  For example using 0 and 1 instead of &#8216;yes&#8217; and &#8216;no&#8217;.  2) Use a character which is not part of the responses to pad to a fixed length.  For example, pad with a space to three characters.  3) Use the PKCS #7 style padding scheme where m bytes are appended each having the value of m.  For example, appending a 0 to &#8220;YES&#8221; and two 1&#8217;s to &#8220;NO&#8221;.  This style of padding means that all values need to be padded.</p>
+<h1 id="rfc.section.11"><a href="#rfc.section.11">11.</a> <a href="#privacy-considerations" id="privacy-considerations">Privacy Considerations</a></h1>
+<p id="rfc.section.11.p.1">Privacy threats executed through intermediate nodes are considerably reduced by means of OSCOAP. End-to-end integrity protection and encryption of CoAP payload and all options that are not used for forwarding, provide mitigation against attacks on sensor and actuator communication, which may have a direct impact on the personal sphere.</p>
+<p id="rfc.section.11.p.2">CoAP headers sent in plaintext allow for example matching of CON and ACK (CoAP Message Identifier), matching of request and responses (Token) and traffic analysis.</p>
+<h1 id="rfc.section.12"><a href="#rfc.section.12">12.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
+<p id="rfc.section.12.p.1">Note to RFC Editor: Please replace all occurrences of &#8220;[[this document]]&#8221; with the RFC number of this specification.</p>
+<h1 id="rfc.section.12.1"><a href="#rfc.section.12.1">12.1.</a> <a href="#coap-option-numbers-registry" id="coap-option-numbers-registry">CoAP Option Numbers Registry</a></h1>
+<p id="rfc.section.12.1.p.1">The Object-Security option is added to the CoAP Option Numbers registry:</p>
 <pre>
 +--------+-----------------+-------------------+
 | Number | Name            | Reference         |
@@ -887,8 +892,8 @@ external_aad = [
 |  TBD   | Object-Security | [[this document]] |
 +--------+-----------------+-------------------+
 </pre>
-<h1 id="rfc.section.11.2"><a href="#rfc.section.11.2">11.2.</a> <a href="#media-type-registrations" id="media-type-registrations">Media Type Registrations</a></h1>
-<p id="rfc.section.11.2.p.1">The &#8220;application/oscon&#8221; media type is added to the Media Types registry:</p>
+<h1 id="rfc.section.12.2"><a href="#rfc.section.12.2">12.2.</a> <a href="#media-type-registrations" id="media-type-registrations">Media Type Registrations</a></h1>
+<p id="rfc.section.12.2.p.1">The &#8220;application/oscon&#8221; media type is added to the Media Types registry:</p>
 <pre>
     Type name: application
 
@@ -927,8 +932,8 @@ external_aad = [
 
     Author: G&#246;ran Selander, goran.selander@ericsson.com
 </pre>
-<h1 id="rfc.section.11.3"><a href="#rfc.section.11.3">11.3.</a> <a href="#coap-content-format-registration" id="coap-content-format-registration">CoAP Content Format Registration</a></h1>
-<p id="rfc.section.11.3.p.1">The &#8220;application/oscon&#8221; content format is added to the CoAP Content Format registry:</p>
+<h1 id="rfc.section.12.3"><a href="#rfc.section.12.3">12.3.</a> <a href="#coap-content-format-registration" id="coap-content-format-registration">CoAP Content Format Registration</a></h1>
+<p id="rfc.section.12.3.p.1">The &#8220;application/oscon&#8221; content format is added to the CoAP Content Format registry:</p>
 <pre>
 +-------------------+----------+----+-------------------+
 | Media type        | Encoding | ID | Reference         |
@@ -936,11 +941,11 @@ external_aad = [
 | application/oscon | -        | 70 | [[this document]] |
 +-------------------+----------+----+-------------------+
 </pre>
-<h1 id="rfc.section.12"><a href="#rfc.section.12">12.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
-<p id="rfc.section.12.p.1">The following individuals provided input to this document: Christian Ams&#252;ss, Carsten Bormann, Joakim Brorsson, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Marco Tiloca, and Malisa Vucinic.</p>
-<p id="rfc.section.12.p.2">Ludwig Seitz and Goeran Selander worked on this document as part of the CelticPlus project CyberWI, with funding from Vinnova.</p>
-<h1 id="rfc.references"><a href="#rfc.references">13.</a> References</h1>
-<h1 id="rfc.references.1"><a href="#rfc.references.1">13.1.</a> Normative References</h1>
+<h1 id="rfc.section.13"><a href="#rfc.section.13">13.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a></h1>
+<p id="rfc.section.13.p.1">The following individuals provided input to this document: Christian Ams&#252;ss, Carsten Bormann, Joakim Brorsson, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Marco Tiloca, and Malisa Vucinic.</p>
+<p id="rfc.section.13.p.2">Ludwig Seitz and Goeran Selander worked on this document as part of the CelticPlus project CyberWI, with funding from Vinnova.</p>
+<h1 id="rfc.references"><a href="#rfc.references">14.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">14.1.</a> Normative References</h1>
 <table>
   <tbody>
     <tr>
@@ -960,6 +965,12 @@ external_aad = [
         <b id="RFC5869">[RFC5869]</b>
       </td>
       <td class="top"><a>Krawczyk, H.</a> and <a>P. Eronen</a>, "<a href="http://tools.ietf.org/html/rfc5869">HMAC-based Extract-and-Expand Key Derivation Function (HKDF)</a>", RFC 5869, DOI 10.17487/RFC5869, May 2010.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5988">[RFC5988]</b>
+      </td>
+      <td class="top"><a>Nottingham, M.</a>, "<a href="http://tools.ietf.org/html/rfc5988">Web Linking</a>", RFC 5988, DOI 10.17487/RFC5988, October 2010.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -993,7 +1004,7 @@ external_aad = [
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.references.2"><a href="#rfc.references.2">13.2.</a> Informative References</h1>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">14.2.</a> Informative References</h1>
 <table>
   <tbody>
     <tr>
@@ -1166,7 +1177,7 @@ Client  Proxy  Server
 <p id="rfc.section.C.p.1">TODO: This section needs to be updated.</p>
 <p id="rfc.section.C.p.2">OSCOAP protects message exchanges end-to-end between a certain client and a certain server, targeting the security requirements for forward proxy of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. In contrast, many use cases require one and the same message to be protected for, and verified by, multiple endpoints, see caching proxy section of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. Those security requirements can be addressed by protecting essentially the payload/content of individual messages using the COSE format (<a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>), rather than the entire request/response message exchange. This is referred to as Object Security of Content (OSCON).</p>
 <p id="rfc.section.C.p.3">OSCON transforms an unprotected CoAP message into a protected CoAP message in the following way: the payload of the unprotected CoAP message is wrapped by a COSE object, which replaces the payload of the unprotected CoAP message. We call the result the &#8220;protected&#8221; CoAP message.</p>
-<p id="rfc.section.C.p.4">The unprotected payload shall be the plaintext/payload of the COSE object.  The &#8216;protected&#8217; field of the COSE object &#8216;Headers&#8217; shall include the context identifier, both for requests and responses.  If the unprotected CoAP message includes a Content-Format option, then the COSE object shall include a protected &#8216;content type&#8217; field, whose value is set to the unprotected message Content-Format value. The Content-Format option of the protected CoAP message shall be replaced with &#8220;application/oscon&#8221; (<a href="#iana">Section 11</a>)</p>
+<p id="rfc.section.C.p.4">The unprotected payload shall be the plaintext/payload of the COSE object.  The &#8216;protected&#8217; field of the COSE object &#8216;Headers&#8217; shall include the context identifier, both for requests and responses.  If the unprotected CoAP message includes a Content-Format option, then the COSE object shall include a protected &#8216;content type&#8217; field, whose value is set to the unprotected message Content-Format value. The Content-Format option of the protected CoAP message shall be replaced with &#8220;application/oscon&#8221; (<a href="#iana">Section 12</a>)</p>
 <p id="rfc.section.C.p.5">The COSE object shall be protected (encrypted) and verified (decrypted) as described in (<a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>).</p>
 <p id="rfc.section.C.p.6">Most AEAD algorithms require a unique nonce for each message. Sequence numbers for partial IV as specified for OSCOAP may be used for replay protection as described in <a href="#sequence-numbers">Section 7</a>. The use of time stamps in the COSE header parameter &#8216;operation time&#8217; <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a> for freshness may be used.</p>
 <p id="rfc.section.C.p.7">OSCON shall not be used in cases where CoAP header fields (such as Code or Version) or CoAP options need to be integrity protected or encrypted. OSCON shall not be used in cases which require a secure binding between request and response.</p>
