@@ -731,6 +731,29 @@ U=Unprotected, *=Special
 <p id="rfc.section.5.3.3.2.p.2">The sending endpoint SHALL first decompose the Proxy-Uri value of the unprotected CoAP message into the Proxy-Scheme, Uri-Host, Uri-Port, Uri-Path and Uri-Query options (if present) according to section 6.4 of <a href="#RFC7252">[RFC7252]</a>.</p>
 <p id="rfc.section.5.3.3.2.p.3">Uri-Path and Uri-Query are class E options and MUST be protected and processed as if obtained from the unprotected CoAP message, see <a href="#class-e">Section 5.3.1</a>.</p>
 <p id="rfc.section.5.3.3.2.p.4">The value of the Proxy-Uri option of the protected CoAP message MUST be replaced with Proxy-Scheme, Uri-Host and Uri-Port options (if present) composed according to section 6.5 of <a href="#RFC7252">[RFC7252]</a> and MUST be processed as a class U option, see <a href="#class-u">Section 5.3.3</a>.</p>
+<p id="rfc.section.5.3.3.2.p.5">An example of how Proxy-Uri is processed is given below.</p>
+<p id="rfc.section.5.3.3.2.p.6">An unprotected CoAP message contains:</p>
+<p/>
+
+<ul>
+  <li>Proxy-Uri = &#8220;coap://example.com/resource?q=1&#8221;</li>
+</ul>
+<p id="rfc.section.5.3.3.2.p.8">During OSCOAP processing, Proxy-Uri is split into:</p>
+<p/>
+
+<ul>
+  <li>Proxy-Scheme = &#8220;coap&#8221;</li>
+  <li>Uri-Host = &#8220;example.com&#8221;</li>
+  <li>Uri-Port = &#8220;5863&#8221;</li>
+  <li>Uri-Path = &#8220;resource&#8221;</li>
+  <li>Uri-Query = &#8220;q=1&#8221;</li>
+</ul>
+<p id="rfc.section.5.3.3.2.p.10">Uri-Path and Uri-Query follow the processing defined in <a href="#class-e">Section 5.3.1</a>.  Proxy-Uri is added to the OSCOAP protected message with value:</p>
+<p/>
+
+<ul>
+  <li>Proxy-Uri = &#8220;coap://example.com&#8221;</li>
+</ul>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#cose-object" id="cose-object">The COSE Object</a></h1>
 <p id="rfc.section.6.p.1">This section defines how to use COSE <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a> to wrap and protect data in the unprotected CoAP message. OSCOAP uses the untagged COSE_Encrypt0 structure with an Authenticated Encryption with Additional Data (AEAD) algorithm. The key lengths, IV lengths, and maximum sequence number are algorithm dependent.</p>
 <p id="rfc.section.6.p.2">The AEAD algorithm AES-CCM-64-64-128 defined in Section 10.2 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a> is mandatory to implement. For AES-CCM-64-64-128 the length of Sender Key and Recipient Key is 128 bits, the length of nonce, Sender IV, and Recipient IV is 7 bytes, and the maximum Sequence Number is 2^55 - 1.</p>
@@ -1319,14 +1342,13 @@ Client  Proxy  Server
 	</span>
 	<span class="org vcardline">Ericsson AB</span>
 	<span class="adr">
-	  <span class="vcardline">F&#228;r&#246;gatan 6</span>
-
+	  
 	  <span class="vcardline">
 		<span class="locality"></span> 
 		<span class="region"></span>
-		<span class="code">SE-164 80 Stockholm</span>
+		<span class="code"></span>
 	  </span>
-	  <span class="country-name vcardline">SWEDEN</span>
+	  <span class="country-name vcardline"></span>
 	</span>
 	<span class="vcardline">EMail: <a href="mailto:goran.selander@ericsson.com">goran.selander@ericsson.com</a></span>
 
@@ -1341,14 +1363,13 @@ Client  Proxy  Server
 	</span>
 	<span class="org vcardline">Ericsson AB</span>
 	<span class="adr">
-	  <span class="vcardline">F&#228;r&#246;gatan 6</span>
-
+	  
 	  <span class="vcardline">
 		<span class="locality"></span> 
 		<span class="region"></span>
-		<span class="code">SE-164 80 Stockholm</span>
+		<span class="code"></span>
 	  </span>
-	  <span class="country-name vcardline">SWEDEN</span>
+	  <span class="country-name vcardline"></span>
 	</span>
 	<span class="vcardline">EMail: <a href="mailto:john.mattsson@ericsson.com">john.mattsson@ericsson.com</a></span>
 
@@ -1363,14 +1384,13 @@ Client  Proxy  Server
 	</span>
 	<span class="org vcardline">Ericsson AB</span>
 	<span class="adr">
-	  <span class="vcardline">F&#228;r&#246;gatan 6</span>
-
+	  
 	  <span class="vcardline">
 		<span class="locality"></span> 
 		<span class="region"></span>
-		<span class="code">SE-164 80 Stockholm</span>
+		<span class="code"></span>
 	  </span>
-	  <span class="country-name vcardline">SWEDEN</span>
+	  <span class="country-name vcardline"></span>
 	</span>
 	<span class="vcardline">EMail: <a href="mailto:francesca.palombini@ericsson.com">francesca.palombini@ericsson.com</a></span>
 
@@ -1385,14 +1405,13 @@ Client  Proxy  Server
 	</span>
 	<span class="org vcardline">SICS Swedish ICT</span>
 	<span class="adr">
-	  <span class="vcardline">Scheelevagen 17</span>
-
+	  
 	  <span class="vcardline">
 		<span class="locality"></span> 
 		<span class="region"></span>
-		<span class="code">SE-223 70 Lund</span>
+		<span class="code"></span>
 	  </span>
-	  <span class="country-name vcardline">SWEDEN</span>
+	  <span class="country-name vcardline"></span>
 	</span>
 	<span class="vcardline">EMail: <a href="mailto:ludwig@sics.se">ludwig@sics.se</a></span>
 
