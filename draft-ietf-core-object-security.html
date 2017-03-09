@@ -821,7 +821,7 @@ external_aad = [
 <h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#sequence-number-and-replay-window-state" id="sequence-number-and-replay-window-state">Sequence Number and Replay Window State</a></h1>
 <h1 id="rfc.section.6.3.1"><a href="#rfc.section.6.3.1">6.3.1.</a> <a href="#the-basic-case" id="the-basic-case">The Basic Case</a></h1>
 <p id="rfc.section.6.3.1.p.1">To prevent from reusing of the Nonce/Sequence Number with the same key, or from accepting replayed messages, a node needs to handle the situation of suddenly losing sequence number and replay window state in RAM, e.g. as a result of a reboot.</p>
-<p id="rfc.section.6.3.1.p.2">After boot, a node MAY reject to use existing security contexts from before it booted and MAY establish a new security context with each party it communicates, e.g.  using EDHOC <a href="#I-D.selander-ace-cose-ecdhe">[I-D.selander-ace-cose-ecdhe]</a>. However, establishing a fresh security context may have a non-negligable cost in terms of e.g. power consumption.</p>
+<p id="rfc.section.6.3.1.p.2">After boot, a node MAY reject to use existing security contexts from before it booted and MAY establish a new security context with each party it communicates, e.g. using EDHOC <a href="#I-D.selander-ace-cose-ecdhe">[I-D.selander-ace-cose-ecdhe]</a>. However, establishing a fresh security context may have a non-negligible cost in terms of e.g. power consumption.</p>
 <p id="rfc.section.6.3.1.p.3">In order to reuse a stored security context the following procedure MUST be performed:</p>
 <p/>
 

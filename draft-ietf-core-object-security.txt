@@ -1105,9 +1105,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    After boot, a node MAY reject to use existing security contexts from
    before it booted and MAY establish a new security context with each
-   party it communicates, e.g.  using EDHOC
+   party it communicates, e.g. using EDHOC
    [I-D.selander-ace-cose-ecdhe].  However, establishing a fresh
-   security context may have a non-negligable cost in terms of e.g.
+   security context may have a non-negligible cost in terms of e.g.
    power consumption.
 
    In order to reuse a stored security context the following procedure
