@@ -826,7 +826,7 @@ external_aad = [
 <p/>
 
 <ul>
-  <li>Before sending a message, the client MUST have stored in persistent memory a sequence number associated to the stored security context higher than any sequence number which has been or are being sent using this security context. After boot, the client MUST NOT use any lower sequence number in a request than what was persitently stored with that security context.  <ul><li>Storing to persistant memory can be costly. Instead of storing a sequence number for each request, the client MAY store Seq + K to persistent memory every K requests, where Seq is the current sequence number and K &gt; 1. This is a trade-off between the number of storage operations and efficient use of sequence numbers.</li></ul></li>
+  <li>Before sending a message, the client MUST have stored in persistent memory a sequence number associated to the stored security context higher than any sequence number which has been or are being sent using this security context. After boot, the client MUST NOT use any lower sequence number in a request than what was persistently stored with that security context.  <ul><li>Storing to persistent memory can be costly. Instead of storing a sequence number for each request, the client MAY store Seq + K to persistent memory every K requests, where Seq is the current sequence number and K &gt; 1. This is a trade-off between the number of storage operations and efficient use of sequence numbers.</li></ul></li>
   <li>After boot, before accepting a message from a stored security context, the server MUST synchronize the replay window so that no old messages are being accepted. The server MAY use the Repeat option <a href="#I-D.mattsson-core-coap-actuators">[I-D.mattsson-core-coap-actuators]</a> for synchronizing the replay window: For each stored security context, the first time the server receives an OSCOAP request, it generates a pseudo-random nonce and responds with the Repeat option set to the nonce as described in <a href="#I-D.mattsson-core-coap-actuators">[I-D.mattsson-core-coap-actuators]</a>. If the server receives a repeated OSCOAP request containing the Repeat option and the same nonce, and if the server can verify the request then the sequence number obtained in the repeated message is set as the lower limit of the replay window.</li>
 </ul>
 <h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#freshness" id="freshness">Freshness</a></h1>
@@ -841,7 +841,7 @@ external_aad = [
 <ol>
   <li>Retrieve the Sender Context associated with the target resource.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
-  <li>Compose the AEAD nonce by XORing the context IV (Sender IV) with with the partial IV (Sender Sequence Number in network byte order). Increment the Sender Sequence Number by one.</li>
+  <li>Compose the AEAD nonce by XORing the context IV (Sender IV) with the partial IV (Sender Sequence Number in network byte order). Increment the Sender Sequence Number by one.</li>
   <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#app-compression">Appendix A</a>.</li>
   <li>Format the protected CoAP message according to <a href="#coap-headers-and-options">Section 4</a>. The Object-Security option is added, see <a href="#option">Section 2</a>.</li>
   <li>Store the association Token - Security Context. The client SHALL be able to find the Recipient Context from the Token in the response.</li>
@@ -856,7 +856,7 @@ external_aad = [
   <li>Verify the Sequence Number in the &#8216;Partial IV&#8217; parameter, as described in <a href="#sequence-numbers">Section 6</a>.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
   <li>Compose the AEAD nonce by XORing the context IV (Recipient IV) with the padded &#8216;Partial IV&#8217; parameter, received in the COSE Object.</li>
-  <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the server MUST stop processing the request and SHOULD send an 4.01 error message.</li><li>If decryption suceeds, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 6</a>.</li></ul></li>
+  <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the server MUST stop processing the request and SHOULD send an 4.01 error message.</li><li>If decryption succeeds, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 6</a>.</li></ul></li>
   <li>Add decrypted options or payload to the unprotected request, overwriting any outer E options (see <a href="#coap-headers-and-options">Section 4</a>). The Object-Security option is removed.</li>
 </ol>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#protecting-the-response" id="protecting-the-response">Protecting the Response</a></h1>

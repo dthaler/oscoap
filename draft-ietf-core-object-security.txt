@@ -1127,9 +1127,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
       security context higher than any sequence number which has been or
       are being sent using this security context.  After boot, the
       client MUST NOT use any lower sequence number in a request than
-      what was persitently stored with that security context.
+      what was persistently stored with that security context.
 
-      *  Storing to persistant memory can be costly.  Instead of storing
+      *  Storing to persistent memory can be costly.  Instead of storing
          a sequence number for each request, the client MAY store Seq +
          K to persistent memory every K requests, where Seq is the
          current sequence number and K > 1.  This is a trade-off between
@@ -1191,8 +1191,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
        Section 5.
 
    3.  Compose the AEAD nonce by XORing the context IV (Sender IV) with
-       with the partial IV (Sender Sequence Number in network byte
-       order).  Increment the Sender Sequence Number by one.
+       the partial IV (Sender Sequence Number in network byte order).
+       Increment the Sender Sequence Number by one.
 
    4.  Encrypt the COSE object using the Sender Key. Compress the COSE
        Object as specified in Appendix A.
@@ -1237,7 +1237,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
        *  If decryption fails, the server MUST stop processing the
           request and SHOULD send an 4.01 error message.
 
-       *  If decryption suceeds, update the Recipient Replay Window, as
+       *  If decryption succeeds, update the Recipient Replay Window, as
           described in Section 6.
 
    7.  Add decrypted options or payload to the unprotected request,
