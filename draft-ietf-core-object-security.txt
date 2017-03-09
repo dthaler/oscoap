@@ -1149,8 +1149,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
       the sequence number obtained in the repeated message is set as the
       lower limit of the replay window.
 
-   #
-
 6.4.  Freshness
 
    For responses without Observe, OSCOAP provides absolute freshness.
@@ -1170,6 +1168,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    number in the AAD of the response.  The server therefore needs to
    store the request's ID (Sender ID or Recipient ID) and sequence
    number until all responses has been sent.
+
+
 
 
 
