@@ -857,14 +857,15 @@ external_aad = [
   <li>Add decrypted options or payload to the unprotected request, overwriting any outer E options (see <a href="#coap-headers-and-options">Section 4</a>). The Object-Security option is removed.</li>
 </ol>
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#protecting-the-response" id="protecting-the-response">Protecting the Response</a></h1>
-<p id="rfc.section.7.3.p.1">TODO: Update</p>
-<p id="rfc.section.7.3.p.2">Given an unprotected CoAP response, including header, options, and payload, the server SHALL perform the following steps to create a protected CoAP response, using the security context identified by the Context Identifier of the received request:</p>
+<p id="rfc.section.7.3.p.1">Given an unprotected response, the server SHALL perform the following steps to create a protected response:</p>
 <p/>
 
 <ol>
-  <li>Compute the COSE object as specified in Section <a href="#cose-object">Section 5</a> <ul><li>The AEAD nonce is created by XORing the Sender IV (context IV) and the padded Sender Sequence Number.</li></ul></li>
-  <li>Format the protected CoAP message as an ordinary CoAP message, with the following Header, Options, and Payload based on the unprotected CoAP message: <ul><li>The CoAP header is the same as the unprotected CoAP message.</li><li>The CoAP options which are of class E are removed, except any special option (labelled &#8216;*&#8217;) that is present which has its outer value (<a href="#coap-headers-and-options">Section 4</a>). The Object-Security option is added.</li><li>If the message type of the unprotected CoAP message does not allow Payload, then the value of the Object-Security option is the COSE object. If the message type of the unprotected CoAP message allows Payload, then the Object-Security option is empty and the Payload of the protected CoAP message is the COSE object.</li></ul></li>
-  <li>Increment the Sender Sequence Number by one.</li>
+  <li>Retrieve the Sender Context in the Security Context used to verify the request.</li>
+  <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
+  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the context IV (Recipient IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the context IV (Recipient IV with the first bit flipped) with the partial IV (Sequence Number in network byte order). Increment the Sequence Number by one.</li></ul></li>
+  <li>Encrypt the COSE object using the Sender Key.</li>
+  <li>Format the protected CoAP message according to <a href="#coap-headers-and-options">Section 4</a>. The Object-Security option is added, see <a href="#option">Section 2</a>.</li>
 </ol>
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#verifying-the-response" id="verifying-the-response">Verifying the Response</a></h1>
 <p id="rfc.section.7.4.p.1">A client receiving a response containing the Object-Security option SHALL perform the following steps:</p>

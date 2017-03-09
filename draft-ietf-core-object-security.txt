@@ -1246,41 +1246,41 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 7.3.  Protecting the Response
 
-   TODO: Update
+   Given an unprotected response, the server SHALL perform the following
+   steps to create a protected response:
 
-   Given an unprotected CoAP response, including header, options, and
-   payload, the server SHALL perform the following steps to create a
-   protected CoAP response, using the security context identified by the
-   Context Identifier of the received request:
+   1.  Retrieve the Sender Context in the Security Context used to
+       verify the request.
 
-   1.  Compute the COSE object as specified in Section Section 5
+   2.  Compose the Additional Authenticated Data, as described in
+       Section 5.
 
-       *  The AEAD nonce is created by XORing the Sender IV (context IV)
-          and the padded Sender Sequence Number.
+   3.  Compose the AEAD nonce
 
-   2.  Format the protected CoAP message as an ordinary CoAP message,
-       with the following Header, Options, and Payload based on the
-       unprotected CoAP message:
+       *  If Observe is not used, compose the AEAD nonce by XORing the
+          context IV (Recipient IV with the first bit flipped) with the
+          padded Partial IV parameter from the request.
 
-       *  The CoAP header is the same as the unprotected CoAP message.
+       *  If Observe is used, compose the AEAD nonce by XORing the
+          context IV (Recipient IV with the first bit flipped) with the
+          partial IV (Sequence Number in network byte order).  Increment
+          the Sequence Number by one.
 
-       *  The CoAP options which are of class E are removed, except any
-          special option (labelled '*') that is present which has its
-          outer value (Section 4).  The Object-Security option is added.
+   4.  Encrypt the COSE object using the Sender Key.
 
-       *  If the message type of the unprotected CoAP message does not
-          allow Payload, then the value of the Object-Security option is
-          the COSE object.  If the message type of the unprotected CoAP
-          message allows Payload, then the Object-Security option is
-          empty and the Payload of the protected CoAP message is the
-          COSE object.
-
-   3.  Increment the Sender Sequence Number by one.
+   5.  Format the protected CoAP message according to Section 4.  The
+       Object-Security option is added, see Section 2.
 
 7.4.  Verifying the Response
 
    A client receiving a response containing the Object-Security option
    SHALL perform the following steps:
+
+   1.  Process outer Block options according to [RFC7959], until all
+       blocks of the protected CoAP message have been received, see
+       Section 4.3.1.2.
+
+   2.  Retrieve the Recipient Context associated with the Token.
 
 
 
@@ -1289,12 +1289,6 @@ Selander, et al.       Expires September 10, 2017              [Page 23]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
-
-   1.  Process outer Block options according to [RFC7959], until all
-       blocks of the protected CoAP message have been received, see
-       Section 4.3.1.2.
-
-   2.  Retrieve the Recipient Context associated with the Token.
 
    3.  If Observe is used, verify the Sequence Number in the 'Partial
        IV' parameter as described in Section 6.
@@ -1338,6 +1332,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    A value MUST NOT be given for the "sec" attribute; any present value
    MUST be ignored by parsers.  The "sec" attribute MUST NOT appear more
+   than once in a given link-value; occurrences after the first MUST be
+   ignored by parsers.
+
+
+
+
 
 
 
@@ -1345,9 +1345,6 @@ Selander, et al.       Expires September 10, 2017              [Page 24]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
-
-   than once in a given link-value; occurrences after the first MUST be
-   ignored by parsers.
 
 9.  Security Considerations
 
@@ -1394,6 +1391,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    is achieved by using the algorithm AES-CCM-16-64-128
    [I-D.ietf-cose-msg].
 
+   Most AEAD algorithms require a unique nonce for each message, for
+   which the sequence numbers in the COSE message field "Partial IV" is
+   used.  If the recipient accepts any sequence number larger than the
 
 
 
@@ -1402,9 +1402,6 @@ Selander, et al.       Expires September 10, 2017              [Page 25]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-   Most AEAD algorithms require a unique nonce for each message, for
-   which the sequence numbers in the COSE message field "Partial IV" is
-   used.  If the recipient accepts any sequence number larger than the
    one previously received, then the problem of sequence number
    synchronization is avoided.  With reliable transport it may be
    defined that only messages with sequence number which are equal to
@@ -1448,6 +1445,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    bytes are appended each having the value of m.  For example,
    appending a 0 to "YES" and two 1's to "NO".  This style of padding
    means that all values need to be padded.
+
+
+
 
 
 
