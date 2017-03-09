@@ -637,7 +637,7 @@ Verify request with   |                       |
 <p id="rfc.section.4.p.6">Note that, even though the message formats are slightly different, OSCOAP complies with CoAP over unreliable transport <a href="#RFC7252">[RFC7252]</a> as well as CoAP over reliable transport <a href="#I-D.ietf-core-coap-tcp-tls">[I-D.ietf-core-coap-tcp-tls]</a>.</p>
 <h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> <a href="#coap-payload" id="coap-payload">CoAP Payload</a></h1>
 <p id="rfc.section.4.1.p.1">The CoAP Payload SHALL be encrypted and integrity protected (Class E), and thus is an inner message field.</p>
-<p id="rfc.section.4.1.p.2">The sending endpoint writes the payload of the unprotected CoAP message into the plaintext of the COSE object (see <a href="#protected-coap-formatting-req">Section 7.1</a> and <a href="#protected-coap-formatting-resp">Section 7.3</a>).</p>
+<p id="rfc.section.4.1.p.2">The sending endpoint writes the payload of the unprotected CoAP message into the plaintext of the COSE object.</p>
 <p id="rfc.section.4.1.p.3">The receiving endpoint verifies and decrypts the COSE object, and recreates the payload of the unprotected CoAP message.</p>
 <h1 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a> <a href="#coap-header" id="coap-header">CoAP Header</a></h1>
 <p id="rfc.section.4.2.p.1">Many CoAP header fields are required to be read and changed during a normal message exchange or when traversing a proxy and thus cannot be protected between the endpoints, e.g. CoAP message layer fields such as Message ID.</p>
@@ -682,7 +682,7 @@ U=Unprotected, *=Special
 <p id="rfc.section.4.3.p.4">Specifications of new CoAP options SHOULD define how they are processed with OSCOAP. New COAP options SHOULD be of class E and SHOULD NOT have outer options unless a forwarding proxy needs to read an option value. If a certain option is both inner and outer, the two values SHOULD NOT be the same, unless a proxy is required by specification to be able to read the end-to-end value.</p>
 <h1 id="rfc.section.4.3.1"><a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#class-e" id="class-e">Class E Options</a></h1>
 <p id="rfc.section.4.3.1.p.1">For options in class E (see <a href="#protected-coap-options">Figure 4</a>) the option value in the unprotected CoAP message, if present, SHALL be encrypted and integrity protected between the endpoints.  Hence the actions resulting from the use of such options is analogous to communicating in a protected manner with the endpoint. For example, a client using an ETag option will not be served by a proxy.</p>
-<p id="rfc.section.4.3.1.p.2">The sending endpoint SHALL write the class E option from the unprotected CoAP message into the plaintext of the COSE object (see <a href="#protected-coap-formatting-req">Section 7.1</a> and <a href="#protected-coap-formatting-resp">Section 7.3</a>).</p>
+<p id="rfc.section.4.3.1.p.2">The sending endpoint SHALL write the class E option from the unprotected CoAP message into the plaintext of the COSE object.</p>
 <p id="rfc.section.4.3.1.p.3">Except for the special options described in the subsections, the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change or remove the value of an outer option.</p>
 <p id="rfc.section.4.3.1.p.4">Except for the Block options <a href="#block-options">Section 4.3.1.2</a>, the receiving endpoint SHALL discard any outer options of class E from the protected CoAP message and SHALL replace it with the value from the COSE object when present.</p>
 <h1 id="rfc.section.4.3.1.1"><a href="#rfc.section.4.3.1.1">4.3.1.1.</a> <a href="#max-age" id="max-age">Max-Age</a></h1>
@@ -831,18 +831,19 @@ external_aad = [
 <h1 id="rfc.section.6.5"><a href="#rfc.section.6.5">6.5.</a> <a href="#delay-and-mismatch-attacks" id="delay-and-mismatch-attacks">Delay and Mismatch Attacks</a></h1>
 <p id="rfc.section.6.5.p.1">In order to prevent response delay and mismatch attacks <a href="#I-D.mattsson-core-coap-actuators">[I-D.mattsson-core-coap-actuators]</a> from on-path attackers and compromised proxies, OSCOAP binds responses to the request by including the request&#8217;s ID (Sender ID or Recipient ID) and sequence number in the AAD of the response. The server therefore needs to store the request&#8217;s ID (Sender ID or Recipient ID) and sequence number until all responses has been sent.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#processing" id="processing">Processing</a></h1>
-<h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#protected-coap-formatting-req" id="protected-coap-formatting-req">Protecting the Request</a></h1>
-<p id="rfc.section.7.1.p.1">TODO: Update</p>
-<p id="rfc.section.7.1.p.2">Given an unprotected CoAP request, including header, options and payload, the client SHALL perform the following steps to create a protected CoAP request using a security context associated with the target resource (see <a href="#context">Section 3</a>).</p>
+<h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#protecting-the-request" id="protecting-the-request">Protecting the Request</a></h1>
+<p id="rfc.section.7.1.p.1">Given an unprotected request, the client SHALL perform the following steps to create a protected request:</p>
 <p/>
 
 <ol>
-  <li>Compute the COSE object as specified in <a href="#cose-object">Section 5</a>  <ul><li>the AEAD nonce is created by XORing the Sender IV (context IV) with the Sender Sequence Number in network byte order (partial IV).</li></ul></li>
-  <li>Format the protected CoAP message as an ordinary CoAP message, with the following Header, Options, and Payload, based on the unprotected CoAP message:  <ul><li>The CoAP header is the same as the unprotected CoAP message.</li><li>If present, the CoAP option Proxy-Uri is decomposed as described in <a href="#proxy-uri">Section 4.3.3.2</a>.</li><li>The CoAP options which are of class E (<a href="#coap-headers-and-options">Section 4</a>) are removed. The Object-Security option is added.</li><li>If the message type of the unprotected CoAP message does not allow Payload, then the value of the Object-Security option is the COSE object. If the message type of the unprotected CoAP message allows Payload, then the Object-Security option is empty and the Payload of the protected CoAP message is the COSE object.</li></ul></li>
-  <li>Store the association Token - Security Context. The Client SHALL be able to find the correct security context used to protect the request and verify the response with use of the Token of the message exchange.</li>
-  <li>Increment the Sender Sequence Number by one.</li>
+  <li>Retrieve the Sender Context associated with the target resource.</li>
+  <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
+  <li>Compose the AEAD nonce by XORing the context IV (Sender IV) with with the partial IV (Sender Sequence Number in network byte order). Increment the Sender Sequence Number by one.</li>
+  <li>Encrypt the COSE object using the Sender Key.</li>
+  <li>Format the protected CoAP message according to <a href="#coap-headers-and-options">Section 4</a>. The Object-Security option is added, see <a href="#option">Section 2</a>.</li>
+  <li>Store the association Token - Security Context. The client SHALL be able to find the Recipient Context from the Token in the response.</li>
 </ol>
-<h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#proc-request-server" id="proc-request-server">Verifying the Request</a></h1>
+<h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#verifying-the-request" id="verifying-the-request">Verifying the Request</a></h1>
 <p id="rfc.section.7.2.p.1">A server receiving a request containing the Object-Security option SHALL perform the following steps:</p>
 <p/>
 
@@ -855,7 +856,7 @@ external_aad = [
   <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the server MUST stop processing the request and SHOULD send an 4.01 error message.</li><li>If decryption suceeds, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 6</a>.</li></ul></li>
   <li>Add decrypted options or payload to the unprotected request, overwriting any outer E options (see <a href="#coap-headers-and-options">Section 4</a>). The Object-Security option is removed.</li>
 </ol>
-<h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#protected-coap-formatting-resp" id="protected-coap-formatting-resp">Protecting the Response</a></h1>
+<h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#protecting-the-response" id="protecting-the-response">Protecting the Response</a></h1>
 <p id="rfc.section.7.3.p.1">TODO: Update</p>
 <p id="rfc.section.7.3.p.2">Given an unprotected CoAP response, including header, options, and payload, the server SHALL perform the following steps to create a protected CoAP response, using the security context identified by the Context Identifier of the received request:</p>
 <p/>
@@ -865,7 +866,7 @@ external_aad = [
   <li>Format the protected CoAP message as an ordinary CoAP message, with the following Header, Options, and Payload based on the unprotected CoAP message: <ul><li>The CoAP header is the same as the unprotected CoAP message.</li><li>The CoAP options which are of class E are removed, except any special option (labelled &#8216;*&#8217;) that is present which has its outer value (<a href="#coap-headers-and-options">Section 4</a>). The Object-Security option is added.</li><li>If the message type of the unprotected CoAP message does not allow Payload, then the value of the Object-Security option is the COSE object. If the message type of the unprotected CoAP message allows Payload, then the Object-Security option is empty and the Payload of the protected CoAP message is the COSE object.</li></ul></li>
   <li>Increment the Sender Sequence Number by one.</li>
 </ol>
-<h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#proc-resp-client" id="proc-resp-client">Verifying the Response</a></h1>
+<h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#verifying-the-response" id="verifying-the-response">Verifying the Response</a></h1>
 <p id="rfc.section.7.4.p.1">A client receiving a response containing the Object-Security option SHALL perform the following steps:</p>
 <p/>
 
