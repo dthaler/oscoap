@@ -117,14 +117,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    Appendix B.  Test Vectors . . . . . . . . . . . . . . . . . . . .  33
    Appendix C.  Examples . . . . . . . . . . . . . . . . . . . . . .  33
      C.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  33
-     C.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  35
-   Appendix D.  Object Security of Content (OSCON) . . . . . . . . .  37
-     D.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  38
-     D.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  39
-     D.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  39
-     D.4.  Authenticated Encryption with Additional Data (AEAD)  . .  40
-     D.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  41
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  41
+     C.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  34
+   Appendix D.  Object Security of Content (OSCON) . . . . . . . . .  36
+     D.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  37
+     D.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  38
+     D.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  38
+     D.4.  Authenticated Encryption with Additional Data (AEAD)  . .  39
+     D.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  40
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  40
 
 1.  Introduction
 
@@ -1880,24 +1880,24 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    Since the method (GET) doesn't allow payload, the Object-Security
    option carries the COSE object as its value.  Since the response code
-   (Content) allows payload ("OFF"), the COSE object (indicated with [
-   ... ]) is carried as the CoAP payload.
+   (Content) allows payload ("OFF"), the COSE object is carried as the
+   CoAP payload.
 
-   The COSE header of the request contains an identifier (cid:5f),
+   The COSE header of the request contains an identifier (5f),
    indicating which security context was used to protect the message and
-   a Sequence Number (seq:42).
-
-   The option Uri-Path (alarm_status) and payload ("OFF") are formatted
-   as indicated in Section 5, and encrypted in the COSE ciphertext
-   (indicated with { ... }).
+   a Sequence Number (42).  The option Uri-Path (alarm_status) and
+   payload ("OFF") are formatted as indicated in Section 5 and
+   encrypted.
 
    The server verifies that the Sequence Number has not been received
    before (see Section 6).  The client verifies that the response
    message is generated as a response to the request.
 
+C.2.  Secure Subscribe to Sensor
 
-
-
+   This example targets the scenario in Section 3.2 of
+   [I-D.hartke-core-e2e-security-reqs].  The example illustrates a
+   client requesting subscription to a blood sugar measurement resource
 
 
 
@@ -1906,61 +1906,8 @@ Selander, et al.       Expires September 10, 2017              [Page 34]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-C.2.  Secure Subscribe to Sensor
-
-   This example targets the scenario in Section 3.2 of
-   [I-D.hartke-core-e2e-security-reqs].  The example illustrates a
-   client requesting subscription to a blood sugar measurement resource
    (GET /glucose), and first receiving the value 220 mg/dl, and then a
    second reading with value 180 mg/dl.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 35]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
 
  Client  Proxy  Server
     |      |      |
@@ -2008,27 +1955,24 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
     indicate a COSE object.  Curly brackets { ... } indicate encrypted
                                    data.
 
-   Since the method (GET) doesn't allow payload, the Object-Security
-   option carries the COSE object as its value.  Since the response code
 
 
-
-Selander, et al.       Expires September 10, 2017              [Page 36]
+Selander, et al.       Expires September 10, 2017              [Page 35]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-   (Content) allows payload ("OFF"), the COSE object (indicated with [
-   ... ]) is carried as the CoAP payload.
+   Since the method (GET) doesn't allow payload, the Object-Security
+   option carries the COSE object as its value.  Since the response code
+   (Content) allows payload ("OFF"), the COSE object is carried as the
+   CoAP payload.
 
-   The COSE header of the request contains an identifier (kid:ca),
+   The COSE header of the request contains an identifier (ca),
    indicating which security context was used to protect the message and
    a Sequence Number (15).  The COSE header of the responses contains
-   sequence numbers (32 and 36).
-
-   The options Content-Format and the payload are formatted as indicated
-   in Section 5, and encrypted in the COSE ciphertext (indicated with {
-   ... }).  The option Observe is integrity protected.
+   sequence numbers (32 and 36).  The options Content-Format and the
+   payload are formatted as indicated in Section 5 and encrypted.  The
+   option Observe is integrity protected.
 
    The server verifies that the sequence number has not been received
    before (see Section 6).  The client verifies that the sequence number
@@ -2069,7 +2013,7 @@ Appendix D.  Object Security of Content (OSCON)
 
 
 
-Selander, et al.       Expires September 10, 2017              [Page 37]
+Selander, et al.       Expires September 10, 2017              [Page 36]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2125,7 +2069,7 @@ D.1.  Overhead OSCON
 
 
 
-Selander, et al.       Expires September 10, 2017              [Page 38]
+Selander, et al.       Expires September 10, 2017              [Page 37]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2181,7 +2125,7 @@ D.3.  Signature Only
 
 
 
-Selander, et al.       Expires September 10, 2017              [Page 39]
+Selander, et al.       Expires September 10, 2017              [Page 38]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2237,7 +2181,7 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
 
 
 
-Selander, et al.       Expires September 10, 2017              [Page 40]
+Selander, et al.       Expires September 10, 2017              [Page 39]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2293,7 +2237,7 @@ Authors' Addresses
 
 
 
-Selander, et al.       Expires September 10, 2017              [Page 41]
+Selander, et al.       Expires September 10, 2017              [Page 40]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
@@ -2349,4 +2293,4 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
 
-Selander, et al.       Expires September 10, 2017              [Page 42]
+Selander, et al.       Expires September 10, 2017              [Page 41]
