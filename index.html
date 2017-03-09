@@ -1207,50 +1207,46 @@ Client  Proxy  Server
    +-----&gt;|      |            Code: 0.01 (GET)
    | GET  |      |           Token: 0x83
    |      |      |         Observe: 0
-   |      |      | Object-Security: [kid:ca, seq:15b7,
+   |      |      | Object-Security: [kid:ca, seq:15,
    |      |      |                   {Uri-Path:"glucose"}]
    |      |      |         Payload: -
    |      |      |
    |      +-----&gt;|            Code: 0.01 (GET)
    |      | GET  |           Token: 0xbe
    |      |      |         Observe: 0
-   |      |      | Object-Security: [kid:ca, seq:15b7,
+   |      |      | Object-Security: [kid:ca, seq:15,
    |      |      |                   {Uri-Path:"glucose"}]
    |      |      |         Payload: -
    |      |      |
    |      |&lt;-----+            Code: 2.05 (Content)
    |      | 2.05 |           Token: 0xbe
-   |      |      |         Observe: 0032c2
+   |      |      |         Observe: 000032
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:32c2, {Content-Format:0,
-   |      |      |                   "220"}]
+   |      |      |         Payload: [seq:32, {Content-Format:0, "220"}]
    |      |      |
    |&lt;-----+      |            Code: 2.05 (Content)
    | 2.05 |      |           Token: 0x83
-   |      |      |         Observe: 0032c2
+   |      |      |         Observe: 000032
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:32c2, {Content-Format:0,
-   |      |      |                   "220"}]
+   |      |      |         Payload: [seq:32, {Content-Format:0, "220"}]
   ...    ...    ...
    |      |      |
    |      |&lt;-----+            Code: 2.05 (Content)
    |      | 2.05 |           Token: 0xbe
-   |      |      |         Observe: 0032c6
+   |      |      |         Observe: 000036
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:32c6, {Content-Format:0,
-   |      |      |                   "180"}]
+   |      |      |         Payload: [seq:36, {Content-Format:0, "180"}]
    |      |      |
    |&lt;-----+      |            Code: 2.05 (Content)
    | 2.05 |      |           Token: 0x83
-   |      |      |         Observe: 0032c6
+   |      |      |         Observe: 000036
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:32c6, {Content-Format:0,
-   |      |      |                   "180"}]
+   |      |      |         Payload: [seq:36, {Content-Format:0, "180"}]
    |      |      |
 </pre>
 <p class="figure">Figure 7: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
 <p id="rfc.section.C.2.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload (&#8220;OFF&#8221;), the COSE object (indicated with [ &#8230; ]) is carried as the CoAP payload.</p>
-<p id="rfc.section.C.2.p.3">The COSE header of the request contains an identifier (kid:ca), indicating which security context was used to protect the message and a Sequence Number (seq:15b7). The COSE header of the responses contains sequence numbers (seq:32c and seq:32c6).</p>
+<p id="rfc.section.C.2.p.3">The COSE header of the request contains an identifier (kid:ca), indicating which security context was used to protect the message and a Sequence Number (15). The COSE header of the responses contains sequence numbers (32 and 36).</p>
 <p id="rfc.section.C.2.p.4">The options Content-Format and the payload are formatted as indicated in <a href="#cose-object">Section 5</a>, and encrypted in the COSE ciphertext (indicated with { &#8230; }). The option Observe is integrity protected.</p>
 <p id="rfc.section.C.2.p.5">The server verifies that the sequence number has not been received before (see <a href="#sequence-numbers">Section 6</a>). The client verifies that the sequence number has not been received before and tha the response message is generated as a response to the subscribe request.</p>
 <h1 id="rfc.appendix.D"><a href="#rfc.appendix.D">Appendix D.</a> <a href="#oscon" id="oscon">Object Security of Content (OSCON)</a></h1>

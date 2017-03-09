@@ -118,12 +118,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    Appendix C.  Examples . . . . . . . . . . . . . . . . . . . . . .  33
      C.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  33
      C.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  35
-   Appendix D.  Object Security of Content (OSCON) . . . . . . . . .  36
-     D.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  37
-     D.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  38
+   Appendix D.  Object Security of Content (OSCON) . . . . . . . . .  37
+     D.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  38
+     D.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  39
      D.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  39
-     D.4.  Authenticated Encryption with Additional Data (AEAD)  . .  39
-     D.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  40
+     D.4.  Authenticated Encryption with Additional Data (AEAD)  . .  40
+     D.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  41
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  41
 
 1.  Introduction
@@ -1914,46 +1914,46 @@ C.2.  Secure Subscribe to Sensor
    (GET /glucose), and first receiving the value 220 mg/dl, and then a
    second reading with value 180 mg/dl.
 
-     Client  Proxy  Server
-        |      |      |
-        +----->|      |            Code: 0.01 (GET)
-        | GET  |      |           Token: 0x83
-        |      |      |         Observe: 0
-        |      |      | Object-Security: [kid:ca, seq:15b7,
-        |      |      |                   {Uri-Path:"glucose"}]
-        |      |      |         Payload: -
-        |      |      |
-        |      +----->|            Code: 0.01 (GET)
-        |      | GET  |           Token: 0xbe
-        |      |      |         Observe: 0
-        |      |      | Object-Security: [kid:ca, seq:15b7,
-        |      |      |                   {Uri-Path:"glucose"}]
-        |      |      |         Payload: -
-        |      |      |
-        |      |<-----+            Code: 2.05 (Content)
-        |      | 2.05 |           Token: 0xbe
-        |      |      |         Observe: 0032c2
-        |      |      | Object-Security: -
-        |      |      |         Payload: [seq:32c2, {Content-Format:0,
-        |      |      |                   "220"}]
-        |      |      |
-        |<-----+      |            Code: 2.05 (Content)
-        | 2.05 |      |           Token: 0x83
-        |      |      |         Observe: 0032c2
-        |      |      | Object-Security: -
-        |      |      |         Payload: [seq:32c2, {Content-Format:0,
-        |      |      |                   "220"}]
-       ...    ...    ...
-        |      |      |
-        |      |<-----+            Code: 2.05 (Content)
-        |      | 2.05 |           Token: 0xbe
-        |      |      |         Observe: 0032c6
-        |      |      | Object-Security: -
-        |      |      |         Payload: [seq:32c6, {Content-Format:0,
-        |      |      |                   "180"}]
-        |      |      |
-        |<-----+      |            Code: 2.05 (Content)
-        | 2.05 |      |           Token: 0x83
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1962,11 +1962,47 @@ Selander, et al.       Expires September 10, 2017              [Page 35]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-        |      |      |         Observe: 0032c6
-        |      |      | Object-Security: -
-        |      |      |         Payload: [seq:32c6, {Content-Format:0,
-        |      |      |                   "180"}]
-        |      |      |
+ Client  Proxy  Server
+    |      |      |
+    +----->|      |            Code: 0.01 (GET)
+    | GET  |      |           Token: 0x83
+    |      |      |         Observe: 0
+    |      |      | Object-Security: [kid:ca, seq:15,
+    |      |      |                   {Uri-Path:"glucose"}]
+    |      |      |         Payload: -
+    |      |      |
+    |      +----->|            Code: 0.01 (GET)
+    |      | GET  |           Token: 0xbe
+    |      |      |         Observe: 0
+    |      |      | Object-Security: [kid:ca, seq:15,
+    |      |      |                   {Uri-Path:"glucose"}]
+    |      |      |         Payload: -
+    |      |      |
+    |      |<-----+            Code: 2.05 (Content)
+    |      | 2.05 |           Token: 0xbe
+    |      |      |         Observe: 000032
+    |      |      | Object-Security: -
+    |      |      |         Payload: [seq:32, {Content-Format:0, "220"}]
+    |      |      |
+    |<-----+      |            Code: 2.05 (Content)
+    | 2.05 |      |           Token: 0x83
+    |      |      |         Observe: 000032
+    |      |      | Object-Security: -
+    |      |      |         Payload: [seq:32, {Content-Format:0, "220"}]
+   ...    ...    ...
+    |      |      |
+    |      |<-----+            Code: 2.05 (Content)
+    |      | 2.05 |           Token: 0xbe
+    |      |      |         Observe: 000036
+    |      |      | Object-Security: -
+    |      |      |         Payload: [seq:36, {Content-Format:0, "180"}]
+    |      |      |
+    |<-----+      |            Code: 2.05 (Content)
+    | 2.05 |      |           Token: 0x83
+    |      |      |         Observe: 000036
+    |      |      | Object-Security: -
+    |      |      |         Payload: [seq:36, {Content-Format:0, "180"}]
+    |      |      |
 
       Figure 7: Secure Subscribe to Sensor.  Square brackets [ ... ]
     indicate a COSE object.  Curly brackets { ... } indicate encrypted
@@ -1974,13 +2010,21 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    Since the method (GET) doesn't allow payload, the Object-Security
    option carries the COSE object as its value.  Since the response code
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 36]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
+
    (Content) allows payload ("OFF"), the COSE object (indicated with [
    ... ]) is carried as the CoAP payload.
 
    The COSE header of the request contains an identifier (kid:ca),
    indicating which security context was used to protect the message and
-   a Sequence Number (seq:15b7).  The COSE header of the responses
-   contains sequence numbers (seq:32c and seq:32c6).
+   a Sequence Number (15).  The COSE header of the responses contains
+   sequence numbers (32 and 36).
 
    The options Content-Format and the payload are formatted as indicated
    in Section 5, and encrypted in the COSE ciphertext (indicated with {
@@ -2009,15 +2053,6 @@ Appendix D.  Object Security of Content (OSCON)
    OSCON transforms an unprotected CoAP message into a protected CoAP
    message in the following way: the payload of the unprotected CoAP
    message is wrapped by a COSE object, which replaces the payload of
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 36]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    the unprotected CoAP message.  We call the result the "protected"
    CoAP message.
 
@@ -2029,6 +2064,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    value is set to the unprotected message Content-Format value.  The
    Content-Format option of the protected CoAP message shall be replaced
    with "application/oscon" (Section 11)
+
+
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 37]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
    The COSE object shall be protected (encrypted) and verified
    (decrypted) as described in ([I-D.ietf-cose-msg]).
@@ -2065,15 +2109,6 @@ D.1.  Overhead OSCON
    The sizes of COSE messages for selected algorithms are detailed in
    this section.
 
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 37]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    The size of the header is shown separately from the size of the MAC/
    signature.  A 4-byte Context Identifier and a 1-byte Sequence Number
    are used throughout all examples, with these values:
@@ -2086,6 +2121,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    ("Cid+Seq" column) and of the Tag ("MAC"/"SIG"/"TAG").  The "Message
    OH" column shows the total expansions of the CoAP message size, while
    the "COSE OH" column is calculated from the previous columns.
+
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 38]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
    Overhead incurring from CBOR encoding is also included in the COSE
    overhead count.
@@ -2119,17 +2162,6 @@ D.2.  MAC Only
 
    Figure 8 summarizes these results.
 
-
-
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 38]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
           +------------------+-----+-----+---------+------------+
           |     Structure    | Tid | MAC | COSE OH | Message OH |
           +------------------+-----+-----+---------+------------+
@@ -2146,6 +2178,13 @@ D.3.  Signature Only
    used (Section 4.2 of [I-D.ietf-cose-msg]).
 
    The object in COSE encoding gives:
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 39]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
              997(                         # COSE_Sign1_Tagged
                [
@@ -2179,13 +2218,6 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
    COSE_Encrypt0_Tagged structure is used (Section 5.2 of
    [I-D.ietf-cose-msg]).
 
-
-
-Selander, et al.       Expires September 10, 2017              [Page 39]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    The object in COSE encoding gives:
 
      993(                         # COSE_Encrypt0_Tagged
@@ -2201,6 +2233,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    This COSE object encodes to a total size of 25 bytes.
 
    Figure 10 summarizes these results.
+
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 40]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
         +----------------------+-----+-----+---------+------------+
         |       Structure      | Tid | TAG | COSE OH | Message OH |
@@ -2235,13 +2275,6 @@ D.5.  Symmetric Encryption with Asymmetric Signature (SEAS)
 
    Figure 11 summarizes these results.
 
-
-
-Selander, et al.       Expires September 10, 2017              [Page 40]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
     +----------------------+-----+-----+------+---------+------------+
     |       Structure      | Tid | TAG | SIG  | COSE OH | Message OH |
     +----------------------+-----+-----+------+---------+------------+
@@ -2257,6 +2290,12 @@ Authors' Addresses
    Ericsson AB
 
    Email: goran.selander@ericsson.com
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 41]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
    John Mattsson
@@ -2293,4 +2332,21 @@ Authors' Addresses
 
 
 
-Selander, et al.       Expires September 10, 2017              [Page 41]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 42]
