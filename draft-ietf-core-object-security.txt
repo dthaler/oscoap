@@ -1050,10 +1050,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    o  alg: contains the Algorithm from the security context used for the
       exchange (see Section 3.1).
 
-   o  request_id: contains the value of the "kid" in the COSE object of
+   o  request_kid: contains the value of the 'kid' in the COSE object of
       the request (see Section 5).
 
-   o  request_seq: contains the value of the "Partial IV" in the COSE
+   o  request_seq: contains the value of the 'Partial IV' in the COSE
       object of the request (see Section 5).
 
 

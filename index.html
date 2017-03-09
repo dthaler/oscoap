@@ -806,8 +806,8 @@ external_aad = [
   <li>code: contains is the CoAP Code of the unprotected CoAP message, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a>.</li>
   <li>options: contains the class I options <a href="#class-i">Section 4.3.2</a>&#160;encoded as described in Section 3.1 of <a href="#RFC7252">[RFC7252]</a>, where the delta is the difference to the previously included class I option</li>
   <li>alg: contains the Algorithm from the security context used for the exchange (see <a href="#context-definition">Section 3.1</a>).</li>
-  <li>request_id:  contains the value of the &#8220;kid&#8221; in the COSE object of the request (see Section 5).</li>
-  <li>request_seq: contains the value of the &#8220;Partial IV&#8221; in the COSE object of the request (see Section 5).</li>
+  <li>request_kid:  contains the value of the &#8216;kid&#8217; in the COSE object of the request (see Section 5).</li>
+  <li>request_seq: contains the value of the &#8216;Partial IV&#8217; in the COSE object of the request (see Section 5).</li>
 </ul>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#sequence-numbers" id="sequence-numbers">Sequence Numbers, Replay, Message Binding, and Freshness</a></h1>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#aead-nonce-uniqueness" id="aead-nonce-uniqueness">AEAD Nonce Uniqueness</a></h1>
