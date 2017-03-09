@@ -1163,7 +1163,9 @@ After Compression (16 bytes)
 <h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#examples" id="examples">Examples</a></h1>
 <p id="rfc.section.C.p.1">This section gives examples of OSCOAP. The message exchanges are made, based on the assumption that there is a security context established between client and server. For simplicity, these examples only indicate the content of the messages without going into detail of the COSE message format.</p>
 <h1 id="rfc.appendix.C.1"><a href="#rfc.appendix.C.1">C.1.</a> <a href="#secure-access-to-sensor" id="secure-access-to-sensor">Secure Access to Sensor</a></h1>
-<p id="rfc.section.C.1.p.1">Here is an example targeting the scenario in the Section 2.2.1. - Forwarding of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. The example illustrates a client requesting the alarm status from a server. In the request, CoAP option Uri-Path is encrypted and integrity protected, and the CoAP header fields Code and Version are integrity protected (see <a href="#coap-headers-and-options">Section 4</a>). In the response, the CoAP Payload is encrypted and integrity protected, and the CoAP header fields Code and Version are integrity protected.</p>
+<p id="rfc.section.C.1.p.1">This example targets the scenario in Section 3.1 of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. The example illustrates a client requesting the alarm status from a server.</p>
+<div id="rfc.figure.6"/>
+<div id="fig-alarm"/>
 <pre>
 Client  Proxy  Server
    |      |      |
@@ -1176,7 +1178,7 @@ Client  Proxy  Server
    |      |      |
    |      +-----&gt;|            Code: 0.01 (GET)
    |      | GET  |           Token: 0x7b
-   |      |      | Object-Security: [cid:5f, seq:42,
+   |      |      | Object-Security: [kid:5f, seq:42,
    |      |      |                   {Uri-Path:"alarm_status"},
    |      |      |                   &lt;Tag&gt;]
    |      |      |         Payload: -
@@ -1192,14 +1194,14 @@ Client  Proxy  Server
    |      |      |         Payload: [{"OFF"}, &lt;Tag&gt;]
    |      |      |
 </pre>
-<p class="figure">Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicate a COSE object. The brackets { ... } indicate encrypted data.</p>
-<p id="rfc.section.C.1.p.2">Since the unprotected request message (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value.  Since the unprotected response message (Content) allows payload (&#8220;OFF&#8221;), the COSE object (indicated with [ &#8230; ]) is carried as the CoAP payload.</p>
-<p id="rfc.section.C.1.p.3">The COSE header of the request contains a Context Identifier (cid:5fdc), indicating which security context was used to protect the message and a Sequence Number (seq:42).</p>
-<p id="rfc.section.C.1.p.4">The option Uri-Path (alarm_status) and payload (&#8220;OFF&#8221;) are formatted as indicated in <a href="#cose-object">Section 5</a>, and encrypted in the COSE Cipher Text (indicated with { &#8230; }).</p>
-<p id="rfc.section.C.1.p.5">The server verifies that the Sequence Number has not been received before (see <a href="#sequence-numbers">Section 6</a>). The client verifies that the Sequence Number has not been received before and that the response message is generated as a response to the sent request message (see <a href="#sequence-numbers">Section 6</a>).</p>
+<p class="figure">Figure 6: Secure Access to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
+<p id="rfc.section.C.1.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload (&#8220;OFF&#8221;), the COSE object (indicated with [ &#8230; ]) is carried as the CoAP payload.</p>
+<p id="rfc.section.C.1.p.3">The COSE header of the request contains an identifier (cid:5f), indicating which security context was used to protect the message and a Sequence Number (seq:42).</p>
+<p id="rfc.section.C.1.p.4">The option Uri-Path (alarm_status) and payload (&#8220;OFF&#8221;) are formatted as indicated in <a href="#cose-object">Section 5</a>, and encrypted in the COSE ciphertext (indicated with { &#8230; }).</p>
+<p id="rfc.section.C.1.p.5">The server verifies that the Sequence Number has not been received before (see <a href="#sequence-numbers">Section 6</a>). The client verifies that the response message is generated as a response to the request.</p>
 <h1 id="rfc.appendix.C.2"><a href="#rfc.appendix.C.2">C.2.</a> <a href="#secure-subscribe-to-sensor" id="secure-subscribe-to-sensor">Secure Subscribe to Sensor</a></h1>
-<p id="rfc.section.C.2.p.1">Here is an example targeting the scenario in the Forwarding with observe case  of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. The example illustrates a client requesting subscription to a blood sugar measurement resource (GET /glucose), and first receiving the value 220 mg/dl, and then a second reading with value 180 mg/dl. The CoAP options Observe, Uri-Path, Content-Format, and Payload are encrypted and integrity protected, and the CoAP header field Code is integrity protected (see <a href="#coap-headers-and-options">Section 4</a>).</p>
-<div id="rfc.figure.6"/>
+<p id="rfc.section.C.2.p.1">This example targets the scenario in Section 3.2 of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. The example illustrates a client requesting subscription to a blood sugar measurement resource (GET /glucose), and first receiving the value 220 mg/dl, and then a second reading with value 180 mg/dl.</p>
+<div id="rfc.figure.7"/>
 <div id="get-protected-enc"/>
 <pre>
 Client  Proxy  Server
@@ -1207,56 +1209,52 @@ Client  Proxy  Server
    +-----&gt;|      |            Code: 0.01 (GET)
    | GET  |      |           Token: 0x83
    |      |      |         Observe: 0
-   |      |      | Object-Security: [cid:ca, seq:15b7, {Observe:0,
+   |      |      | Object-Security: [kid:ca, seq:15b7, {Observe:0,
    |      |      |                   Uri-Path:"glucose"}, &lt;Tag&gt;]
    |      |      |         Payload: -
    |      |      |
    |      +-----&gt;|            Code: 0.01 (GET)
    |      | GET  |           Token: 0xbe
    |      |      |         Observe: 0
-   |      |      | Object-Security: [cid:ca, seq:15b7, {Observe:0,
+   |      |      | Object-Security: [kid:ca, seq:15b7, {Observe:0,
    |      |      |                   Uri-Path:"glucose"}, &lt;Tag&gt;]
    |      |      |         Payload: -
    |      |      |
    |      |&lt;-----+            Code: 2.05 (Content)
    |      | 2.05 |           Token: 0xbe
-   |      |      |         Max-Age: 0
-   |      |      |         Observe: 1
+   |      |      |         Observe: 0032c2
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:32c2, {Observe:1, 
-   |      |      |                   Content-Format:0, "220"}, &lt;Tag&gt;]
+   |      |      |         Payload: [seq:32c2, {Content-Format:0,
+   |      |      |                   "220"}, &lt;Tag&gt;]
    |      |      |
    |&lt;-----+      |            Code: 2.05 (Content)
    | 2.05 |      |           Token: 0x83
-   |      |      |         Max-Age: 0
-   |      |      |         Observe: 1
+   |      |      |         Observe: 0032c2
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:32c2, {Observe:1,
-   |      |      |                   Content-Format:0, "220"}, &lt;Tag&gt;]
+   |      |      |         Payload: [seq:32c2, {Content-Format:0,
+   |      |      |                   "220"}, &lt;Tag&gt;]
   ...    ...    ...
    |      |      |
    |      |&lt;-----+            Code: 2.05 (Content)
    |      | 2.05 |           Token: 0xbe
-   |      |      |         Max-Age: 0
-   |      |      |         Observe: 2
+   |      |      |         Observe: 0032c6
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:32c6, {Observe:2, 
-   |      |      |                   Content-Format:0, "180"}, &lt;Tag&gt;]
+   |      |      |         Payload: [seq:32c6, {Content-Format:0,
+   |      |      |                   "180"}, &lt;Tag&gt;]
    |      |      |
    |&lt;-----+      |            Code: 2.05 (Content)
    | 2.05 |      |           Token: 0x83
-   |      |      |         Max-Age: 0
-   |      |      |         Observe: 2
+   |      |      |         Observe: 0032c6
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:32c6, {Observe:2,
-   |      |      |                   Content-Format:0, "180"}, &lt;Tag&gt;]
+   |      |      |         Payload: [seq:32c6, {Content-Format:0,
+   |      |      |                   "180"}, &lt;Tag&gt;]
    |      |      |
 </pre>
-<p class="figure">Figure 6: Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicates COSE object. The bracket { ... } indicates encrypted data.</p>
-<p id="rfc.section.C.2.p.2">Since the unprotected request message (GET) doesn&#8217;t allow payload, the COSE object (indicated with [ &#8230; ]) is carried in the Object-Security option value. Since the unprotected response message (Content) allows payload, the Object-Security option is empty, and the COSE object is carried as the payload.</p>
-<p id="rfc.section.C.2.p.3">The COSE header of the request contains a Context Identifier (cid:ca), indicating which security context was used to protect the message and a Sequence Number (seq:15b7).</p>
-<p id="rfc.section.C.2.p.4">The options Observe, Content-Format and the payload are formatted as indicated in <a href="#cose-object">Section 5</a>, and encrypted in the COSE ciphertext (indicated with { &#8230; }).</p>
-<p id="rfc.section.C.2.p.5">The server verifies that the Sequence Number has not been received before (see <a href="#sequence-numbers">Section 6</a>). The client verifies that the Sequence Number has not been received before and that the response message is generated as a response to the subscribe request.</p>
+<p class="figure">Figure 7: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
+<p id="rfc.section.C.2.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload (&#8220;OFF&#8221;), the COSE object (indicated with [ &#8230; ]) is carried as the CoAP payload.</p>
+<p id="rfc.section.C.2.p.3">The COSE header of the request contains an identifier (kid:ca), indicating which security context was used to protect the message and a Sequence Number (seq:15b7). The COSE header of the responses contains sequence numbers (seq:32c and seq:32c6).</p>
+<p id="rfc.section.C.2.p.4">The options Content-Format and the payload are formatted as indicated in <a href="#cose-object">Section 5</a>, and encrypted in the COSE ciphertext (indicated with { &#8230; }). The option Observe is integrity protected.</p>
+<p id="rfc.section.C.2.p.5">The server verifies that the sequence number has not been received before (see <a href="#sequence-numbers">Section 6</a>). The client verifies that the sequence number has not been received before and tha the response message is generated as a response to the subscribe request.</p>
 <h1 id="rfc.appendix.D"><a href="#rfc.appendix.D">Appendix D.</a> <a href="#oscon" id="oscon">Object Security of Content (OSCON)</a></h1>
 <p id="rfc.section.D.p.1">TODO: This section needs to be updated.</p>
 <p id="rfc.section.D.p.2">OSCOAP protects message exchanges end-to-end between a certain client and a certain server, targeting the security requirements for forward proxy of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. In contrast, many use cases require one and the same message to be protected for, and verified by, multiple endpoints, see caching proxy section of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. Those security requirements can be addressed by protecting essentially the payload/content of individual messages using the COSE format (<a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>), rather than the entire request/response message exchange. This is referred to as Object Security of Content (OSCON).</p>
@@ -1297,8 +1295,8 @@ Client  Proxy  Server
 )
 </pre>
 <p id="rfc.section.D.2.p.4">This COSE object encodes to a total size of 26 bytes.</p>
-<p><a href="#comp-hmac-sha256">Figure 7</a> summarizes these results.</p>
-<div id="rfc.figure.7"/>
+<p><a href="#comp-hmac-sha256">Figure 8</a> summarizes these results.</p>
+<div id="rfc.figure.8"/>
 <div id="comp-hmac-sha256"/>
 <pre>
 +------------------+-----+-----+---------+------------+
@@ -1307,7 +1305,7 @@ Client  Proxy  Server
 | COSE_Mac0_Tagged | 5 B | 8 B |   13 B  |    26 B    |
 +------------------+-----+-----+---------+------------+
 </pre>
-<p class="figure">Figure 7: Message overhead for a 5-byte Tid using HMAC 256/64</p>
+<p class="figure">Figure 8: Message overhead for a 5-byte Tid using HMAC 256/64</p>
 <h1 id="rfc.appendix.D.3"><a href="#rfc.appendix.D.3">D.3.</a> <a href="#ssm-dig-sig" id="ssm-dig-sig">Signature Only</a></h1>
 <p id="rfc.section.D.3.p.1">This example is based on ECDSA, with a signature of 64 bytes.</p>
 <p id="rfc.section.D.3.p.2">Since only one signature is used, the COSE_Sign1_Tagged structure is used (Section 4.2 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>).</p>
@@ -1325,8 +1323,8 @@ Client  Proxy  Server
 )
 </pre>
 <p id="rfc.section.D.3.p.4">This COSE object encodes to a total size of 83 bytes.</p>
-<p><a href="#comp-ecdsa">Figure 8</a> summarizes these results.</p>
-<div id="rfc.figure.8"/>
+<p><a href="#comp-ecdsa">Figure 9</a> summarizes these results.</p>
+<div id="rfc.figure.9"/>
 <div id="comp-ecdsa"/>
 <pre>
 +-------------------+-----+------+---------+------------+
@@ -1335,7 +1333,7 @@ Client  Proxy  Server
 | COSE_Sign1_Tagged | 5 B | 64 B |   14 B  |  83 bytes  |
 +-------------------+-----+------+---------+------------+
 </pre>
-<p class="figure">Figure 8: Message overhead for a 5-byte Tid using 64 byte ECDSA signature.</p>
+<p class="figure">Figure 9: Message overhead for a 5-byte Tid using 64 byte ECDSA signature.</p>
 <h1 id="rfc.appendix.D.4"><a href="#rfc.appendix.D.4">D.4.</a> <a href="#sem-auth-enc" id="sem-auth-enc">Authenticated Encryption with Additional Data (AEAD)</a></h1>
 <p id="rfc.section.D.4.p.1">This example is based on AES-CCM with the Tag truncated to 8 bytes.</p>
 <p id="rfc.section.D.4.p.2">Since the key is implicitly known by the recipient, the COSE_Encrypt0_Tagged structure is used (Section 5.2 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>).</p>
@@ -1352,8 +1350,8 @@ Client  Proxy  Server
 )
 </pre>
 <p id="rfc.section.D.4.p.4">This COSE object encodes to a total size of 25 bytes.</p>
-<p><a href="#comp-aes-ccm">Figure 9</a> summarizes these results.</p>
-<div id="rfc.figure.9"/>
+<p><a href="#comp-aes-ccm">Figure 10</a> summarizes these results.</p>
+<div id="rfc.figure.10"/>
 <div id="comp-aes-ccm"/>
 <pre>
 +----------------------+-----+-----+---------+------------+
@@ -1362,7 +1360,7 @@ Client  Proxy  Server
 | COSE_Encrypt0_Tagged | 5 B | 8 B |   12 B  |  25 bytes  |
 +----------------------+-----+-----+---------+------------+
 </pre>
-<p class="figure">Figure 9: Message overhead for a 5-byte Tid using AES_128_CCM_8.</p>
+<p class="figure">Figure 10: Message overhead for a 5-byte Tid using AES_128_CCM_8.</p>
 <h1 id="rfc.appendix.D.5"><a href="#rfc.appendix.D.5">D.5.</a> <a href="#sem-seds" id="sem-seds">Symmetric Encryption with Asymmetric Signature (SEAS)</a></h1>
 <p id="rfc.section.D.5.p.1">This example is based on AES-CCM and ECDSA with 64 bytes signature. The same assumption on the security context as in <a href="#sem-auth-enc">Appendix D.4</a>.  COSE defines the field &#8216;counter signature w/o headers&#8217; that is used here to sign a COSE_Encrypt0_Tagged message (see Section 3 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>).</p>
 <p id="rfc.section.D.5.p.2">The object in COSE encoding gives:</p>
@@ -1379,8 +1377,8 @@ Client  Proxy  Server
 )
 </pre>
 <p id="rfc.section.D.5.p.3">This COSE object encodes to a total size of 92 bytes.</p>
-<p><a href="#comp-aes-ccm-ecdsa">Figure 10</a> summarizes these results.</p>
-<div id="rfc.figure.10"/>
+<p><a href="#comp-aes-ccm-ecdsa">Figure 11</a> summarizes these results.</p>
+<div id="rfc.figure.11"/>
 <div id="comp-aes-ccm-ecdsa"/>
 <pre>
 +----------------------+-----+-----+------+---------+------------+
@@ -1389,7 +1387,7 @@ Client  Proxy  Server
 | COSE_Encrypt0_Tagged | 5 B | 8 B | 64 B |   15 B  |    92 B    |
 +----------------------+-----+-----+------+---------+------------+
 </pre>
-<p class="figure">Figure 10: Message overhead for a 5-byte Tid using AES-CCM countersigned with ECDSA.</p>
+<p class="figure">Figure 11: Message overhead for a 5-byte Tid using AES-CCM countersigned with ECDSA.</p>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>

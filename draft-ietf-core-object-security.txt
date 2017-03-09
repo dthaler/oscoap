@@ -122,7 +122,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
      D.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  37
      D.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  38
      D.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  39
-     D.4.  Authenticated Encryption with Additional Data (AEAD)  . .  40
+     D.4.  Authenticated Encryption with Additional Data (AEAD)  . .  39
      D.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  40
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  41
 
@@ -1823,14 +1823,14 @@ Appendix C.  Examples
 
 C.1.  Secure Access to Sensor
 
-   Here is an example targeting the scenario in the Section 2.2.1. -
-   Forwarding of [I-D.hartke-core-e2e-security-reqs].  The example
-   illustrates a client requesting the alarm status from a server.  In
-   the request, CoAP option Uri-Path is encrypted and integrity
-   protected, and the CoAP header fields Code and Version are integrity
-   protected (see Section 4).  In the response, the CoAP Payload is
-   encrypted and integrity protected, and the CoAP header fields Code
-   and Version are integrity protected.
+   This example targets the scenario in Section 3.1 of
+   [I-D.hartke-core-e2e-security-reqs].  The example illustrates a
+   client requesting the alarm status from a server.
+
+
+
+
+
 
 
 
@@ -1861,7 +1861,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
          |      |      |
          |      +----->|            Code: 0.01 (GET)
          |      | GET  |           Token: 0x7b
-         |      |      | Object-Security: [cid:5f, seq:42,
+         |      |      | Object-Security: [kid:5f, seq:42,
          |      |      |                   {Uri-Path:"alarm_status"},
          |      |      |                   <Tag>]
          |      |      |         Payload: -
@@ -1877,26 +1877,26 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
          |      |      |         Payload: [{"OFF"}, <Tag>]
          |      |      |
 
-    Indication of CoAP GET protected with OSCOAP.  The brackets [ ... ]
-     indicate a COSE object.  The brackets { ... } indicate encrypted
-                                   data.
+   Figure 6: Secure Access to Sensor.  Square brackets [ ... ] indicate
+      a COSE object.  Curly brackets { ... } indicate encrypted data.
 
-   Since the unprotected request message (GET) doesn't allow payload,
-   the Object-Security option carries the COSE object as its value.
-   Since the unprotected response message (Content) allows payload
-   ("OFF"), the COSE object (indicated with [ ... ]) is carried as the
-   CoAP payload.
+   Since the method (GET) doesn't allow payload, the Object-Security
+   option carries the COSE object as its value.  Since the response code
+   (Content) allows payload ("OFF"), the COSE object (indicated with [
+   ... ]) is carried as the CoAP payload.
 
-   The COSE header of the request contains a Context Identifier
-   (cid:5fdc), indicating which security context was used to protect the
-   message and a Sequence Number (seq:42).
+   The COSE header of the request contains an identifier (cid:5f),
+   indicating which security context was used to protect the message and
+   a Sequence Number (seq:42).
 
    The option Uri-Path (alarm_status) and payload ("OFF") are formatted
-   as indicated in Section 5, and encrypted in the COSE Cipher Text
+   as indicated in Section 5, and encrypted in the COSE ciphertext
    (indicated with { ... }).
 
    The server verifies that the Sequence Number has not been received
-   before (see Section 6).  The client verifies that the Sequence Number
+   before (see Section 6).  The client verifies that the response
+   message is generated as a response to the request.
+
 
 
 
@@ -1906,54 +1906,54 @@ Selander, et al.       Expires September 10, 2017              [Page 34]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-   has not been received before and that the response message is
-   generated as a response to the sent request message (see Section 6).
-
 C.2.  Secure Subscribe to Sensor
 
-   Here is an example targeting the scenario in the Forwarding with
-   observe case of [I-D.hartke-core-e2e-security-reqs].  The example
-   illustrates a client requesting subscription to a blood sugar
-   measurement resource (GET /glucose), and first receiving the value
-   220 mg/dl, and then a second reading with value 180 mg/dl.  The CoAP
-   options Observe, Uri-Path, Content-Format, and Payload are encrypted
-   and integrity protected, and the CoAP header field Code is integrity
-   protected (see Section 4).
+   This example targets the scenario in Section 3.2 of
+   [I-D.hartke-core-e2e-security-reqs].  The example illustrates a
+   client requesting subscription to a blood sugar measurement resource
+   (GET /glucose), and first receiving the value 220 mg/dl, and then a
+   second reading with value 180 mg/dl.
 
-   Client  Proxy  Server
-      |      |      |
-      +----->|      |            Code: 0.01 (GET)
-      | GET  |      |           Token: 0x83
-      |      |      |         Observe: 0
-      |      |      | Object-Security: [cid:ca, seq:15b7, {Observe:0,
-      |      |      |                   Uri-Path:"glucose"}, <Tag>]
-      |      |      |         Payload: -
-      |      |      |
-      |      +----->|            Code: 0.01 (GET)
-      |      | GET  |           Token: 0xbe
-      |      |      |         Observe: 0
-      |      |      | Object-Security: [cid:ca, seq:15b7, {Observe:0,
-      |      |      |                   Uri-Path:"glucose"}, <Tag>]
-      |      |      |         Payload: -
-      |      |      |
-      |      |<-----+            Code: 2.05 (Content)
-      |      | 2.05 |           Token: 0xbe
-      |      |      |         Max-Age: 0
-      |      |      |         Observe: 1
-      |      |      | Object-Security: -
-      |      |      |         Payload: [seq:32c2, {Observe:1,
-      |      |      |                   Content-Format:0, "220"}, <Tag>]
-      |      |      |
-      |<-----+      |            Code: 2.05 (Content)
-      | 2.05 |      |           Token: 0x83
-      |      |      |         Max-Age: 0
-      |      |      |         Observe: 1
-      |      |      | Object-Security: -
-      |      |      |         Payload: [seq:32c2, {Observe:1,
-      |      |      |                   Content-Format:0, "220"}, <Tag>]
-     ...    ...    ...
-      |      |      |
-      |      |<-----+            Code: 2.05 (Content)
+    Client  Proxy  Server
+       |      |      |
+       +----->|      |            Code: 0.01 (GET)
+       | GET  |      |           Token: 0x83
+       |      |      |         Observe: 0
+       |      |      | Object-Security: [kid:ca, seq:15b7, {Observe:0,
+       |      |      |                   Uri-Path:"glucose"}, <Tag>]
+       |      |      |         Payload: -
+       |      |      |
+       |      +----->|            Code: 0.01 (GET)
+       |      | GET  |           Token: 0xbe
+       |      |      |         Observe: 0
+       |      |      | Object-Security: [kid:ca, seq:15b7, {Observe:0,
+       |      |      |                   Uri-Path:"glucose"}, <Tag>]
+       |      |      |         Payload: -
+       |      |      |
+       |      |<-----+            Code: 2.05 (Content)
+       |      | 2.05 |           Token: 0xbe
+       |      |      |         Observe: 0032c2
+       |      |      | Object-Security: -
+       |      |      |         Payload: [seq:32c2, {Content-Format:0,
+       |      |      |                   "220"}, <Tag>]
+       |      |      |
+       |<-----+      |            Code: 2.05 (Content)
+       | 2.05 |      |           Token: 0x83
+       |      |      |         Observe: 0032c2
+       |      |      | Object-Security: -
+       |      |      |         Payload: [seq:32c2, {Content-Format:0,
+       |      |      |                   "220"}, <Tag>]
+      ...    ...    ...
+       |      |      |
+       |      |<-----+            Code: 2.05 (Content)
+       |      | 2.05 |           Token: 0xbe
+       |      |      |         Observe: 0032c6
+       |      |      | Object-Security: -
+       |      |      |         Payload: [seq:32c6, {Content-Format:0,
+       |      |      |                   "180"}, <Tag>]
+       |      |      |
+       |<-----+      |            Code: 2.05 (Content)
+       | 2.05 |      |           Token: 0x83
 
 
 
@@ -1962,43 +1962,33 @@ Selander, et al.       Expires September 10, 2017              [Page 35]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-      |      | 2.05 |           Token: 0xbe
-      |      |      |         Max-Age: 0
-      |      |      |         Observe: 2
-      |      |      | Object-Security: -
-      |      |      |         Payload: [seq:32c6, {Observe:2,
-      |      |      |                   Content-Format:0, "180"}, <Tag>]
-      |      |      |
-      |<-----+      |            Code: 2.05 (Content)
-      | 2.05 |      |           Token: 0x83
-      |      |      |         Max-Age: 0
-      |      |      |         Observe: 2
-      |      |      | Object-Security: -
-      |      |      |         Payload: [seq:32c6, {Observe:2,
-      |      |      |                   Content-Format:0, "180"}, <Tag>]
-      |      |      |
+       |      |      |         Observe: 0032c6
+       |      |      | Object-Security: -
+       |      |      |         Payload: [seq:32c6, {Content-Format:0,
+       |      |      |                   "180"}, <Tag>]
+       |      |      |
 
-   Figure 6: Indication of CoAP GET protected with OSCOAP.  The brackets
-       [ ... ] indicates COSE object.  The bracket { ... } indicates
-                              encrypted data.
+      Figure 7: Secure Subscribe to Sensor.  Square brackets [ ... ]
+    indicate a COSE object.  Curly brackets { ... } indicate encrypted
+                                   data.
 
-   Since the unprotected request message (GET) doesn't allow payload,
-   the COSE object (indicated with [ ... ]) is carried in the Object-
-   Security option value.  Since the unprotected response message
-   (Content) allows payload, the Object-Security option is empty, and
-   the COSE object is carried as the payload.
+   Since the method (GET) doesn't allow payload, the Object-Security
+   option carries the COSE object as its value.  Since the response code
+   (Content) allows payload ("OFF"), the COSE object (indicated with [
+   ... ]) is carried as the CoAP payload.
 
-   The COSE header of the request contains a Context Identifier
-   (cid:ca), indicating which security context was used to protect the
-   message and a Sequence Number (seq:15b7).
+   The COSE header of the request contains an identifier (kid:ca),
+   indicating which security context was used to protect the message and
+   a Sequence Number (seq:15b7).  The COSE header of the responses
+   contains sequence numbers (seq:32c and seq:32c6).
 
-   The options Observe, Content-Format and the payload are formatted as
-   indicated in Section 5, and encrypted in the COSE ciphertext
-   (indicated with { ... }).
+   The options Content-Format and the payload are formatted as indicated
+   in Section 5, and encrypted in the COSE ciphertext (indicated with {
+   ... }).  The option Observe is integrity protected.
 
-   The server verifies that the Sequence Number has not been received
-   before (see Section 6).  The client verifies that the Sequence Number
-   has not been received before and that the response message is
+   The server verifies that the sequence number has not been received
+   before (see Section 6).  The client verifies that the sequence number
+   has not been received before and tha the response message is
    generated as a response to the subscribe request.
 
 Appendix D.  Object Security of Content (OSCON)
@@ -2010,14 +2000,6 @@ Appendix D.  Object Security of Content (OSCON)
    proxy of [I-D.hartke-core-e2e-security-reqs].  In contrast, many use
    cases require one and the same message to be protected for, and
    verified by, multiple endpoints, see caching proxy section of
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 36]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    [I-D.hartke-core-e2e-security-reqs].  Those security requirements can
    be addressed by protecting essentially the payload/content of
    individual messages using the COSE format ([I-D.ietf-cose-msg]),
@@ -2027,6 +2009,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
    OSCON transforms an unprotected CoAP message into a protected CoAP
    message in the following way: the payload of the unprotected CoAP
    message is wrapped by a COSE object, which replaces the payload of
+
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 36]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
+
    the unprotected CoAP message.  We call the result the "protected"
    CoAP message.
 
@@ -2065,15 +2056,6 @@ D.1.  Overhead OSCON
    supported: message authentication code, digital signature,
    authenticated encryption, and symmetric encryption + digital
    signature.  The use of digital signature is necessary for
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 37]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
    applications with many legitimate recipients of a given message, and
    where data origin authentication is required.
 
@@ -2082,6 +2064,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    The sizes of COSE messages for selected algorithms are detailed in
    this section.
+
+
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 37]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
    The size of the header is shown separately from the size of the MAC/
    signature.  A 4-byte Context Identifier and a 1-byte Sequence Number
@@ -2113,23 +2104,6 @@ D.2.  MAC Only
 
    The object in COSE encoding gives:
 
-
-
-
-
-
-
-
-
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 38]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
-
             996(                         # COSE_Mac0_Tagged
               [
                 h'a20444a1534e3c0641a3', # protected:
@@ -2143,7 +2117,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    This COSE object encodes to a total size of 26 bytes.
 
-   Figure 7 summarizes these results.
+   Figure 8 summarizes these results.
+
+
+
+
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 38]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
           +------------------+-----+-----+---------+------------+
           |     Structure    | Tid | MAC | COSE OH | Message OH |
@@ -2151,7 +2136,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
           | COSE_Mac0_Tagged | 5 B | 8 B |   13 B  |    26 B    |
           +------------------+-----+-----+---------+------------+
 
-       Figure 7: Message overhead for a 5-byte Tid using HMAC 256/64
+       Figure 8: Message overhead for a 5-byte Tid using HMAC 256/64
 
 D.3.  Signature Only
 
@@ -2175,16 +2160,7 @@ D.3.  Signature Only
 
    This COSE object encodes to a total size of 83 bytes.
 
-   Figure 8 summarizes these results.
-
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 39]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
+   Figure 9 summarizes these results.
 
          +-------------------+-----+------+---------+------------+
          |     Structure     | Tid |  SIG | COSE OH | Message OH |
@@ -2192,7 +2168,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
          | COSE_Sign1_Tagged | 5 B | 64 B |   14 B  |  83 bytes  |
          +-------------------+-----+------+---------+------------+
 
-      Figure 8: Message overhead for a 5-byte Tid using 64 byte ECDSA
+      Figure 9: Message overhead for a 5-byte Tid using 64 byte ECDSA
                                 signature.
 
 D.4.  Authenticated Encryption with Additional Data (AEAD)
@@ -2202,6 +2178,13 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
    Since the key is implicitly known by the recipient, the
    COSE_Encrypt0_Tagged structure is used (Section 5.2 of
    [I-D.ietf-cose-msg]).
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 39]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
    The object in COSE encoding gives:
 
@@ -2217,7 +2200,7 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
 
    This COSE object encodes to a total size of 25 bytes.
 
-   Figure 9 summarizes these results.
+   Figure 10 summarizes these results.
 
         +----------------------+-----+-----+---------+------------+
         |       Structure      | Tid | TAG | COSE OH | Message OH |
@@ -2225,7 +2208,7 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
         | COSE_Encrypt0_Tagged | 5 B | 8 B |   12 B  |  25 bytes  |
         +----------------------+-----+-----+---------+------------+
 
-     Figure 9: Message overhead for a 5-byte Tid using AES_128_CCM_8.
+     Figure 10: Message overhead for a 5-byte Tid using AES_128_CCM_8.
 
 D.5.  Symmetric Encryption with Asymmetric Signature (SEAS)
 
@@ -2234,13 +2217,6 @@ D.5.  Symmetric Encryption with Asymmetric Signature (SEAS)
    defines the field 'counter signature w/o headers' that is used here
    to sign a COSE_Encrypt0_Tagged message (see Section 3 of
    [I-D.ietf-cose-msg]).
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 40]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
-
 
    The object in COSE encoding gives:
 
@@ -2257,7 +2233,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    This COSE object encodes to a total size of 92 bytes.
 
-   Figure 10 summarizes these results.
+   Figure 11 summarizes these results.
+
+
+
+Selander, et al.       Expires September 10, 2017              [Page 40]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
+
 
     +----------------------+-----+-----+------+---------+------------+
     |       Structure      | Tid | TAG | SIG  | COSE OH | Message OH |
@@ -2265,7 +2248,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
     | COSE_Encrypt0_Tagged | 5 B | 8 B | 64 B |   15 B  |    92 B    |
     +----------------------+-----+-----+------+---------+------------+
 
-        Figure 10: Message overhead for a 5-byte Tid using AES-CCM
+        Figure 11: Message overhead for a 5-byte Tid using AES-CCM
                          countersigned with ECDSA.
 
 Authors' Addresses
@@ -2286,16 +2269,6 @@ Authors' Addresses
    Ericsson AB
 
    Email: francesca.palombini@ericsson.com
-
-
-
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 41]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
    Ludwig Seitz
@@ -2320,33 +2293,4 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Selander, et al.       Expires September 10, 2017              [Page 42]
+Selander, et al.       Expires September 10, 2017              [Page 41]
