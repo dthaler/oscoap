@@ -1161,8 +1161,7 @@ After Compression (16 bytes)
 <h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#app-vectors" id="app-vectors">Test Vectors</a></h1>
 <p id="rfc.section.B.p.1">TODO: This section needs to be updated.</p>
 <h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#examples" id="examples">Examples</a></h1>
-<p id="rfc.section.C.p.1">TODO: This section needs to be updated.</p>
-<p id="rfc.section.C.p.2">This section gives examples of OSCOAP. The message exchanges are made, based on the assumption that there is a security context established between client and server. For simplicity, these examples only indicate the content of the messages without going into detail of the COSE message format.</p>
+<p id="rfc.section.C.p.1">This section gives examples of OSCOAP. The message exchanges are made, based on the assumption that there is a security context established between client and server. For simplicity, these examples only indicate the content of the messages without going into detail of the COSE message format.</p>
 <h1 id="rfc.appendix.C.1"><a href="#rfc.appendix.C.1">C.1.</a> <a href="#secure-access-to-sensor" id="secure-access-to-sensor">Secure Access to Sensor</a></h1>
 <p id="rfc.section.C.1.p.1">Here is an example targeting the scenario in the Section 2.2.1. - Forwarding of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. The example illustrates a client requesting the alarm status from a server. In the request, CoAP option Uri-Path is encrypted and integrity protected, and the CoAP header fields Code and Version are integrity protected (see <a href="#coap-headers-and-options">Section 4</a>). In the response, the CoAP Payload is encrypted and integrity protected, and the CoAP header fields Code and Version are integrity protected.</p>
 <div id="rfc.figure.6"/>
@@ -1172,29 +1171,27 @@ Client  Proxy  Server
    |      |      |
    +-----&gt;|      |            Code: 0.01 (GET)
    | GET  |      |           Token: 0x8c
-   |      |      | Object-Security: [cid:5fdc, seq:42,
+   |      |      | Object-Security: [kid:5f, seq:42,
    |      |      |                   {Uri-Path:"alarm_status"},
    |      |      |                   &lt;Tag&gt;]
    |      |      |         Payload: -
    |      |      |
    |      +-----&gt;|            Code: 0.01 (GET)
    |      | GET  |           Token: 0x7b
-   |      |      | Object-Security: [cid:5fdc, seq:42,
+   |      |      | Object-Security: [cid:5f, seq:42,
    |      |      |                   {Uri-Path:"alarm_status"},
    |      |      |                   &lt;Tag&gt;]
    |      |      |         Payload: -
    |      |      |
    |      |&lt;-----+            Code: 2.05 (Content)
    |      | 2.05 |           Token: 0x7b
-   |      |      |         Max-Age: 0
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:56, {"OFF"}, &lt;Tag&gt;]
+   |      |      |         Payload: [{"OFF"}, &lt;Tag&gt;]
    |      |      |
    |&lt;-----+      |            Code: 2.05 (Content)
    | 2.05 |      |           Token: 0x8c
-   |      |      |         Max-Age: 0
    |      |      | Object-Security: -
-   |      |      |         Payload: [seq:56, {"OFF"}, &lt;Tag&gt;]
+   |      |      |         Payload: [{"OFF"}, &lt;Tag&gt;]
    |      |      |
 </pre>
 <p class="figure">Figure 6: Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicate a COSE object. The brackets { ... } indicate encrypted data.</p>
