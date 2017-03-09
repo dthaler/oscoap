@@ -1172,26 +1172,24 @@ Client  Proxy  Server
    +-----&gt;|      |            Code: 0.01 (GET)
    | GET  |      |           Token: 0x8c
    |      |      | Object-Security: [kid:5f, seq:42,
-   |      |      |                   {Uri-Path:"alarm_status"},
-   |      |      |                   &lt;Tag&gt;]
+   |      |      |                   {Uri-Path:"alarm_status"}]
    |      |      |         Payload: -
    |      |      |
    |      +-----&gt;|            Code: 0.01 (GET)
    |      | GET  |           Token: 0x7b
    |      |      | Object-Security: [kid:5f, seq:42,
-   |      |      |                   {Uri-Path:"alarm_status"},
-   |      |      |                   &lt;Tag&gt;]
+   |      |      |                   {Uri-Path:"alarm_status"}]
    |      |      |         Payload: -
    |      |      |
    |      |&lt;-----+            Code: 2.05 (Content)
    |      | 2.05 |           Token: 0x7b
    |      |      | Object-Security: -
-   |      |      |         Payload: [{"OFF"}, &lt;Tag&gt;]
+   |      |      |         Payload: [{"OFF"}]
    |      |      |
    |&lt;-----+      |            Code: 2.05 (Content)
    | 2.05 |      |           Token: 0x8c
    |      |      | Object-Security: -
-   |      |      |         Payload: [{"OFF"}, &lt;Tag&gt;]
+   |      |      |         Payload: [{"OFF"}]
    |      |      |
 </pre>
 <p class="figure">Figure 6: Secure Access to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
