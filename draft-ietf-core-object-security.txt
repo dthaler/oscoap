@@ -1914,46 +1914,46 @@ C.2.  Secure Subscribe to Sensor
    (GET /glucose), and first receiving the value 220 mg/dl, and then a
    second reading with value 180 mg/dl.
 
-    Client  Proxy  Server
-       |      |      |
-       +----->|      |            Code: 0.01 (GET)
-       | GET  |      |           Token: 0x83
-       |      |      |         Observe: 0
-       |      |      | Object-Security: [kid:ca, seq:15b7, {Observe:0,
-       |      |      |                   Uri-Path:"glucose"}, <Tag>]
-       |      |      |         Payload: -
-       |      |      |
-       |      +----->|            Code: 0.01 (GET)
-       |      | GET  |           Token: 0xbe
-       |      |      |         Observe: 0
-       |      |      | Object-Security: [kid:ca, seq:15b7, {Observe:0,
-       |      |      |                   Uri-Path:"glucose"}, <Tag>]
-       |      |      |         Payload: -
-       |      |      |
-       |      |<-----+            Code: 2.05 (Content)
-       |      | 2.05 |           Token: 0xbe
-       |      |      |         Observe: 0032c2
-       |      |      | Object-Security: -
-       |      |      |         Payload: [seq:32c2, {Content-Format:0,
-       |      |      |                   "220"}, <Tag>]
-       |      |      |
-       |<-----+      |            Code: 2.05 (Content)
-       | 2.05 |      |           Token: 0x83
-       |      |      |         Observe: 0032c2
-       |      |      | Object-Security: -
-       |      |      |         Payload: [seq:32c2, {Content-Format:0,
-       |      |      |                   "220"}, <Tag>]
-      ...    ...    ...
-       |      |      |
-       |      |<-----+            Code: 2.05 (Content)
-       |      | 2.05 |           Token: 0xbe
-       |      |      |         Observe: 0032c6
-       |      |      | Object-Security: -
-       |      |      |         Payload: [seq:32c6, {Content-Format:0,
-       |      |      |                   "180"}, <Tag>]
-       |      |      |
-       |<-----+      |            Code: 2.05 (Content)
-       | 2.05 |      |           Token: 0x83
+     Client  Proxy  Server
+        |      |      |
+        +----->|      |            Code: 0.01 (GET)
+        | GET  |      |           Token: 0x83
+        |      |      |         Observe: 0
+        |      |      | Object-Security: [kid:ca, seq:15b7,
+        |      |      |                   {Uri-Path:"glucose"}, <Tag>]
+        |      |      |         Payload: -
+        |      |      |
+        |      +----->|            Code: 0.01 (GET)
+        |      | GET  |           Token: 0xbe
+        |      |      |         Observe: 0
+        |      |      | Object-Security: [kid:ca, seq:15b7,
+        |      |      |                   {Uri-Path:"glucose"}, <Tag>]
+        |      |      |         Payload: -
+        |      |      |
+        |      |<-----+            Code: 2.05 (Content)
+        |      | 2.05 |           Token: 0xbe
+        |      |      |         Observe: 0032c2
+        |      |      | Object-Security: -
+        |      |      |         Payload: [seq:32c2, {Content-Format:0,
+        |      |      |                   "220"}, <Tag>]
+        |      |      |
+        |<-----+      |            Code: 2.05 (Content)
+        | 2.05 |      |           Token: 0x83
+        |      |      |         Observe: 0032c2
+        |      |      | Object-Security: -
+        |      |      |         Payload: [seq:32c2, {Content-Format:0,
+        |      |      |                   "220"}, <Tag>]
+       ...    ...    ...
+        |      |      |
+        |      |<-----+            Code: 2.05 (Content)
+        |      | 2.05 |           Token: 0xbe
+        |      |      |         Observe: 0032c6
+        |      |      | Object-Security: -
+        |      |      |         Payload: [seq:32c6, {Content-Format:0,
+        |      |      |                   "180"}, <Tag>]
+        |      |      |
+        |<-----+      |            Code: 2.05 (Content)
+        | 2.05 |      |           Token: 0x83
 
 
 
@@ -1962,11 +1962,11 @@ Selander, et al.       Expires September 10, 2017              [Page 35]
 Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
 
-       |      |      |         Observe: 0032c6
-       |      |      | Object-Security: -
-       |      |      |         Payload: [seq:32c6, {Content-Format:0,
-       |      |      |                   "180"}, <Tag>]
-       |      |      |
+        |      |      |         Observe: 0032c6
+        |      |      | Object-Security: -
+        |      |      |         Payload: [seq:32c6, {Content-Format:0,
+        |      |      |                   "180"}, <Tag>]
+        |      |      |
 
       Figure 7: Secure Subscribe to Sensor.  Square brackets [ ... ]
     indicate a COSE object.  Curly brackets { ... } indicate encrypted
