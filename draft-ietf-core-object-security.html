@@ -802,34 +802,13 @@ external_aad = [
 <p/>
 
 <ul>
-  <li>ver: uint, contains the CoAP version number, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a>.</li>
-  <li>code: uint, contains is the CoAP Code of the unprotected CoAP message, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a>.</li>
-  <li>options: bstr, contains the class I options <a href="#class-i">Section 4.3.2</a>&#160;encoded as described in Section 3.1 of <a href="#RFC7252">[RFC7252]</a>, where the delta is the difference to the previously included class I option</li>
-  <li>alg: int, contains the Algorithm from the security context used for the exchange (see <a href="#context-definition">Section 3.1</a>).</li>
-  <li>request_id : bstr, contains the Sender ID for the endpoint sending the request; which means that for the endpoint receiving the request and sending the response, the id has value Recipient ID. Note that the same request_id value is used in the external aad both for request and response and in both endpoints, as long as server and client roles remain the same. An example is given in <a href="#fig-request-id">Figure 6</a>.</li>
-  <li>request_seq : bstr, contains the value of the &#8220;Partial IV&#8221; in the COSE object of the request (see Section 5).</li>
+  <li>ver: contains the CoAP version number, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a>.</li>
+  <li>code: contains is the CoAP Code of the unprotected CoAP message, as defined in Section 3 of <a href="#RFC7252">[RFC7252]</a>.</li>
+  <li>options: contains the class I options <a href="#class-i">Section 4.3.2</a>&#160;encoded as described in Section 3.1 of <a href="#RFC7252">[RFC7252]</a>, where the delta is the difference to the previously included class I option</li>
+  <li>alg: contains the Algorithm from the security context used for the exchange (see <a href="#context-definition">Section 3.1</a>).</li>
+  <li>request_id:  contains the value of the &#8220;kid&#8221; in the COSE object of the request (see Section 5).</li>
+  <li>request_seq: contains the value of the &#8220;Partial IV&#8221; in the COSE object of the request (see Section 5).</li>
 </ul>
-<div id="rfc.figure.6"/>
-<div id="fig-request-id"/>
-<pre>
-          .-------------------.      .-------------------.
-          |  Sender ID = 00 , |      |  Sender ID = 01 , |
-          | Recipient ID = 01 |      | Recipient ID = 00 |
-          '-------------------'      '-------------------'
-                   Client                   Server
-                      |                       |
- Protect request with |                       |
-request_id = Sender_ID = 00                   |
-                      +----------------------&gt;|
-                      |                       | Verify request with
-                      |                  request_id = Recipient_ID = 00
-                      |                       | Protect response with
-                      |                  request_id = Recipient_ID = 00
-Verify response with  |&lt;----------------------+
-request_id = Sender_ID = 00                   |
-                      |                       |
-</pre>
-<p class="figure">Figure 6: Example of use of the request_id in the external_aad</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#sequence-numbers" id="sequence-numbers">Sequence Numbers, Replay, Message Binding, and Freshness</a></h1>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#aead-nonce-uniqueness" id="aead-nonce-uniqueness">AEAD Nonce Uniqueness</a></h1>
 <p id="rfc.section.6.1.p.1">An AEAD nonce MUST NOT be used more than once per AEAD key. In order to assure unique nonces, each Sender Context contains a Sender Sequence Number used to protect requests, and - in case of Observe - responses. The maximum sequence number is algorithm dependent and SHALL be 2^(nonce length in bits - 1) - 1. If the Sender Sequence Number exceeds the maximum sequence number, the endpoint MUST NOT process any more messages with the given Sender Context. The endpoint SHOULD acquire a new security context (and consequently inform the other endpoint) before this happens. The latter is out of scope of this document.</p>
@@ -1111,7 +1090,7 @@ request_id = Sender_ID = 00                   |
 <p id="rfc.section.B.p.2">This section gives examples of OSCOAP. The message exchanges are made, based on the assumption that there is a security context established between client and server. For simplicity, these examples only indicate the content of the messages without going into detail of the COSE message format.</p>
 <h1 id="rfc.appendix.B.1"><a href="#rfc.appendix.B.1">B.1.</a> <a href="#secure-access-to-sensor" id="secure-access-to-sensor">Secure Access to Sensor</a></h1>
 <p id="rfc.section.B.1.p.1">Here is an example targeting the scenario in the Section 2.2.1. - Forwarding of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. The example illustrates a client requesting the alarm status from a server. In the request, CoAP option Uri-Path is encrypted and integrity protected, and the CoAP header fields Code and Version are integrity protected (see <a href="#coap-headers-and-options">Section 4</a>). In the response, the CoAP Payload is encrypted and integrity protected, and the CoAP header fields Code and Version are integrity protected.</p>
-<div id="rfc.figure.7"/>
+<div id="rfc.figure.6"/>
 <div id="get-protected-sig"/>
 <pre>
 Client  Proxy  Server
@@ -1143,14 +1122,14 @@ Client  Proxy  Server
    |      |      |         Payload: [seq:56, {"OFF"}, &lt;Tag&gt;]
    |      |      |
 </pre>
-<p class="figure">Figure 7: Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicate a COSE object. The brackets { ... } indicate encrypted data.</p>
+<p class="figure">Figure 6: Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicate a COSE object. The brackets { ... } indicate encrypted data.</p>
 <p id="rfc.section.B.1.p.2">Since the unprotected request message (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value.  Since the unprotected response message (Content) allows payload (&#8220;OFF&#8221;), the COSE object (indicated with [ &#8230; ]) is carried as the CoAP payload.</p>
 <p id="rfc.section.B.1.p.3">The COSE header of the request contains a Context Identifier (cid:5fdc), indicating which security context was used to protect the message and a Sequence Number (seq:42).</p>
 <p id="rfc.section.B.1.p.4">The option Uri-Path (alarm_status) and payload (&#8220;OFF&#8221;) are formatted as indicated in <a href="#cose-object">Section 5</a>, and encrypted in the COSE Cipher Text (indicated with { &#8230; }).</p>
 <p id="rfc.section.B.1.p.5">The server verifies that the Sequence Number has not been received before (see <a href="#sequence-numbers">Section 6</a>). The client verifies that the Sequence Number has not been received before and that the response message is generated as a response to the sent request message (see <a href="#sequence-numbers">Section 6</a>).</p>
 <h1 id="rfc.appendix.B.2"><a href="#rfc.appendix.B.2">B.2.</a> <a href="#secure-subscribe-to-sensor" id="secure-subscribe-to-sensor">Secure Subscribe to Sensor</a></h1>
 <p id="rfc.section.B.2.p.1">Here is an example targeting the scenario in the Forwarding with observe case  of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a>. The example illustrates a client requesting subscription to a blood sugar measurement resource (GET /glucose), and first receiving the value 220 mg/dl, and then a second reading with value 180 mg/dl. The CoAP options Observe, Uri-Path, Content-Format, and Payload are encrypted and integrity protected, and the CoAP header field Code is integrity protected (see <a href="#coap-headers-and-options">Section 4</a>).</p>
-<div id="rfc.figure.8"/>
+<div id="rfc.figure.7"/>
 <div id="get-protected-enc"/>
 <pre>
 Client  Proxy  Server
@@ -1203,7 +1182,7 @@ Client  Proxy  Server
    |      |      |                   Content-Format:0, "180"}, &lt;Tag&gt;]
    |      |      |
 </pre>
-<p class="figure">Figure 8: Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicates COSE object. The bracket { ... } indicates encrypted data.</p>
+<p class="figure">Figure 7: Indication of CoAP GET protected with OSCOAP. The brackets [ ... ] indicates COSE object. The bracket { ... } indicates encrypted data.</p>
 <p id="rfc.section.B.2.p.2">Since the unprotected request message (GET) doesn&#8217;t allow payload, the COSE object (indicated with [ &#8230; ]) is carried in the Object-Security option value. Since the unprotected response message (Content) allows payload, the Object-Security option is empty, and the COSE object is carried as the payload.</p>
 <p id="rfc.section.B.2.p.3">The COSE header of the request contains a Context Identifier (cid:ca), indicating which security context was used to protect the message and a Sequence Number (seq:15b7).</p>
 <p id="rfc.section.B.2.p.4">The options Observe, Content-Format and the payload are formatted as indicated in <a href="#cose-object">Section 5</a>, and encrypted in the COSE ciphertext (indicated with { &#8230; }).</p>
@@ -1248,8 +1227,8 @@ Client  Proxy  Server
 )
 </pre>
 <p id="rfc.section.C.2.p.4">This COSE object encodes to a total size of 26 bytes.</p>
-<p><a href="#comp-hmac-sha256">Figure 9</a> summarizes these results.</p>
-<div id="rfc.figure.9"/>
+<p><a href="#comp-hmac-sha256">Figure 8</a> summarizes these results.</p>
+<div id="rfc.figure.8"/>
 <div id="comp-hmac-sha256"/>
 <pre>
 +------------------+-----+-----+---------+------------+
@@ -1258,7 +1237,7 @@ Client  Proxy  Server
 | COSE_Mac0_Tagged | 5 B | 8 B |   13 B  |    26 B    |
 +------------------+-----+-----+---------+------------+
 </pre>
-<p class="figure">Figure 9: Message overhead for a 5-byte Tid using HMAC 256/64</p>
+<p class="figure">Figure 8: Message overhead for a 5-byte Tid using HMAC 256/64</p>
 <h1 id="rfc.appendix.C.3"><a href="#rfc.appendix.C.3">C.3.</a> <a href="#ssm-dig-sig" id="ssm-dig-sig">Signature Only</a></h1>
 <p id="rfc.section.C.3.p.1">This example is based on ECDSA, with a signature of 64 bytes.</p>
 <p id="rfc.section.C.3.p.2">Since only one signature is used, the COSE_Sign1_Tagged structure is used (Section 4.2 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>).</p>
@@ -1276,8 +1255,8 @@ Client  Proxy  Server
 )
 </pre>
 <p id="rfc.section.C.3.p.4">This COSE object encodes to a total size of 83 bytes.</p>
-<p><a href="#comp-ecdsa">Figure 10</a> summarizes these results.</p>
-<div id="rfc.figure.10"/>
+<p><a href="#comp-ecdsa">Figure 9</a> summarizes these results.</p>
+<div id="rfc.figure.9"/>
 <div id="comp-ecdsa"/>
 <pre>
 +-------------------+-----+------+---------+------------+
@@ -1286,7 +1265,7 @@ Client  Proxy  Server
 | COSE_Sign1_Tagged | 5 B | 64 B |   14 B  |  83 bytes  |
 +-------------------+-----+------+---------+------------+
 </pre>
-<p class="figure">Figure 10: Message overhead for a 5-byte Tid using 64 byte ECDSA signature.</p>
+<p class="figure">Figure 9: Message overhead for a 5-byte Tid using 64 byte ECDSA signature.</p>
 <h1 id="rfc.appendix.C.4"><a href="#rfc.appendix.C.4">C.4.</a> <a href="#sem-auth-enc" id="sem-auth-enc">Authenticated Encryption with Additional Data (AEAD)</a></h1>
 <p id="rfc.section.C.4.p.1">This example is based on AES-CCM with the Tag truncated to 8 bytes.</p>
 <p id="rfc.section.C.4.p.2">Since the key is implicitly known by the recipient, the COSE_Encrypt0_Tagged structure is used (Section 5.2 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>).</p>
@@ -1303,8 +1282,8 @@ Client  Proxy  Server
 )
 </pre>
 <p id="rfc.section.C.4.p.4">This COSE object encodes to a total size of 25 bytes.</p>
-<p><a href="#comp-aes-ccm">Figure 11</a> summarizes these results.</p>
-<div id="rfc.figure.11"/>
+<p><a href="#comp-aes-ccm">Figure 10</a> summarizes these results.</p>
+<div id="rfc.figure.10"/>
 <div id="comp-aes-ccm"/>
 <pre>
 +----------------------+-----+-----+---------+------------+
@@ -1313,7 +1292,7 @@ Client  Proxy  Server
 | COSE_Encrypt0_Tagged | 5 B | 8 B |   12 B  |  25 bytes  |
 +----------------------+-----+-----+---------+------------+
 </pre>
-<p class="figure">Figure 11: Message overhead for a 5-byte Tid using AES_128_CCM_8.</p>
+<p class="figure">Figure 10: Message overhead for a 5-byte Tid using AES_128_CCM_8.</p>
 <h1 id="rfc.appendix.C.5"><a href="#rfc.appendix.C.5">C.5.</a> <a href="#sem-seds" id="sem-seds">Symmetric Encryption with Asymmetric Signature (SEAS)</a></h1>
 <p id="rfc.section.C.5.p.1">This example is based on AES-CCM and ECDSA with 64 bytes signature. The same assumption on the security context as in <a href="#sem-auth-enc">Appendix C.4</a>.  COSE defines the field &#8216;counter signature w/o headers&#8217; that is used here to sign a COSE_Encrypt0_Tagged message (see Section 3 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>).</p>
 <p id="rfc.section.C.5.p.2">The object in COSE encoding gives:</p>
@@ -1330,8 +1309,8 @@ Client  Proxy  Server
 )
 </pre>
 <p id="rfc.section.C.5.p.3">This COSE object encodes to a total size of 92 bytes.</p>
-<p><a href="#comp-aes-ccm-ecdsa">Figure 12</a> summarizes these results.</p>
-<div id="rfc.figure.12"/>
+<p><a href="#comp-aes-ccm-ecdsa">Figure 11</a> summarizes these results.</p>
+<div id="rfc.figure.11"/>
 <div id="comp-aes-ccm-ecdsa"/>
 <pre>
 +----------------------+-----+-----+------+---------+------------+
@@ -1340,7 +1319,7 @@ Client  Proxy  Server
 | COSE_Encrypt0_Tagged | 5 B | 8 B | 64 B |   15 B  |    92 B    |
 +----------------------+-----+-----+------+---------+------------+
 </pre>
-<p class="figure">Figure 12: Message overhead for a 5-byte Tid using AES-CCM countersigned with ECDSA.</p>
+<p class="figure">Figure 11: Message overhead for a 5-byte Tid using AES-CCM countersigned with ECDSA.</p>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
