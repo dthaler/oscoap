@@ -1877,9 +1877,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
          |      |      |         Payload: [{"OFF"}, <Tag>]
          |      |      |
 
-   Figure 6: Indication of CoAP GET protected with OSCOAP.  The brackets
-      [ ... ] indicate a COSE object.  The brackets { ... } indicate
-                              encrypted data.
+    Indication of CoAP GET protected with OSCOAP.  The brackets [ ... ]
+     indicate a COSE object.  The brackets { ... } indicate encrypted
+                                   data.
 
    Since the unprotected request message (GET) doesn't allow payload,
    the Object-Security option carries the COSE object as its value.
@@ -1978,7 +1978,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
       |      |      |                   Content-Format:0, "180"}, <Tag>]
       |      |      |
 
-   Figure 7: Indication of CoAP GET protected with OSCOAP.  The brackets
+   Figure 6: Indication of CoAP GET protected with OSCOAP.  The brackets
        [ ... ] indicates COSE object.  The bracket { ... } indicates
                               encrypted data.
 
@@ -2143,7 +2143,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    This COSE object encodes to a total size of 26 bytes.
 
-   Figure 8 summarizes these results.
+   Figure 7 summarizes these results.
 
           +------------------+-----+-----+---------+------------+
           |     Structure    | Tid | MAC | COSE OH | Message OH |
@@ -2151,7 +2151,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
           | COSE_Mac0_Tagged | 5 B | 8 B |   13 B  |    26 B    |
           +------------------+-----+-----+---------+------------+
 
-       Figure 8: Message overhead for a 5-byte Tid using HMAC 256/64
+       Figure 7: Message overhead for a 5-byte Tid using HMAC 256/64
 
 D.3.  Signature Only
 
@@ -2175,7 +2175,7 @@ D.3.  Signature Only
 
    This COSE object encodes to a total size of 83 bytes.
 
-   Figure 9 summarizes these results.
+   Figure 8 summarizes these results.
 
 
 
@@ -2192,7 +2192,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
          | COSE_Sign1_Tagged | 5 B | 64 B |   14 B  |  83 bytes  |
          +-------------------+-----+------+---------+------------+
 
-      Figure 9: Message overhead for a 5-byte Tid using 64 byte ECDSA
+      Figure 8: Message overhead for a 5-byte Tid using 64 byte ECDSA
                                 signature.
 
 D.4.  Authenticated Encryption with Additional Data (AEAD)
@@ -2217,7 +2217,7 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
 
    This COSE object encodes to a total size of 25 bytes.
 
-   Figure 10 summarizes these results.
+   Figure 9 summarizes these results.
 
         +----------------------+-----+-----+---------+------------+
         |       Structure      | Tid | TAG | COSE OH | Message OH |
@@ -2225,7 +2225,7 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
         | COSE_Encrypt0_Tagged | 5 B | 8 B |   12 B  |  25 bytes  |
         +----------------------+-----+-----+---------+------------+
 
-     Figure 10: Message overhead for a 5-byte Tid using AES_128_CCM_8.
+     Figure 9: Message overhead for a 5-byte Tid using AES_128_CCM_8.
 
 D.5.  Symmetric Encryption with Asymmetric Signature (SEAS)
 
@@ -2257,7 +2257,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
 
    This COSE object encodes to a total size of 92 bytes.
 
-   Figure 11 summarizes these results.
+   Figure 10 summarizes these results.
 
     +----------------------+-----+-----+------+---------+------------+
     |       Structure      | Tid | TAG | SIG  | COSE OH | Message OH |
@@ -2265,7 +2265,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          March 2017
     | COSE_Encrypt0_Tagged | 5 B | 8 B | 64 B |   15 B  |    92 B    |
     +----------------------+-----+-----+------+---------+------------+
 
-        Figure 11: Message overhead for a 5-byte Tid using AES-CCM
+        Figure 10: Message overhead for a 5-byte Tid using AES-CCM
                          countersigned with ECDSA.
 
 Authors' Addresses
