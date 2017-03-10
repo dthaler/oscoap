@@ -477,7 +477,7 @@ Client                                           Server
    |                                               |
 </pre>
 <p class="figure">Figure 1: Sketch of OSCOAP</p>
-<p id="rfc.section.1.p.5">OSCOAP may be used in extremely constrained settings, where CoAP over DTLS may be prohibitive e.g. due to large code size. Alternatively, OSCOAP can be combined with DTLS, thereby enabling end-to-end security of e.g. CoAP payload and options, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. Examples of the use of OSCOAP are given in <a href="#examples">Appendix C</a>.</p>
+<p id="rfc.section.1.p.5">OSCOAP may be used in extremely constrained settings, where CoAP over DTLS may be prohibitive e.g. due to large code size. Alternatively, OSCOAP can be combined with DTLS, thereby enabling end-to-end security of e.g. CoAP payload and options, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. Examples of the use of OSCOAP are given in <a href="#app-examples">Appendix C</a>.</p>
 <p id="rfc.section.1.p.6">The message protection provided by OSCOAP can alternatively be applied only to the payload of individual messages. We call this object security of content (OSCON) and it is defined in <a href="#oscon">Appendix D</a>.</p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>. These words may also appear in this document in lowercase, absent their normative meanings.</p>
@@ -1158,7 +1158,7 @@ After Compression (16 bytes)
 </pre>
 <h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#app-vectors" id="app-vectors">Test Vectors</a></h1>
 <p id="rfc.section.B.p.1">TODO: This section needs to be updated.</p>
-<h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#examples" id="examples">Examples</a></h1>
+<h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#app-examples" id="app-examples">Examples</a></h1>
 <p id="rfc.section.C.p.1">This section gives examples of OSCOAP. The message exchanges are made, based on the assumption that there is a security context established between client and server. For simplicity, these examples only indicate the content of the messages without going into detail of the COSE message format.</p>
 <h1 id="rfc.appendix.C.1"><a href="#rfc.appendix.C.1">C.1.</a> <a href="#secure-access-to-sensor" id="secure-access-to-sensor">Secure Access to Sensor</a></h1>
 <p id="rfc.section.C.1.p.1">This example targets the scenario in Section 3.1 of <a href="#I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting the alarm status from a server.</p>
