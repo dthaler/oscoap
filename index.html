@@ -333,7 +333,7 @@ address {
 
   <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-object-security-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-06" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-4-13" />
   <meta name="dct.abstract" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
   <meta name="description" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
 
@@ -357,7 +357,7 @@ address {
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 8, 2017</td>
+  <td class="left">Expires: October 15, 2017</td>
   <td class="right">Ericsson AB</td>
 </tr>
 <tr>
@@ -370,7 +370,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 06, 2017</td>
+  <td class="right">April 13, 2017</td>
 </tr>
 
     	
@@ -390,7 +390,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 8, 2017.</p>
+<p>This Internet-Draft will expire on October 15, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -482,6 +482,7 @@ Client                                           Server
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>. These words may also appear in this document in lowercase, absent their normative meanings.</p>
 <p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in CoAP <a href="#RFC7252">[RFC7252]</a>, Observe <a href="#RFC7641">[RFC7641]</a>, Blockwise <a href="#RFC7959">[RFC7959]</a>, COSE <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>, CBOR <a href="#RFC7049">[RFC7049]</a>, CDDL <a href="#I-D.greevenbosch-appsawg-cbor-cddl">[I-D.greevenbosch-appsawg-cbor-cddl]</a>, and constrained environments <a href="#RFC7228">[RFC7228]</a>.</p>
+<p id="rfc.section.1.1.p.3">The terms Common/Sender/Recipient Context, Master Secret/Salt, Sender ID/Key/IV, Recepient ID/Key/IV and Context IV are defined in <a href="#context-definition">Section 3.1</a>.</p>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#option" id="option">The Object-Security Option</a></h1>
 <p id="rfc.section.2.p.1">The Object-Security option (see <a href="#fig-option">Figure 2</a>) indicates that OSCOAP is used to protect the CoAP message exchange. The Object-Security option is critical, safe to forward, part of the cache key, not repeatable, and opaque.</p>
 <div id="rfc.figure.2"/>
@@ -525,7 +526,7 @@ Retrieve context for  | request:              |
  target resource      | [Token = Token1,      |
 Protect request with  |  kid = SID, ...]      |
   Sender Context      +----------------------&gt;| Retrieve context with
-                      |                       |  RID = SID
+                      |                       |  RID = kid
                       |                       | Verify request with
                       |                       |  Recipient Context
                       | response:             | Protect response with
@@ -562,8 +563,9 @@ Verify request with   |                       |
   <li>Recipient IV. Byte string containing the IV to verify messages received. Derived from Common Context and Recipient ID. Length is determined by Algorithm. Its value is immutable once the security context is established.</li>
   <li>Replay Window. The replay window to verify requests and observe responses received.</li>
 </ul>
-<p id="rfc.section.3.1.p.10">An endpoint may free up memory by not storing the Sender Key, Sender IV, Recipient Key, and Recipient IV, deriving them from the Common Context when needed. Alternatively, an endpoint may free up memory by not storing the Master Secret and Master Salt after the other parameters have been derived.</p>
-<p id="rfc.section.3.1.p.11">The endpoints MAY interchange the client and server roles while maintaining the same security context. When this happens, the former server still protects messages to send using its Sender Context, and verifies messages received using its Recipient Context. The same is also true for the former client. The endpoints MUST NOT change the Sender/Recipient ID. In other words, changing the roles does not change the set of keys to be used.</p>
+<p id="rfc.section.3.1.p.10">When it is understood which context is referred to (Sender Context or Recipient Context), the term &#8220;Context IV&#8221; is used to denote the IV of this context (Sender IV or Recipient IV, respectively).</p>
+<p id="rfc.section.3.1.p.11">An endpoint may free up memory by not storing the Sender Key, Sender IV, Recipient Key, and Recipient IV, deriving them from the Common Context when needed. Alternatively, an endpoint may free up memory by not storing the Master Secret and Master Salt after the other parameters have been derived.</p>
+<p id="rfc.section.3.1.p.12">The endpoints MAY interchange the client and server roles while maintaining the same security context. When this happens, the former server still protects messages to send using its Sender Context, and verifies messages received using its Recipient Context. The same is also true for the former client. The endpoints MUST NOT change the Sender/Recipient ID. In other words, changing the roles does not change the set of keys to be used.</p>
 <h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#context-derivation" id="context-derivation">Derivation of Security Context Parameters</a></h1>
 <p id="rfc.section.3.2.p.1">The parameters in the security context are derived from a small set of input parameters. The following input parameters SHALL be pre-established:</p>
 <p/>
@@ -757,7 +759,7 @@ U=Unprotected, *=Special
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#cose-object" id="cose-object">The COSE Object</a></h1>
 <p id="rfc.section.5.p.1">This section defines how to use COSE <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a> to wrap and protect data in the unprotected CoAP message. OSCOAP uses the untagged COSE_Encrypt0 structure with an Authenticated Encryption with Additional Data (AEAD) algorithm. The key lengths, IV lengths, and maximum sequence number are algorithm dependent.</p>
 <p id="rfc.section.5.p.2">The AEAD algorithm AES-CCM-64-64-128 defined in Section 10.2 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a> is mandatory to implement. For AES-CCM-64-64-128 the length of Sender Key and Recipient Key is 128 bits, the length of nonce, Sender IV, and Recipient IV is 7 bytes. The maximum Sequence Number is specified in <a href="#sec-considerations">Section 9</a>.</p>
-<p id="rfc.section.5.p.3">The nonce is constructed as described in Section 3.1 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>, i.e. by padding the partial IV (Sequence Number in network byte order) with zeroes and XORing it with the context IV (Sender IV or Recipient IV), with the following addition: The first bit in the Sender IV or Recipient IV SHALL be flipped in responses.</p>
+<p id="rfc.section.5.p.3">The nonce is constructed as described in Section 3.1 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>, i.e. by padding the partial IV (Sequence Number in network byte order) with zeroes and XORing it with the Context IV (Sender IV or Recipient IV), with the following addition: The first bit in the Context IV SHALL be flipped for responses, in case  there is a unique response (not Observe). In this way, the same sequence number can be reused for requests and corresponding responses, which reduces the size of the responses in the most common case. For detailed processing instructions, see <a href="#processing">Section 7</a>.</p>
 <p id="rfc.section.5.p.4">We denote by Plaintext the data that is encrypted and integrity protected, and by Additional Authenticated Data (AAD) the data that is integrity protected only.</p>
 <p id="rfc.section.5.p.5">The COSE Object SHALL be a COSE_Encrypt0 object with fields defined as follows</p>
 <p/>
@@ -857,7 +859,7 @@ external_aad = [
 <ol>
   <li>Retrieve the Sender Context associated with the target resource.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
-  <li>Compose the AEAD nonce by XORing the context IV (Sender IV) with the partial IV (Sequence Number in network byte order). Increment the Sequence Number by one.</li>
+  <li>Compose the AEAD nonce by XORing the Context IV (Sender IV) with the partial IV (Sequence Number in network byte order). Increment the Sequence Number by one.</li>
   <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#app-compression">Appendix A</a>.</li>
   <li>Format the protected CoAP message according to <a href="#coap-headers-and-options">Section 4</a>. The Object-Security option is added, see <a href="#options-in-protected">Section 4.3.4</a>.</li>
   <li>Store the association Token - Security Context. The client SHALL be able to find the Recipient Context from the Token in the response.</li>
@@ -871,7 +873,7 @@ external_aad = [
   <li>Retrieve the Recipient Context associated with the Recipient ID in the &#8216;kid&#8217; parameter of the COSE object.</li>
   <li>Verify the Sequence Number in the &#8216;Partial IV&#8217; parameter, as described in <a href="#sequence-numbers">Section 6</a>.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
-  <li>Compose the AEAD nonce by XORing the context IV (Recipient IV) with the padded &#8216;Partial IV&#8217; parameter, received in the COSE Object.</li>
+  <li>Compose the AEAD nonce by XORing the Context IV (Recipient IV) with the padded &#8216;Partial IV&#8217; parameter, received in the COSE Object.</li>
   <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the server MUST stop processing the request and SHOULD send a 4.01 error message.</li><li>If decryption succeeds, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 6</a>.</li></ul></li>
   <li>Add decrypted options and payload to the unprotected request, processing the E options as described in (<a href="#coap-headers-and-options">Section 4</a>). The Object-Security option is removed.</li>
   <li>The unprotected CoAP request is processed according to <a href="#RFC7252">[RFC7252]</a></li>
@@ -883,7 +885,7 @@ external_aad = [
 <ol>
   <li>Retrieve the Sender Context in the Security Context used to verify the request.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
-  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the context IV (Sender IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the context IV (Sender IV) with the partial IV (Sequence Number in network byte order). Increment the Sequence Number by one.</li></ul></li>
+  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the Context IV (Sender IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the Context IV (Sender IV) with the partial IV (Sequence Number in network byte order). Increment the Sequence Number by one.</li></ul></li>
   <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#app-compression">Appendix A</a>.</li>
   <li>Format the protected CoAP message according to <a href="#coap-headers-and-options">Section 4</a>. The Object-Security option is added, see <a href="#options-in-protected">Section 4.3.4</a>.</li>
 </ol>
@@ -896,7 +898,7 @@ external_aad = [
   <li>Retrieve the Recipient Context associated with the Token.</li>
   <li>If Observe is used, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers">Section 6</a>.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
-  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the context IV (Recipient IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the context IV (Recipient IV) with the padded Partial IV parameter from the response.</li></ul></li>
+  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the Context IV (Recipient IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the Context IV (Recipient IV) with the padded Partial IV parameter from the response.</li></ul></li>
   <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the client MUST stop processing.</li><li>If decryption succeeds and Observe is used, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 6</a>.</li></ul></li>
   <li>Add decrypted options or payload to the unprotected response overwriting any outer E options (see <a href="#coap-headers-and-options">Section 4</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the sequence number.</li></ul></li>
   <li>The unprotected CoAP response is processed according to <a href="#RFC7252">[RFC7252]</a></li>

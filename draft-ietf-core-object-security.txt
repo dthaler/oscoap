@@ -5,10 +5,10 @@
 CoRE Working Group                                           G. Selander
 Internet-Draft                                               J. Mattsson
 Intended status: Standards Track                            F. Palombini
-Expires: October 8, 2017                                     Ericsson AB
+Expires: October 15, 2017                                    Ericsson AB
                                                                 L. Seitz
                                                         SICS Swedish ICT
-                                                          April 06, 2017
+                                                          April 13, 2017
 
 
                     Object Security of CoAP (OSCOAP)
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 8, 2017.
+   This Internet-Draft will expire on October 15, 2017.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Selander, et al.         Expires October 8, 2017                [Page 1]
+Selander, et al.        Expires October 15, 2017                [Page 1]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -73,14 +73,14 @@ Table of Contents
    2.  The Object-Security Option  . . . . . . . . . . . . . . . . .   5
    3.  The Security Context  . . . . . . . . . . . . . . . . . . . .   6
      3.1.  Security Context Definition . . . . . . . . . . . . . . .   6
-     3.2.  Derivation of Security Context Parameters . . . . . . . .   8
+     3.2.  Derivation of Security Context Parameters . . . . . . . .   9
      3.3.  Requirements on the Security Context Parameters . . . . .  10
    4.  Protected CoAP Message Fields . . . . . . . . . . . . . . . .  11
-     4.1.  CoAP Payload  . . . . . . . . . . . . . . . . . . . . . .  11
+     4.1.  CoAP Payload  . . . . . . . . . . . . . . . . . . . . . .  12
      4.2.  CoAP Header . . . . . . . . . . . . . . . . . . . . . . .  12
      4.3.  CoAP Options  . . . . . . . . . . . . . . . . . . . . . .  12
    5.  The COSE Object . . . . . . . . . . . . . . . . . . . . . . .  17
-     5.1.  Plaintext . . . . . . . . . . . . . . . . . . . . . . . .  18
+     5.1.  Plaintext . . . . . . . . . . . . . . . . . . . . . . . .  19
      5.2.  Additional Authenticated Data . . . . . . . . . . . . . .  19
    6.  Sequence Numbers, Replay, Message Binding, and Freshness  . .  20
      6.1.  AEAD Nonce Uniqueness . . . . . . . . . . . . . . . . . .  20
@@ -88,14 +88,14 @@ Table of Contents
      6.3.  Sequence Number and Replay Window State . . . . . . . . .  20
      6.4.  Freshness . . . . . . . . . . . . . . . . . . . . . . . .  22
      6.5.  Delay and Mismatch Attacks  . . . . . . . . . . . . . . .  22
-   7.  Processing  . . . . . . . . . . . . . . . . . . . . . . . . .  22
-     7.1.  Protecting the Request  . . . . . . . . . . . . . . . . .  22
+   7.  Processing  . . . . . . . . . . . . . . . . . . . . . . . . .  23
+     7.1.  Protecting the Request  . . . . . . . . . . . . . . . . .  23
      7.2.  Verifying the Request . . . . . . . . . . . . . . . . . .  23
      7.3.  Protecting the Response . . . . . . . . . . . . . . . . .  24
      7.4.  Verifying the Response  . . . . . . . . . . . . . . . . .  24
    8.  Web Linking . . . . . . . . . . . . . . . . . . . . . . . . .  25
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  25
-   10. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  27
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  26
+   10. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  28
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  28
      11.1.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  28
      11.2.  Media Type Registrations . . . . . . . . . . . . . . . .  28
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Selander, et al.         Expires October 8, 2017                [Page 2]
+Selander, et al.        Expires October 15, 2017                [Page 2]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -165,7 +165,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.         Expires October 8, 2017                [Page 3]
+Selander, et al.        Expires October 15, 2017                [Page 3]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -221,7 +221,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.         Expires October 8, 2017                [Page 4]
+Selander, et al.        Expires October 15, 2017                [Page 4]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -229,6 +229,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    COSE [I-D.ietf-cose-msg], CBOR [RFC7049], CDDL
    [I-D.greevenbosch-appsawg-cbor-cddl], and constrained environments
    [RFC7228].
+
+   The terms Common/Sender/Recipient Context, Master Secret/Salt, Sender
+   ID/Key/IV, Recepient ID/Key/IV and Context IV are defined in
+   Section 3.1.
 
 2.  The Object-Security Option
 
@@ -270,18 +274,17 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
    o  If the method/response code does not allow payload, then the
       compressed COSE object Appendix A is the value of the Object-
-      Security option and the length of the Object-Security option is
-      equal to the size of the compressed COSE object.  An endpoint
-      receiving a CoAP message without payload, that also contains an
 
 
 
-
-Selander, et al.         Expires October 8, 2017                [Page 5]
+Selander, et al.        Expires October 15, 2017                [Page 5]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
+      Security option and the length of the Object-Security option is
+      equal to the size of the compressed COSE object.  An endpoint
+      receiving a CoAP message without payload, that also contains an
       empty Object-Security option SHALL treat it as malformed and
       reject it.
 
@@ -330,10 +333,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-
-
-
-Selander, et al.         Expires October 8, 2017                [Page 6]
+Selander, et al.        Expires October 15, 2017                [Page 6]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -349,7 +349,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
     target resource      | [Token = Token1,      |
    Protect request with  |  kid = SID, ...]      |
      Sender Context      +---------------------->| Retrieve context with
-                         |                       |  RID = SID
+                         |                       |  RID = kid
                          |                       | Verify request with
                          |                       |  Recipient Context
                          | response:             | Protect response with
@@ -389,7 +389,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.         Expires October 8, 2017                [Page 7]
+Selander, et al.        Expires October 15, 2017                [Page 7]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -423,6 +423,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    o  Replay Window.  The replay window to verify requests and observe
       responses received.
 
+   When it is understood which context is referred to (Sender Context or
+   Recipient Context), the term "Context IV" is used to denote the IV of
+   this context (Sender IV or Recipient IV, respectively).
+
    An endpoint may free up memory by not storing the Sender Key, Sender
    IV, Recipient Key, and Recipient IV, deriving them from the Common
    Context when needed.  Alternatively, an endpoint may free up memory
@@ -437,18 +441,20 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    Sender/Recipient ID.  In other words, changing the roles does not
    change the set of keys to be used.
 
+
+
+
+
+Selander, et al.        Expires October 15, 2017                [Page 8]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
 3.2.  Derivation of Security Context Parameters
 
    The parameters in the security context are derived from a small set
    of input parameters.  The following input parameters SHALL be pre-
    established:
-
-
-
-Selander, et al.         Expires October 8, 2017                [Page 8]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
    o  Master Secret
 
@@ -493,18 +499,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
       output parameter = HKDF(salt, IKM, info, L)
 
+
+
+Selander, et al.        Expires October 15, 2017                [Page 9]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    where:
 
    o  salt is the Master Salt as defined above
 
    o  IKM is the Master Secret is defined above
-
-
-
-Selander, et al.         Expires October 8, 2017                [Page 9]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
    o  info is a CBOR array consisting of:
 
@@ -546,21 +552,21 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    guaranteed, random Sender IDs MUST be used.  Random Sender IDs MUST
    be long enough so that the probability of collisions is negligible.
 
+
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 10]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    To enable retrieval of the right Recipient Context, the Recipient ID
    SHOULD be unique in the sets of all Recipient Contexts used by an
    endpoint.
 
    The same Master Salt MAY be used with several Master Secrets.
-
-
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 10]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
 4.  Protected CoAP Message Fields
 
@@ -602,6 +608,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    OSCOAP complies with CoAP over unreliable transport [RFC7252] as well
    as CoAP over reliable transport [I-D.ietf-core-coap-tcp-tls].
 
+
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 11]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
 4.1.  CoAP Payload
 
    The CoAP Payload SHALL be encrypted and integrity protected (Class
@@ -609,14 +625,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
    The sending endpoint writes the payload of the unprotected CoAP
    message into the plaintext of the COSE object.
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 11]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
    The receiving endpoint verifies and decrypts the COSE object, and
    recreates the payload of the unprotected CoAP message.
@@ -658,21 +666,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    for the destination endpoint and the outer value is intended for the
    proxy.
 
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 12]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    A summary of how options are protected and processed is shown in
    Figure 4.  Options within each class are protected and processed in a
    similar way, but certain options which require special processing as
    described in the subsections and indicated by a * in Figure 4.
-
-
-
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 12]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
                    +----+----------------+---+---+---+
                    | No.| Name           | E | I | U |
@@ -713,6 +718,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    that option value.  If a certain option has both inner and outer
    values, the two values SHOULD NOT be the same.
 
+
+
+
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 13]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
 4.3.1.  Class E Options
 
    For options in class E (see Figure 4) the option value in the
@@ -721,14 +738,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    resulting from the use of such options is analogous to communicating
    in a protected manner directly with the endpoint.  For example, a
    client using an ETag option will not be served by a proxy.
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 13]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
    The sending endpoint SHALL write the class E option from the
    unprotected CoAP message into the plaintext of the COSE object.
@@ -769,6 +778,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    fragmentation of payload into blocks and protection of information
    about the fragmentation (block number, block size, last block).  In
    this case, the CoAP client fragments the CoAP message as defined in
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 14]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    [RFC7959] before the message is processed by OSCOAP.  The CoAP server
    first processes the OSCOAP message before processing blockwise as
    defined in [RFC7959].
@@ -776,15 +793,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    There SHALL be a security policy defining a maximum unfragmented
    message size for inner Block options such that messages exceeding
    this size SHALL be fragmented by the sending endpoint.
-
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 14]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
    Additionally, a proxy may arbitrarily do block fragmentation on any
    CoAP message, in particular an OSCOAP message, as defined in
@@ -825,22 +833,21 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    on forwarding of [I-D.hartke-core-e2e-security-reqs]
    (Section 2.2.1.2).
 
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 15]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    In order for a proxy to support forwarding of Observe, there MUST be
    an outer Observe option in the message.
 
    o  The Observe option of the unprotected CoAP request SHALL be
       encoded in the protected CoAP request as described in
       Section 4.3.4.
-
-
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 15]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
    o  The Observe option of the unprotected CoAP response SHALL be
       encoded in the protected CoAP response as described in
@@ -883,21 +890,20 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    Uri-Path and Uri-Query options (if present) according to section 6.4
    of [RFC7252].
 
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 16]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    Uri-Path and Uri-Query are class E options and MUST be protected and
    processed as if obtained from the unprotected CoAP message, see
    Section 4.3.1.
 
    The value of the Proxy-Uri option of the protected CoAP message MUST
    be replaced with Proxy-Scheme, Uri-Host and Uri-Port options (if
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 16]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
    present) composed according to section 6.5 of [RFC7252] and MUST be
    processed as a class U option, see Section 4.3.3.
 
@@ -940,25 +946,29 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    with Additional Data (AEAD) algorithm.  The key lengths, IV lengths,
    and maximum sequence number are algorithm dependent.
 
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 17]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    The AEAD algorithm AES-CCM-64-64-128 defined in Section 10.2 of
    [I-D.ietf-cose-msg] is mandatory to implement.  For AES-CCM-64-64-128
    the length of Sender Key and Recipient Key is 128 bits, the length of
    nonce, Sender IV, and Recipient IV is 7 bytes.  The maximum Sequence
    Number is specified in Section 9.
 
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 17]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
    The nonce is constructed as described in Section 3.1 of
    [I-D.ietf-cose-msg], i.e. by padding the partial IV (Sequence Number
-   in network byte order) with zeroes and XORing it with the context IV
+   in network byte order) with zeroes and XORing it with the Context IV
    (Sender IV or Recipient IV), with the following addition: The first
-   bit in the Sender IV or Recipient IV SHALL be flipped in responses.
+   bit in the Context IV SHALL be flipped for responses, in case there
+   is a unique response (not Observe).  In this way, the same sequence
+   number can be reused for requests and corresponding responses, which
+   reduces the size of the responses in the most common case.  For
+   detailed processing instructions, see Section 7.
 
    We denote by Plaintext the data that is encrypted and integrity
    protected, and by Additional Authenticated Data (AAD) the data that
@@ -989,6 +999,17 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    The encryption process is described in Section 5.3 of
    [I-D.ietf-cose-msg].
 
+
+
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 18]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
 5.1.  Plaintext
 
    The Plaintext is formatted as a CoAP message without Header (see
@@ -1001,14 +1022,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
    o  the Payload of unprotected CoAP message, if present, and in that
       case prefixed by the one-byte Payload Marker (0xFF).
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 18]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1045,6 +1058,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
    o  options: contains the Class I options Section 4.3.2 present in the
       unprotected CoAP message encoded as described in Section 3.1 of
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 19]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
       [RFC7252], where the delta is the difference to the previously
       included class I option
 
@@ -1056,15 +1077,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
    o  request_seq: contains the value of the 'Partial IV' in the COSE
       object of the request (see Section 5).
-
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 19]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
 6.  Sequence Numbers, Replay, Message Binding, and Freshness
 
@@ -1103,6 +1115,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    situation of suddenly losing sequence number and replay window state
    in RAM, e.g. as a result of a reboot.
 
+
+
+Selander, et al.        Expires October 15, 2017               [Page 20]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    After boot, a node MAY reject to use existing security contexts from
    before it booted and MAY establish a new security context with each
    party it communicates, e.g. using EDHOC
@@ -1113,14 +1132,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    If a stored security context is to be used after reboot, then the
    node MUST NOT reuse a previous Sequence Number and MUST NOT accept
    previously accepted messages.
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 20]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
 6.3.1.  The Basic Case
 
@@ -1158,6 +1169,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
       number obtained in the repeated message is set as the lower limit
       of the replay window.
 
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 21]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
 6.3.2.  The Observe Case
 
    To prevent reuse of Sequence Number in case of Observe, the node MAY
@@ -1170,13 +1190,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
       server does not use any lower sequence number in an Observe
       response than what was persistently stored with that security
       context.
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 21]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
       *  Storing to persistent memory can be costly.  Instead of storing
          a sequence number for each notification, the server may store
@@ -1212,6 +1225,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    store the request's ID (Sender ID or Recipient ID) and sequence
    number until all responses have been sent.
 
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 22]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
 7.  Processing
 
 7.1.  Protecting the Request
@@ -1224,17 +1246,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    2.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
-
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 22]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
-   3.  Compose the AEAD nonce by XORing the context IV (Sender IV) with
+   3.  Compose the AEAD nonce by XORing the Context IV (Sender IV) with
        the partial IV (Sequence Number in network byte order).
        Increment the Sequence Number by one.
 
@@ -1265,11 +1277,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    4.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
-   5.  Compose the AEAD nonce by XORing the context IV (Recipient IV)
+   5.  Compose the AEAD nonce by XORing the Context IV (Recipient IV)
        with the padded 'Partial IV' parameter, received in the COSE
        Object.
 
    6.  Decrypt the COSE object using the Recipient Key.
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 23]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
 
        *  If decryption fails, the server MUST stop processing the
           request and SHOULD send a 4.01 error message.
@@ -1282,13 +1301,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
        Object-Security option is removed.
 
    8.  The unprotected CoAP request is processed according to [RFC7252]
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 23]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
 7.3.  Protecting the Response
 
@@ -1304,11 +1316,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    3.  Compose the AEAD nonce
 
        *  If Observe is not used, compose the AEAD nonce by XORing the
-          context IV (Sender IV with the first bit flipped) with the
+          Context IV (Sender IV with the first bit flipped) with the
           padded Partial IV parameter from the request.
 
        *  If Observe is used, compose the AEAD nonce by XORing the
-          context IV (Sender IV) with the partial IV (Sequence Number in
+          Context IV (Sender IV) with the partial IV (Sequence Number in
           network byte order).  Increment the Sequence Number by one.
 
    4.  Encrypt the COSE object using the Sender Key. Compress the COSE
@@ -1326,6 +1338,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
        blocks of the protected CoAP message have been received, see
        Section 4.3.1.2.
 
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 24]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    2.  Retrieve the Recipient Context associated with the Token.
 
    3.  If Observe is used, verify the Sequence Number in the 'Partial
@@ -1336,22 +1356,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
    5.  Compose the AEAD nonce
 
-
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 24]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
        *  If Observe is not used, compose the AEAD nonce by XORing the
-          context IV (Recipient IV with the first bit flipped) with the
+          Context IV (Recipient IV with the first bit flipped) with the
           padded Partial IV parameter from the request.
 
        *  If Observe is used, compose the AEAD nonce by XORing the
-          context IV (Recipient IV) with the padded Partial IV parameter
+          Context IV (Recipient IV) with the padded Partial IV parameter
           from the response.
 
    6.  Decrypt the COSE object using the Recipient Key.
@@ -1384,6 +1394,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    than once in a given link-value; occurrences after the first MUST be
    ignored by parsers.
 
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 25]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
 9.  Security Considerations
 
    In scenarios with intermediary nodes such as proxies or brokers,
@@ -1394,14 +1412,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    perspective, but also from a security perspective, as the
    intermediaries are free to delete resources on sensors and falsify
    commands to actuators (such as "unlock door", "start fire alarm",
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 25]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
    "raise bridge").  Even in the rare cases, where all the owners of the
    intermediary nodes are fully trusted, attacks and data breaches make
    such an architecture brittle.
@@ -1440,6 +1450,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    Most AEAD algorithms require a unique nonce for each message, for
    which the sequence numbers in the COSE message field "Partial IV" is
    used.  If the recipient accepts any sequence number larger than the
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 26]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    one previously received, then the problem of sequence number
    synchronization is avoided.  With reliable transport it may be
    defined that only messages with sequence number which are equal to
@@ -1449,14 +1467,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    numbers of random nonces.  The requirement to change key at counter
    wrap is a complication, but it also forces the user of this
    specification to think about implementing key renewal.
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 26]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
    The maximum sequence number to guarantee nonce uniqueness
    (Section 6.1) is algorithm dependent.  Using AES_CCM, with the
@@ -1494,6 +1504,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    appending a 0 to "YES" and two 1's to "NO".  This style of padding
    means that all values need to be padded.
 
+
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 27]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
 10.  Privacy Considerations
 
    Privacy threats executed through intermediate nodes are considerably
@@ -1505,14 +1525,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    The unprotected options (Figure 4) may reveal privacy sensitive
    information.  In particular Uri-Host SHOULD NOT contain privacy
    sensitive information.
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 27]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
    CoAP headers sent in plaintext allow for example matching of CON and
    ACK (CoAP Message Identifier), matching of request and responses
@@ -1553,19 +1565,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Selander, et al.         Expires October 8, 2017               [Page 28]
+Selander, et al.        Expires October 15, 2017               [Page 28]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -1621,7 +1621,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 29]
+Selander, et al.        Expires October 15, 2017               [Page 29]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -1677,7 +1677,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 30]
+Selander, et al.        Expires October 15, 2017               [Page 30]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -1733,7 +1733,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 31]
+Selander, et al.        Expires October 15, 2017               [Page 31]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -1789,7 +1789,7 @@ Appendix A.  OSCOAP Compression
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 32]
+Selander, et al.        Expires October 15, 2017               [Page 32]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -1845,7 +1845,7 @@ A.1.3.  Example Response (with Observe)
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 33]
+Selander, et al.        Expires October 15, 2017               [Page 33]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -1901,7 +1901,7 @@ C.1.  Secure Access to Sensor
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 34]
+Selander, et al.        Expires October 15, 2017               [Page 34]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -1957,7 +1957,7 @@ C.2.  Secure Subscribe to Sensor
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 35]
+Selander, et al.        Expires October 15, 2017               [Page 35]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2013,7 +2013,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 36]
+Selander, et al.        Expires October 15, 2017               [Page 36]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2069,7 +2069,7 @@ Appendix D.  Object Security of Content (OSCON)
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 37]
+Selander, et al.        Expires October 15, 2017               [Page 37]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2125,7 +2125,7 @@ D.1.  Overhead OSCON
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 38]
+Selander, et al.        Expires October 15, 2017               [Page 38]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2181,7 +2181,7 @@ D.3.  Signature Only
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 39]
+Selander, et al.        Expires October 15, 2017               [Page 39]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2237,7 +2237,7 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 40]
+Selander, et al.        Expires October 15, 2017               [Page 40]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2293,7 +2293,7 @@ Authors' Addresses
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 41]
+Selander, et al.        Expires October 15, 2017               [Page 41]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2349,4 +2349,4 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.         Expires October 8, 2017               [Page 42]
+Selander, et al.        Expires October 15, 2017               [Page 42]
