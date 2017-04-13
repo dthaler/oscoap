@@ -971,12 +971,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    The nonce is constructed as described in Section 3.1 of
    [I-D.ietf-cose-msg], i.e. by padding the partial IV (Sequence Number
    in network byte order) with zeroes and XORing it with the Context IV
-   (Sender IV or Recipient IV), with the following addition: The first
-   bit in the Context IV SHALL be flipped for responses, in case there
-   is a unique response (not Observe).  In this way, the same sequence
-   number can be reused for requests and corresponding responses, which
-   reduces the size of the responses in the most common case.  For
-   detailed processing instructions, see Section 7.
+   (Sender IV or Recipient IV), with the following addition: The most
+   significant bit in the first byte of the Context IV SHALL be flipped
+   for responses, in case there is a unique response (not Observe).  In
+   this way, the same sequence number can be reused for requests and
+   corresponding responses, which reduces the size of the responses in
+   the most common case.  For detailed processing instructions, see
+   Section 7.
 
    We denote by Plaintext the data that is encrypted and integrity
    protected, and by Additional Authenticated Data (AAD) the data that
@@ -999,7 +1000,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
       *  The "kid" parameter.  The value is set to the Sender ID (see
          Section 3).  This parameter SHALL be present in requests and
          SHALL NOT be present in responses.
-
 
 
 
@@ -1328,8 +1328,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    3.  Compose the AEAD nonce
 
        *  If Observe is not used, compose the AEAD nonce by XORing the
-          Context IV (Sender IV with the first bit flipped) with the
-          padded Partial IV parameter from the request.
+          Context IV (Sender IV with the most significant bit in the
+          first byte flipped) with the padded Partial IV parameter from
+          the request.
 
        *  If Observe is used, compose the AEAD nonce by XORing the
           Context IV (Sender IV) with the Partial IV of the response
@@ -1337,7 +1338,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
    4.  Encrypt the COSE object using the Sender Key. Compress the COSE
        Object as specified in Section 8.
-
 
 
 
@@ -1372,8 +1372,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
        *  If the Observe option is not present in the response, compose
           the AEAD nonce by XORing the Context IV (Recipient IV with the
-          first bit flipped) with the padded Partial IV parameter from
-          the request.
+          the most significant bit in the first byte flipped) with the
+          padded Partial IV parameter from the request.
 
        *  If the Observe option is present in the response, compose the
           AEAD nonce by XORing the Context IV (Recipient IV) with the
@@ -1630,9 +1630,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    (Section 6.1) is algorithm dependent.  Using AES_CCM, with the
    maximum sequence number SHALL be 2^(min(nonce length in bits, 56) -
    1) - 1.  The "-1" in the exponent stems from the same partial IV and
-   flipped first bit of IV (Section 5) is used in request and response.
-   The compression algorithm (Section 8) assumes that the partial IV is
-   56 bits or less (which is the reason for min(,) in the exponent).
+   flipped bit of IV (Section 5) is used in request and response.  The
+   compression algorithm (Section 8) assumes that the partial IV is 56
+   bits or less (which is the reason for min(,) in the exponent).
 
    The inner block options enable the sender to split large messages
    into protected blocks such that the receiving node can verify blocks
