@@ -563,7 +563,7 @@ Verify request with   |                       |
   <li>Recipient IV. Byte string containing the IV to verify messages received. Derived from Common Context and Recipient ID. Length is determined by Algorithm. Its value is immutable once the security context is established.</li>
   <li>Replay Window. The replay window to verify requests and observe responses received.</li>
 </ul>
-<p id="rfc.section.3.1.p.10">When it is understood which context is referred to (Sender Context or Recipient Context), the term &#8220;Context IV&#8221; is used to denote the IV of this context (Sender IV or Recipient IV, respectively).</p>
+<p id="rfc.section.3.1.p.10">When it is understood which context is referred to (Sender Context or Recipient Context), the term &#8220;Context IV&#8221; is used to denote the IV currently used with this context.</p>
 <p id="rfc.section.3.1.p.11">An endpoint may free up memory by not storing the Sender Key, Sender IV, Recipient Key, and Recipient IV, deriving them from the Common Context when needed. Alternatively, an endpoint may free up memory by not storing the Master Secret and Master Salt after the other parameters have been derived.</p>
 <p id="rfc.section.3.1.p.12">The endpoints MAY interchange the client and server roles while maintaining the same security context. When this happens, the former server still protects messages to send using its Sender Context, and verifies messages received using its Recipient Context. The same is also true for the former client. The endpoints MUST NOT change the Sender/Recipient ID. In other words, changing the roles does not change the set of keys to be used.</p>
 <h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#context-derivation" id="context-derivation">Derivation of Security Context Parameters</a></h1>
@@ -772,7 +772,7 @@ U=Unprotected, *=Special
 <p/>
 
 <ul>
-  <li>all Class E options <a href="#class-e">Section 4.3.1</a> present in the unprotected CoAP message (see <a href="#coap-headers-and-options">Section 4</a>). The options are encoded as described in Section 3.1 of <a href="#RFC7252">[RFC7252]</a>, where the delta is the difference to the previously included Class E option; and</li>
+  <li>all Class E option values <a href="#class-e">Section 4.3.1</a> present in the unprotected CoAP message (see <a href="#coap-options">Section 4.3</a>). The options are encoded as described in Section 3.1 of <a href="#RFC7252">[RFC7252]</a>, where the delta is the difference to the previously included Class E option; and</li>
   <li>the Payload of unprotected CoAP message, if present, and in that case prefixed by the one-byte Payload Marker (0xFF).</li>
 </ul>
 <div id="rfc.figure.5"/>
@@ -781,7 +781,7 @@ U=Unprotected, *=Special
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|    Options to Encrypt (if any) ...                             
+|    Class E options (if any) ...                             
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |1 1 1 1 1 1 1 1|    Payload (if any) ...                        
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -840,7 +840,7 @@ external_aad = [
 <p/>
 
 <ul>
-  <li>Before sending a notification, the server stores in persistent memory a sequence number associated to the stored securit context higher than any sequence number for which a notification has been or are being sent using this security context. After boot, the server does not use any lower sequence number in an Observe response than what was persistently stored with that security context.  <ul><li>Storing to persistent memory can be costly. Instead of storing a sequence number for each notification, the server may store Seq + K to persistent memory every K requests, where Seq is the current sequence number and K &gt; 1. This is a trade-off between the number of storage operations and efficient use of sequence numbers.</li></ul></li>
+  <li>Before sending a notification, the server stores in persistent memory a sequence number associated to the stored security context higher than any sequence number for which a notification has been or are being sent using this security context. After boot, the server does not use any lower sequence number in an Observe response than what was persistently stored with that security context.  <ul><li>Storing to persistent memory can be costly. Instead of storing a sequence number for each notification, the server may store Seq + K to persistent memory every K requests, where Seq is the current sequence number and K &gt; 1. This is a trade-off between the number of storage operations and efficient use of sequence numbers.</li></ul></li>
 </ul>
 <p id="rfc.section.6.3.2.p.3">Note that a client MAY continue an ongoing observation after reboot using a stored security context. With Observe, the client can only verify the order of the notifications, as they may be delayed. If the client wants to synchronize with a server resource it MAY restart an observation.</p>
 <h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#freshness" id="freshness">Freshness</a></h1>
@@ -882,7 +882,7 @@ external_aad = [
 <ol>
   <li>Retrieve the Sender Context in the Security Context used to verify the request.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
-  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the Context IV (Sender IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the Context IV (Sender IV) with the partial IV (Sequence Number in network byte order). Increment the Sequence Number by one.</li></ul></li>
+  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the Context IV (Sender IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the Context IV (Sender IV) with the Partial IV of the response (Sequence Number in network byte order). Increment the Sequence Number by one.</li></ul></li>
   <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#app-compression">Appendix A</a>.</li>
   <li>Format the protected CoAP message according to <a href="#coap-headers-and-options">Section 4</a>. The Object-Security option is added, see <a href="#options-in-protected">Section 4.3.4</a>.</li>
 </ol>
@@ -893,9 +893,9 @@ external_aad = [
 <ol>
   <li>Process outer Block options according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the protected CoAP message have been received, see <a href="#block-options">Section 4.3.1.2</a>.</li>
   <li>Retrieve the Recipient Context associated with the Token.</li>
-  <li>If Observe is used, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers">Section 6</a>.</li>
+  <li>For Observe notifications, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers">Section 6</a>.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
-  <li>Compose the AEAD nonce  <ul><li>If Observe is not used, compose the AEAD nonce by XORing the Context IV (Recipient IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If Observe is used, compose the AEAD nonce by XORing the Context IV (Recipient IV) with the padded Partial IV parameter from the response.</li></ul></li>
+  <li>Compose the AEAD nonce  <ul><li>If the Observe option is not present in the response, compose the AEAD nonce by XORing the Context IV (Recipient IV with the first bit flipped) with the padded Partial IV parameter from the request.</li><li>If the Observe option is present in the response, compose the AEAD nonce by XORing the Context IV (Recipient IV) with the padded Partial IV parameter from the response.</li></ul></li>
   <li>Decrypt the COSE object using the Recipient Key.  <ul><li>If decryption fails, the client MUST stop processing.</li><li>If decryption succeeds and Observe is used, update the Recipient Replay Window, as described in <a href="#sequence-numbers">Section 6</a>.</li></ul></li>
   <li>Add decrypted options or payload to the unprotected response overwriting any outer E options (see <a href="#coap-headers-and-options">Section 4</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the sequence number.</li></ul></li>
   <li>The unprotected CoAP response is processed according to <a href="#RFC7252">[RFC7252]</a></li>

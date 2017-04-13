@@ -424,8 +424,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
       responses received.
 
    When it is understood which context is referred to (Sender Context or
-   Recipient Context), the term "Context IV" is used to denote the IV of
-   this context (Sender IV or Recipient IV, respectively).
+   Recipient Context), the term "Context IV" is used to denote the IV
+   currently used with this context.
 
    An endpoint may free up memory by not storing the Sender Key, Sender
    IV, Recipient Key, and Recipient IV, deriving them from the Common
@@ -1022,10 +1022,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    The Plaintext is formatted as a CoAP message without Header (see
    Figure 5) consisting of:
 
-   o  all Class E options Section 4.3.1 present in the unprotected CoAP
-      message (see Section 4).  The options are encoded as described in
-      Section 3.1 of [RFC7252], where the delta is the difference to the
-      previously included Class E option; and
+   o  all Class E option values Section 4.3.1 present in the unprotected
+      CoAP message (see Section 4.3).  The options are encoded as
+      described in Section 3.1 of [RFC7252], where the delta is the
+      difference to the previously included Class E option; and
 
    o  the Payload of unprotected CoAP message, if present, and in that
       case prefixed by the one-byte Payload Marker (0xFF).
@@ -1033,7 +1033,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     |    Options to Encrypt (if any) ...
+     |    Class E options (if any) ...
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
      |1 1 1 1 1 1 1 1|    Payload (if any) ...
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1193,7 +1193,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    perform the following procedure during normal operations:
 
    o  Before sending a notification, the server stores in persistent
-      memory a sequence number associated to the stored securit context
+      memory a sequence number associated to the stored security context
       higher than any sequence number for which a notification has been
       or are being sent using this security context.  After boot, the
       server does not use any lower sequence number in an Observe
@@ -1332,12 +1332,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
           padded Partial IV parameter from the request.
 
        *  If Observe is used, compose the AEAD nonce by XORing the
-          Context IV (Sender IV) with the partial IV (Sequence Number in
-          network byte order).  Increment the Sequence Number by one.
+          Context IV (Sender IV) with the Partial IV of the response
+          (Sequence Number in network byte order).  Increment the
+          Sequence Number by one.
 
    4.  Encrypt the COSE object using the Sender Key. Compress the COSE
        Object as specified in Appendix A.
-
 
 
 
@@ -1360,21 +1360,22 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
    2.  Retrieve the Recipient Context associated with the Token.
 
-   3.  If Observe is used, verify the Sequence Number in the 'Partial
-       IV' parameter as described in Section 6.
+   3.  For Observe notifications, verify the Sequence Number in the
+       'Partial IV' parameter as described in Section 6.
 
    4.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
    5.  Compose the AEAD nonce
 
-       *  If Observe is not used, compose the AEAD nonce by XORing the
-          Context IV (Recipient IV with the first bit flipped) with the
-          padded Partial IV parameter from the request.
+       *  If the Observe option is not present in the response, compose
+          the AEAD nonce by XORing the Context IV (Recipient IV with the
+          first bit flipped) with the padded Partial IV parameter from
+          the request.
 
-       *  If Observe is used, compose the AEAD nonce by XORing the
-          Context IV (Recipient IV) with the padded Partial IV parameter
-          from the response.
+       *  If the Observe option is present in the response, compose the
+          AEAD nonce by XORing the Context IV (Recipient IV) with the
+          padded Partial IV parameter from the response.
 
    6.  Decrypt the COSE object using the Recipient Key.
 
@@ -1391,7 +1392,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
           significant bytes in the sequence number.
 
    8.  The unprotected CoAP response is processed according to [RFC7252]
-
 
 
 
