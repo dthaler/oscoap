@@ -93,19 +93,19 @@ Table of Contents
      7.2.  Verifying the Request . . . . . . . . . . . . . . . . . .  23
      7.3.  Protecting the Response . . . . . . . . . . . . . . . . .  24
      7.4.  Verifying the Response  . . . . . . . . . . . . . . . . .  25
-   8.  Web Linking . . . . . . . . . . . . . . . . . . . . . . . . .  26
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  26
-   10. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  28
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  28
-     11.1.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  28
-     11.2.  Media Type Registrations . . . . . . . . . . . . . . . .  29
-     11.3.  CoAP Content Format Registration . . . . . . . . . . . .  29
-   12. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  30
-   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
-     13.1.  Normative References . . . . . . . . . . . . . . . . . .  30
-     13.2.  Informative References . . . . . . . . . . . . . . . . .  31
-   Appendix A.  OSCOAP Compression . . . . . . . . . . . . . . . . .  32
-     A.1.  Examples  . . . . . . . . . . . . . . . . . . . . . . . .  33
+   8.  OSCOAP Compression  . . . . . . . . . . . . . . . . . . . . .  26
+     8.1.  Examples  . . . . . . . . . . . . . . . . . . . . . . . .  27
+   9.  Web Linking . . . . . . . . . . . . . . . . . . . . . . . . .  28
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  28
+   11. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  30
+   12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  31
+     12.1.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  31
+     12.2.  Media Type Registrations . . . . . . . . . . . . . . . .  31
+     12.3.  CoAP Content Format Registration . . . . . . . . . . . .  32
+   13. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  33
+   14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  33
+     14.1.  Normative References . . . . . . . . . . . . . . . . . .  33
+     14.2.  Informative References . . . . . . . . . . . . . . . . .  34
 
 
 
@@ -114,17 +114,17 @@ Selander, et al.        Expires October 15, 2017                [Page 2]
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
-   Appendix B.  Test Vectors . . . . . . . . . . . . . . . . . . . .  34
-   Appendix C.  Examples . . . . . . . . . . . . . . . . . . . . . .  34
-     C.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  34
-     C.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  35
-   Appendix D.  Object Security of Content (OSCON) . . . . . . . . .  37
-     D.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  38
-     D.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  39
-     D.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  39
-     D.4.  Authenticated Encryption with Additional Data (AEAD)  . .  40
-     D.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  41
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  41
+   Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  35
+   Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  35
+     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  35
+     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  36
+   Appendix C.  Object Security of Content (OSCON) . . . . . . . . .  38
+     C.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  39
+     C.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  40
+     C.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  40
+     C.4.  Authenticated Encryption with Additional Data (AEAD)  . .  41
+     C.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  42
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  42
 
 1.  Introduction
 
@@ -170,7 +170,7 @@ Selander, et al.        Expires October 15, 2017                [Page 3]
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
-   of COSE is used, see Appendix A.  The use of OSCOAP is signaled with
+   of COSE is used, see Section 8.  The use of OSCOAP is signaled with
    the CoAP option Object-Security, defined in Section 2.  OSCOAP
    provides protection of CoAP payload, certain options, and header
    fields.  The solution transforms an unprotected CoAP message into a
@@ -202,11 +202,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    security of e.g.  CoAP payload and options, in combination with hop-
    by-hop protection of the entire CoAP message, during transport
    between end-point and intermediary node.  Examples of the use of
-   OSCOAP are given in Appendix C.
+   OSCOAP are given in Appendix B.
 
    The message protection provided by OSCOAP can alternatively be
    applied only to the payload of individual messages.  We call this
-   object security of content (OSCON), which is defined in Appendix D.
+   object security of content (OSCON), which is defined in Appendix C.
 
 1.1.  Terminology
 
@@ -266,14 +266,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    response code allows payload (see [RFC7252]):
 
    o  If the method/response code allows payload, then the compressed
-      COSE object Appendix A is the payload of the protected message,
-      and the Object-Security option has length zero.  An endpoint
-      receiving a CoAP message with payload, that also contains a non-
-      empty Object-Security option SHALL treat it as malformed and
-      reject it.
+      COSE object Section 8 is the payload of the protected message, and
+      the Object-Security option has length zero.  An endpoint receiving
+      a CoAP message with payload, that also contains a non-empty
+      Object-Security option SHALL treat it as malformed and reject it.
 
    o  If the method/response code does not allow payload, then the
-      compressed COSE object Appendix A is the value of the Object-
+      compressed COSE object Section 8 is the value of the Object-
+      Security option and the length of the Object-Security option is
 
 
 
@@ -282,7 +282,6 @@ Selander, et al.        Expires October 15, 2017                [Page 5]
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
-      Security option and the length of the Object-Security option is
       equal to the size of the compressed COSE object.  An endpoint
       receiving a CoAP message without payload, that also contains an
       empty Object-Security option SHALL treat it as malformed and
@@ -328,6 +327,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    contexts identified by the same IDs in the two endpoints are not the
    same, but they are partly mirrored.  Retrieval and use of the
    security context are shown in Figure 3.
+
 
 
 
@@ -966,7 +966,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    [I-D.ietf-cose-msg] is mandatory to implement.  For AES-CCM-64-64-128
    the length of Sender Key and Recipient Key is 128 bits, the length of
    nonce, Sender IV, and Recipient IV is 7 bytes.  The maximum Sequence
-   Number is specified in Section 9.
+   Number is specified in Section 10.
 
    The nonce is constructed as described in Section 3.1 of
    [I-D.ietf-cose-msg], i.e. by padding the partial IV (Sequence Number
@@ -1097,7 +1097,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    to assure unique nonces, each Sender Context contains a Sequence
    Number used to protect requests, and - in case of Observe -
    responses.  The maximum sequence number is algorithm dependent, see
-   Section 9.  If the Sequence Number exceeds the maximum sequence
+   Section 10.  If the Sequence Number exceeds the maximum sequence
    number, the endpoint MUST NOT process any more messages with the
    given Sender Context.  The endpoint SHOULD acquire a new security
    context (and consequently inform the other endpoint) before this
@@ -1260,7 +1260,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
        the partial IV (Sequence Number in network byte order).
 
    4.  Encrypt the COSE object using the Sender Key. Compress the COSE
-       Object as specified in Appendix A.
+       Object as specified in Section 8.
 
    5.  Format the protected CoAP message according to Section 4.  The
        Object-Security option is added, see Section 4.3.4.
@@ -1336,7 +1336,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
           (Sequence Number in network byte order).
 
    4.  Encrypt the COSE object using the Sender Key. Compress the COSE
-       Object as specified in Appendix A.
+       Object as specified in Section 8.
 
 
 
@@ -1402,7 +1402,144 @@ Selander, et al.        Expires October 15, 2017               [Page 25]
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
-8.  Web Linking
+8.  OSCOAP Compression
+
+   The Concise Binary Object Representation (CBOR) combines very small
+   message sizes with extensibility.  CBOR Object Signing and Encryption
+   (COSE) uses CBOR to achieve smaller message sizes than JOSE.  COSE is
+   however constructed to support a large number of different stateless
+   use cases, and is not fully optimized for use as a stateful security
+   protocol, leading to a larger than necessary message expansion.  In
+   this section we define a simple stateless compression mechanism for
+   OSCOAP, which significantly reduces the per-packet overhead.
+
+   The value of the Object-Security option for requests SHALL be encoded
+   as follows:
+
+   o  The first byte MUST encode a set of flags and the length of the
+      Partial IV parameter.
+
+      *  The three least significant bits encode the Partial IV size.
+         If their value is 0, the Partial IV is not present in the
+         compressed message.
+
+      *  The fourth least significant bit is set to 1 if the kid is
+         present in the compressed message.
+
+      *  The fifth least significant bit is set to 1 if a counter
+         signature is present in the compressed message.
+
+      *  The sixth least significant bit is set to 1 if a group
+         identifier is present in the compressed message.
+
+   o  The following n bytes (n being the value of the Partial IV size in
+      the first byte) encode the value of the Partial IV, if the Partial
+      IV is present (size not 0).
+
+   o  The following byte encodes the size of the kid parameter, if the
+      kid is present (flag bit set to 1)
+
+   o  The following m bytes (m given by the previous byte) encode the
+      value of the kid, if the kid is present (flag bit set to 1)
+
+   o  The following byte encodes the size of the counter signature, if a
+      counter signature is present (flag bit set to 1)
+
+   o  The following x bytes (x given by the previous byte) encode the
+      value of the kid, if the kid is present (flag bit set to 1)
+
+   o  The following byte encodes the size of the group identifier
+      parameter, if a group identifier is present (flag bit set to 1)
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 26]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
+   o  The following y bytes (y given by the previous byte) encode the
+      value of the group identifier parameter, if a group identifier is
+      present (flag bit set to 1)
+
+   o  The remainining bytes encode the ciphertext.
+
+   In requests, Partial IV and kid MUST be present; counter signature
+   and group Identifier MUST NOT be present.  In responses without
+   observe, Partial IV, kid, counter signature and group Identifier MUST
+   NOT be present.  In responses with observe, kid MUST be present;
+   Partial IV, counter signature and group Identifier MUST NOT be
+   present.
+
+8.1.  Examples
+
+8.1.1.  Example Request
+
+   COSE Object Before Compression:
+
+   [
+   h'',
+   { 4:h'25', 6:h'05' },
+   h'aea0155667924dff8a24e4cb35b9'
+   ]
+
+   0x83 40 a2 04 41 25 06 41 05 4e ae a0 15 56 67 92
+   4d ff 8a 24 e4 cb 35 b9 (24 bytes)
+
+   After Compression:
+
+   first byte: 0b00001001 = 0x09
+
+   0x09 05 01 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
+   35 b9 (18 bytes)
+
+8.1.2.  Example Response (without Observe)
+
+   COSE Object Before Compression:
+
+   [
+   h'',
+   {},
+   h'aea0155667924dff8a24e4cb35b9'
+   ]
+
+   0x83 40 a0 4e ae a0 15 56 67 92 4d ff 8a 24 e4 cb
+   35 b9 (18 bytes)
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 27]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
+   After Compression:
+
+   first byte: 0b00000000 = 0x00
+
+   0x00 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
+   (14 bytes)
+
+8.1.3.  Example Response (with Observe)
+
+   COSE Object Before Compression:
+
+   [
+   h'',
+   { 6:h'07' },
+   h'aea0155667924dff8a24e4cb35b9'
+   ]
+
+   0x83 40 a1 06 41 07 4e ae a0 15 56 67 92 4d ff
+   8a 24 e4 cb 35 b9 (21 bytes)
+
+   first byte: 0b00000001 = 0x01
+
+   0x01 07 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
+   (16 bytes)
+
+9.  Web Linking
 
    The use of OSCOAP MAY be indicated by a target attribute "osc" in a
    web link [RFC5988] to a CoAP resource.  This attribute is a hint
@@ -1416,7 +1553,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    than once in a given link-value; occurrences after the first MUST be
    ignored by parsers.
 
-9.  Security Considerations
+10.  Security Considerations
 
    In scenarios with intermediary nodes such as proxies or brokers,
    transport layer security such as DTLS only protects data hop-by-hop.
@@ -1425,6 +1562,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    considered trustworthy is problematic, not only from a privacy
    perspective, but also from a security perspective, as the
    intermediaries are free to delete resources on sensors and falsify
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 28]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    commands to actuators (such as "unlock door", "start fire alarm",
    "raise bridge").  Even in the rare cases, where all the owners of the
    intermediary nodes are fully trusted, attacks and data breaches make
@@ -1450,14 +1595,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    The use of COSE to protect CoAP messages as specified in this
    document requires an established security context.  The method to
    establish the security context described in Section 3.2 is based on a
-
-
-
-Selander, et al.        Expires October 15, 2017               [Page 26]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
    common shared secret material in client and server, which may be
    obtained e.g. by using EDHOC [I-D.selander-ace-cose-ecdhe] or the ACE
    framework [I-D.ietf-ace-oauth-authz].  An OSCOAP profile of ACE is
@@ -1482,12 +1619,19 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    wrap is a complication, but it also forces the user of this
    specification to think about implementing key renewal.
 
+
+
+Selander, et al.        Expires October 15, 2017               [Page 29]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    The maximum sequence number to guarantee nonce uniqueness
    (Section 6.1) is algorithm dependent.  Using AES_CCM, with the
    maximum sequence number SHALL be 2^(min(nonce length in bits, 56) -
    1) - 1.  The "-1" in the exponent stems from the same partial IV and
    flipped first bit of IV (Section 5) is used in request and response.
-   The compression algorithm (Appendix A) assumes that the partial IV is
+   The compression algorithm (Section 8) assumes that the partial IV is
    56 bits or less (which is the reason for min(,) in the exponent).
 
    The inner block options enable the sender to split large messages
@@ -1506,14 +1650,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    example, the strings "YES" and "NO" even if encrypted can be
    distinguished from each other as there is no padding supplied by the
    current set of encryption algorithms.  Some information can be
-
-
-
-Selander, et al.        Expires October 15, 2017               [Page 27]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
    determined even from looking at boundary conditions.  An example of
    this would be returning an integer between 0 and 100 where lengths of
    1, 2 and 3 will provide information about where in the range things
@@ -1526,7 +1662,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    appending a 0 to "YES" and two 1's to "NO".  This style of padding
    means that all values need to be padded.
 
-10.  Privacy Considerations
+11.  Privacy Considerations
 
    Privacy threats executed through intermediate nodes are considerably
    reduced by means of OSCOAP.  End-to-end integrity protection and
@@ -1538,16 +1674,24 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    information.  In particular Uri-Host SHOULD NOT contain privacy
    sensitive information.
 
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 30]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    CoAP headers sent in plaintext allow for example matching of CON and
    ACK (CoAP Message Identifier), matching of request and responses
    (Token) and traffic analysis.
 
-11.  IANA Considerations
+12.  IANA Considerations
 
    Note to RFC Editor: Please replace all occurrences of "[[this
    document]]" with the RFC number of this specification.
 
-11.1.  CoAP Option Numbers Registry
+12.1.  CoAP Option Numbers Registry
 
    The Object-Security option is added to the CoAP Option Numbers
    registry:
@@ -1558,22 +1702,41 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
              |  TBD   | Object-Security | [[this document]] |
              +--------+-----------------+-------------------+
 
-
-
-
-
-
-
-
-Selander, et al.        Expires October 15, 2017               [Page 28]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
-11.2.  Media Type Registrations
+12.2.  Media Type Registrations
 
    The "application/oscon" media type is added to the Media Types
    registry:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 31]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
 
        Type name: application
 
@@ -1612,19 +1775,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
        Author: Goeran Selander, goran.selander@ericsson.com
 
-11.3.  CoAP Content Format Registration
+12.3.  CoAP Content Format Registration
 
    The "application/oscon" content format is added to the CoAP Content
    Format registry:
-
-
-
-
-
-Selander, et al.        Expires October 15, 2017               [Page 29]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
 
          +-------------------+----------+----+-------------------+
          | Media type        | Encoding | ID | Reference         |
@@ -1632,7 +1786,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
          | application/oscon | -        | 70 | [[this document]] |
          +-------------------+----------+----+-------------------+
 
-12.  Acknowledgments
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 32]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
+13.  Acknowledgments
 
    The following individuals provided input to this document: Christian
    Amsuess, Carsten Bormann, Joakim Brorsson, Martin Gunnarsson, Klaus
@@ -1641,9 +1803,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    Ludwig Seitz and Goeran Selander worked on this document as part of
    the CelticPlus project CyberWI, with funding from Vinnova.
 
-13.  References
+14.  References
 
-13.1.  Normative References
+14.1.  Normative References
 
    [I-D.ietf-cose-msg]
               Schaad, J., "CBOR Object Signing and Encryption (COSE)",
@@ -1671,17 +1833,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
               Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
               October 2013, <http://www.rfc-editor.org/info/rfc7049>.
 
-
-
-
-
-
-
-Selander, et al.        Expires October 15, 2017               [Page 30]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
               DOI 10.17487/RFC7252, June 2014,
@@ -1692,12 +1843,19 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
               DOI 10.17487/RFC7641, September 2015,
               <http://www.rfc-editor.org/info/rfc7641>.
 
+
+
+Selander, et al.        Expires October 15, 2017               [Page 33]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
+
    [RFC7959]  Bormann, C. and Z. Shelby, Ed., "Block-Wise Transfers in
               the Constrained Application Protocol (CoAP)", RFC 7959,
               DOI 10.17487/RFC7959, August 2016,
               <http://www.rfc-editor.org/info/rfc7959>.
 
-13.2.  Informative References
+14.2.  Informative References
 
    [I-D.bormann-6lo-coap-802-15-ie]
               Bormann, C., "Constrained Application Protocol (CoAP) over
@@ -1729,15 +1887,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
               draft-ietf-core-coap-tcp-tls-07 (work in progress), March
               2017.
 
-
-
-
-
-Selander, et al.        Expires October 15, 2017               [Page 31]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
    [I-D.mattsson-core-coap-actuators]
               Mattsson, J., Fornehed, J., Selander, G., and F.
               Palombini, "Controlling Actuators with CoAP", draft-
@@ -1748,6 +1897,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
               Seitz, L. and F. Palombini, "OSCOAP profile of ACE",
               draft-seitz-ace-oscoap-profile-01 (work in progress),
               October 2016.
+
+
+
+
+Selander, et al.        Expires October 15, 2017               [Page 34]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
+
 
    [I-D.selander-ace-cose-ecdhe]
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
@@ -1764,112 +1921,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
 
-Appendix A.  OSCOAP Compression
-
-   The Concise Binary Object Representation (CBOR) combines very small
-   message sizes with extensibility.  CBOR Object Signing and Encryption
-   (COSE) uses CBOR to achieve smaller message sizes than JOSE.  COSE is
-   however constructed to support a large number of different stateless
-   use cases, and is not fully optimized for use as a stateful security
-   protocol, leading to a larger than necessary message expansion.  In
-   this section we define a simple stateless compression mechanism for
-   OSCOAP, which significantly reduces the per-packet overhead.
-
-   The value of the Object-Security option for requests SHALL be encoded
-   as:
-
-   [
-     Partial IV,
-     kid,
-     ciphertext
-   ]
-
-   The value of the Object-Security option for responses SHALL be
-   encoded as:
-
-
-
-Selander, et al.        Expires October 15, 2017               [Page 32]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
-     ciphertext
-
-   except for Observe responses, where the encoding SHALL be:
-
-   [
-     Partial IV,
-     ciphertext
-   ]
-
-   Furthermore, the type and length for the ciphertext is redundant and
-   10 bits in the first two bytes are static.  The type and length for
-   the ciphertext SHALL be excluded, and the first sixteen bits in the
-   COSE arrays above SHALL be encoded as a single byte:
-
-   10000abc 01000def -> 00abcdef
-
-A.1.  Examples
-
-A.1.1.  Example Request
-
-   COSE Object Before Compression (24 bytes)
-   83 40 a2 04 41 25 06 41 05 4e ae a0 15 56 67 92
-   4d ff 8a 24 e4 cb 35 b9
-
-   [
-   h'',
-   { 4:h'25', 6:h'05' },
-   h'aea0155667924dff8a24e4cb35b9'
-   ]
-
-   After Compression (18 bytes)
-   19 05 41 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
-   35 b9
-
-A.1.2.  Example Response
-
-   COSE Object Before Compression (18 bytes)
-   83 40 a0 4e ae a0 15 56 67 92 4d ff 8a 24 e4 cb
-   35 b9
-
-   [
-   h'',
-   {},
-   h'aea0155667924dff8a24e4cb35b9'
-   ]
-
-   After Compression (14 bytes)
-   ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
-
-
-
-Selander, et al.        Expires October 15, 2017               [Page 33]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
-
-
-A.1.3.  Example Response (with Observe)
-
-   COSE Object Before Compression (21 bytes)
-   83 40 a1 06 41 07 4e ae a0 15 56 67 92 4d ff
-   8a 24 e4 cb 35 b9
-
-   [
-   h'',
-   { 6:h'07' },
-   h'aea0155667924dff8a24e4cb35b9'
-   ]
-
-   After Compression (16 bytes)
-   11 07 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
-
-Appendix B.  Test Vectors
+Appendix A.  Test Vectors
 
    TODO: This section needs to be updated.
 
-Appendix C.  Examples
+Appendix B.  Examples
 
    This section gives examples of OSCOAP.  The message exchanges are
    made, based on the assumption that there is a security context
@@ -1877,7 +1933,7 @@ Appendix C.  Examples
    examples only indicate the content of the messages without going into
    detail of the COSE message format.
 
-C.1.  Secure Access to Sensor
+B.1.  Secure Access to Sensor
 
    This example targets the scenario in Section 3.1 of
    [I-D.hartke-core-e2e-security-reqs] and illustrates a client
@@ -1901,7 +1957,7 @@ C.1.  Secure Access to Sensor
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 34]
+Selander, et al.        Expires October 15, 2017               [Page 35]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -1948,7 +2004,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    before.  The client verifies that the response is bound to the
    request.
 
-C.2.  Secure Subscribe to Sensor
+B.2.  Secure Subscribe to Sensor
 
    This example targets the scenario in Section 3.2 of
    [I-D.hartke-core-e2e-security-reqs] and illustrates a client
@@ -1957,7 +2013,7 @@ C.2.  Secure Subscribe to Sensor
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 35]
+Selander, et al.        Expires October 15, 2017               [Page 36]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2013,7 +2069,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 36]
+Selander, et al.        Expires October 15, 2017               [Page 37]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2035,7 +2091,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    before.  The client verifies that the sequence number has not been
    received before and that the responses are bound to the request.
 
-Appendix D.  Object Security of Content (OSCON)
+Appendix C.  Object Security of Content (OSCON)
 
    TODO: This section needs to be updated.
 
@@ -2063,13 +2119,13 @@ Appendix D.  Object Security of Content (OSCON)
    the COSE object shall include a protected 'content type' field, whose
    value is set to the unprotected message Content-Format value.  The
    Content-Format option of the protected CoAP message shall be replaced
-   with "application/oscon" (Section 11)
+   with "application/oscon" (Section 12)
 
 
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 37]
+Selander, et al.        Expires October 15, 2017               [Page 38]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2094,7 +2150,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    provide data origin authentication.  Therefore the COSE object should
    in general be protected with a digital signature.
 
-D.1.  Overhead OSCON
+C.1.  Overhead OSCON
 
    In general there are four different kinds of modes that need to be
    supported: message authentication code, digital signature,
@@ -2125,7 +2181,7 @@ D.1.  Overhead OSCON
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 38]
+Selander, et al.        Expires October 15, 2017               [Page 39]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2136,7 +2192,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
    To make it easier to read, COSE objects are represented using CBOR's
    diagnostic notation rather than a binary dump.
 
-D.2.  MAC Only
+C.2.  MAC Only
 
    This example is based on HMAC-SHA256, with truncation to 8 bytes
    (HMAC 256/64).
@@ -2170,7 +2226,7 @@ D.2.  MAC Only
 
        Figure 8: Message overhead for a 5-byte Tid using HMAC 256/64
 
-D.3.  Signature Only
+C.3.  Signature Only
 
    This example is based on ECDSA, with a signature of 64 bytes.
 
@@ -2181,7 +2237,7 @@ D.3.  Signature Only
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 39]
+Selander, et al.        Expires October 15, 2017               [Page 40]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2210,7 +2266,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
       Figure 9: Message overhead for a 5-byte Tid using 64 byte ECDSA
                                 signature.
 
-D.4.  Authenticated Encryption with Additional Data (AEAD)
+C.4.  Authenticated Encryption with Additional Data (AEAD)
 
    This example is based on AES-CCM with the Tag truncated to 8 bytes.
 
@@ -2237,7 +2293,7 @@ D.4.  Authenticated Encryption with Additional Data (AEAD)
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 40]
+Selander, et al.        Expires October 15, 2017               [Page 41]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2250,10 +2306,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
      Figure 10: Message overhead for a 5-byte Tid using AES_128_CCM_8.
 
-D.5.  Symmetric Encryption with Asymmetric Signature (SEAS)
+C.5.  Symmetric Encryption with Asymmetric Signature (SEAS)
 
    This example is based on AES-CCM and ECDSA with 64 bytes signature.
-   The same assumption on the security context as in Appendix D.4.  COSE
+   The same assumption on the security context as in Appendix C.4.  COSE
    defines the field 'counter signature w/o headers' that is used here
    to sign a COSE_Encrypt0_Tagged message (see Section 3 of
    [I-D.ietf-cose-msg]).
@@ -2293,7 +2349,7 @@ Authors' Addresses
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 41]
+Selander, et al.        Expires October 15, 2017               [Page 42]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
@@ -2349,4 +2405,4 @@ Internet-Draft      Object Security of CoAP (OSCOAP)          April 2017
 
 
 
-Selander, et al.        Expires October 15, 2017               [Page 42]
+Selander, et al.        Expires October 15, 2017               [Page 43]
