@@ -303,7 +303,8 @@ address {
 <link href="#rfc.section.7.3" rel="Chapter" title="7.3 Protecting the Response"/>
 <link href="#rfc.section.7.4" rel="Chapter" title="7.4 Verifying the Response"/>
 <link href="#rfc.section.8" rel="Chapter" title="8 OSCOAP Compression"/>
-<link href="#rfc.section.8.1" rel="Chapter" title="8.1 Examples"/>
+<link href="#rfc.section.8.1" rel="Chapter" title="8.1 Encoding of the Object-Security Option"/>
+<link href="#rfc.section.8.2" rel="Chapter" title="8.2 Examples"/>
 <link href="#rfc.section.9" rel="Chapter" title="9 Web Linking"/>
 <link href="#rfc.section.10" rel="Chapter" title="10 Security Considerations"/>
 <link href="#rfc.section.11" rel="Chapter" title="11 Privacy Considerations"/>
@@ -333,7 +334,7 @@ address {
 
   <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-object-security-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-13" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-4-20" />
   <meta name="dct.abstract" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
   <meta name="description" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
 
@@ -357,7 +358,7 @@ address {
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 15, 2017</td>
+  <td class="left">Expires: October 22, 2017</td>
   <td class="right">Ericsson AB</td>
 </tr>
 <tr>
@@ -370,7 +371,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 13, 2017</td>
+  <td class="right">April 20, 2017</td>
 </tr>
 
     	
@@ -390,7 +391,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 15, 2017.</p>
+<p>This Internet-Draft will expire on October 22, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -428,7 +429,8 @@ address {
 <li>7.3.   <a href="#rfc.section.7.3">Protecting the Response</a></li>
 <li>7.4.   <a href="#rfc.section.7.4">Verifying the Response</a></li>
 </ul><li>8.   <a href="#rfc.section.8">OSCOAP Compression</a></li>
-<ul><li>8.1.   <a href="#rfc.section.8.1">Examples</a></li>
+<ul><li>8.1.   <a href="#rfc.section.8.1">Encoding of the Object-Security Option</a></li>
+<li>8.2.   <a href="#rfc.section.8.2">Examples</a></li>
 </ul><li>9.   <a href="#rfc.section.9">Web Linking</a></li>
 <li>10.   <a href="#rfc.section.10">Security Considerations</a></li>
 <li>11.   <a href="#rfc.section.11">Privacy Considerations</a></li>
@@ -763,7 +765,7 @@ U=Unprotected, *=Special
 
 <ul>
   <li>The &#8220;protected&#8221; field is empty.</li>
-  <li>The &#8220;unprotected&#8221; field includes:  <ul><li>The &#8220;Partial IV&#8221; parameter. The value is set to the Sequence Number. The Partial IV SHALL be of minimum length needed to encode the sequence number. This parameter SHALL be present in requests, and MAY be present in responses. In case of Observe (<a href="#observe">Section 4.3.2.1</a>}) the Partial IV SHALL be present in the response.</li><li>The &#8220;kid&#8221; parameter. The value is set to the Sender ID (see <a href="#context">Section 3</a>). This parameter SHALL be present in requests and SHALL NOT be present in responses.</li></ul></li>
+  <li>The &#8220;unprotected&#8221; field includes:  <ul><li>The &#8220;Partial IV&#8221; parameter. The value is set to the Sequence Number. The Partial IV SHALL be of minimum length needed to encode the sequence number. This parameter SHALL be present in requests. In case of Observe (<a href="#observe">Section 4.3.2.1</a>) the Partial IV SHALL be present in the response, and otherwise the Partial IV SHALL NOT be present in the response.</li><li>The &#8220;kid&#8221; parameter. The value is set to the Sender ID (see <a href="#context">Section 3</a>). This parameter SHALL be present in requests and SHALL NOT be present in responses.</li></ul></li>
   <li>The &#8220;ciphertext&#8221; field is computed from the Plaintext (see <a href="#plaintext">Section 5.1</a>) and the Additional Authenticated Data (AAD) (see <a href="#AAD">Section 5.2</a>) following Section 5.2 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>.</li>
 </ul>
 <p id="rfc.section.5.p.7">The encryption process is described in Section 5.3 of <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a>.</p>
@@ -903,25 +905,23 @@ external_aad = [
   <li>The unprotected CoAP response is processed according to <a href="#RFC7252">[RFC7252]</a></li>
 </ol>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#app-compression" id="app-compression">OSCOAP Compression</a></h1>
-<p id="rfc.section.8.p.1">The Concise Binary Object Representation (CBOR) combines very small message sizes with extensibility. CBOR Object Signing and Encryption (COSE) uses CBOR to achieve smaller message sizes than JOSE. COSE is however constructed to support a large number of different stateless use cases, and is not fully optimized for use as a stateful security protocol, leading to a larger than necessary message expansion. In this section we define a simple stateless compression mechanism for OSCOAP, which significantly reduces the per-packet overhead.</p>
-<p id="rfc.section.8.p.2">The value of the Object-Security option for requests SHALL be encoded as follows:</p>
+<p id="rfc.section.8.p.1">The Concise Binary Object Representation (CBOR) <a href="#RFC7049">[RFC7049]</a> combines very small message sizes with extensibility. The CBOR Object Signing and Encryption (COSE) <a href="#I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</a> uses CBOR to create compact encoding of signed and encrypted data. COSE is however constructed to support a large number of different stateless use cases, and is not fully optimized for use as a stateful security protocol, leading to a larger than necessary message expansion. In this section we define a simple stateless compression mechanism for OSCOAP, which significantly reduces the per-packet overhead.</p>
+<h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#encoding" id="encoding">Encoding of the Object-Security Option</a></h1>
+<p id="rfc.section.8.1.p.1">The value of the Object-Security option SHALL be encoded as follows:</p>
 <p/>
 
 <ul>
-  <li>The first byte MUST encode a set of flags and the length of the Partial IV parameter.  <ul><li>The three least significant bits encode the Partial IV size. If their value is 0, the Partial IV is not present in the compressed message.</li><li>The fourth least significant bit is set to 1 if the kid is present in the compressed message.</li><li>The fifth least significant bit is set to 1 if a counter signature is present in the compressed message.</li><li>The sixth least significant bit is set to 1 if a group identifier is present in the compressed message.</li></ul></li>
+  <li>The first byte MUST encode a set of flags and the length of the Partial IV parameter.  <ul><li>The three least significant bits encode the Partial IV size. If their value is 0, the Partial IV is not present in the compressed message.</li><li>The fourth least significant bit is set to 1 if the kid is present in the compressed message.</li><li>The fifth-eighth least significant bits (= most significant half-byte) are reserved and SHALL be set to zero when not in use.</li></ul></li>
   <li>The following n bytes (n being the value of the Partial IV size in the first byte) encode the value of the Partial IV, if the Partial IV is present (size not 0).</li>
   <li>The following byte encodes the size of the kid parameter, if the kid is present (flag bit set to 1)</li>
   <li>The following m bytes (m given by the previous byte) encode the value of the kid, if the kid is present (flag bit set to 1)</li>
-  <li>The following byte encodes the size of the counter signature, if a counter signature is present (flag bit set to 1)</li>
-  <li>The following x bytes (x given by the previous byte) encode the value of the kid, if the kid is present (flag bit set to 1)</li>
-  <li>The following byte encodes the size of the group identifier parameter, if a group identifier is present (flag bit set to 1)</li>
-  <li>The following y bytes (y given by the previous byte) encode the value of the group identifier parameter, if a group identifier is present (flag bit set to 1)</li>
   <li>The remainining bytes encode the ciphertext.</li>
 </ul>
-<p id="rfc.section.8.p.4">In requests, Partial IV and kid MUST be present; counter signature and group Identifier MUST NOT be present.  In responses without observe, Partial IV, kid, counter signature and group Identifier MUST NOT be present.  In responses with observe, kid MUST be present; Partial IV, counter signature and group Identifier MUST NOT be present.</p>
-<h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#compression-examples" id="compression-examples">Examples</a></h1>
-<h1 id="rfc.section.8.1.1"><a href="#rfc.section.8.1.1">8.1.1.</a> <a href="#example-request" id="example-request">Example Request</a></h1>
-<p id="rfc.section.8.1.1.p.1">COSE Object Before Compression:</p>
+<p id="rfc.section.8.1.p.3">The presence of Partial IV and kid in requests and responses is specified in <a href="#cose-object">Section 5</a>.</p>
+<h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#compression-examples" id="compression-examples">Examples</a></h1>
+<p id="rfc.section.8.2.p.1">This section provides examples of COSE Objects before and after OSCOAP compression.</p>
+<h1 id="rfc.section.8.2.1"><a href="#rfc.section.8.2.1">8.2.1.</a> <a href="#example-request" id="example-request">Example: Request</a></h1>
+<p id="rfc.section.8.2.1.p.1">Before compression:</p>
 <pre>
 [
 h'',
@@ -932,14 +932,14 @@ h'aea0155667924dff8a24e4cb35b9'
 0x83 40 a2 04 41 25 06 41 05 4e ae a0 15 56 67 92
 4d ff 8a 24 e4 cb 35 b9 (24 bytes)
 </pre>
-<p id="rfc.section.8.1.1.p.2">After Compression:</p>
-<p id="rfc.section.8.1.1.p.3">first byte: 0b00001001 = 0x09</p>
+<p id="rfc.section.8.2.1.p.2">After compression:</p>
+<p id="rfc.section.8.2.1.p.3">First byte: 0b00001001 = 0x09</p>
 <pre>
 0x09 05 01 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
 35 b9 (18 bytes)
 </pre>
-<h1 id="rfc.section.8.1.2"><a href="#rfc.section.8.1.2">8.1.2.</a> <a href="#example-response-without-observe" id="example-response-without-observe">Example Response (without Observe)</a></h1>
-<p id="rfc.section.8.1.2.p.1">COSE Object Before Compression:</p>
+<h1 id="rfc.section.8.2.2"><a href="#rfc.section.8.2.2">8.2.2.</a> <a href="#example-response-without-observe" id="example-response-without-observe">Example: Response (without Observe)</a></h1>
+<p id="rfc.section.8.2.2.p.1">Before compression:</p>
 <pre>
 [
 h'',
@@ -950,14 +950,14 @@ h'aea0155667924dff8a24e4cb35b9'
 0x83 40 a0 4e ae a0 15 56 67 92 4d ff 8a 24 e4 cb
 35 b9 (18 bytes)
 </pre>
-<p id="rfc.section.8.1.2.p.2">After Compression:</p>
-<p id="rfc.section.8.1.2.p.3">first byte: 0b00000000 = 0x00</p>
+<p id="rfc.section.8.2.2.p.2">After compression:</p>
+<p id="rfc.section.8.2.2.p.3">First byte: 0b00000000 = 0x00</p>
 <pre>
 0x00 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
 (14 bytes)
 </pre>
-<h1 id="rfc.section.8.1.3"><a href="#rfc.section.8.1.3">8.1.3.</a> <a href="#example-response-with-observe" id="example-response-with-observe">Example Response (with Observe)</a></h1>
-<p id="rfc.section.8.1.3.p.1">COSE Object Before Compression:</p>
+<h1 id="rfc.section.8.2.3"><a href="#rfc.section.8.2.3">8.2.3.</a> <a href="#example-response-with-observe" id="example-response-with-observe">Example: Response (with Observe)</a></h1>
+<p id="rfc.section.8.2.3.p.1">Before compression:</p>
 <pre>
 [
 h'',
@@ -968,7 +968,8 @@ h'aea0155667924dff8a24e4cb35b9'
 0x83 40 a1 06 41 07 4e ae a0 15 56 67 92 4d ff
 8a 24 e4 cb 35 b9 (21 bytes)
 </pre>
-<p id="rfc.section.8.1.3.p.2">first byte: 0b00000001 = 0x01</p>
+<p id="rfc.section.8.2.3.p.2">After compression:</p>
+<p id="rfc.section.8.2.3.p.3">First byte: 0b00000001 = 0x01</p>
 <pre>
 0x01 07 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
 (16 bytes)
