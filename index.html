@@ -870,7 +870,7 @@ external_aad = [
 
 <ol>
   <li>Process outer Block options according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the request have been received, see <a href="#block-options">Section 4.3.1.2</a>.</li>
-  <li>Retrieve the Recipient Context associated with the Recipient ID in the &#8216;kid&#8217; parameter of the COSE object.</li>
+  <li>Decompress the COSE Object (<a href="#app-compression">Section 8</a>) and retrieve the Recipient Context associated with the Recipient ID in the &#8216;kid&#8217; parameter.</li>
   <li>Verify the Sequence Number in the &#8216;Partial IV&#8217; parameter, as described in <a href="#sequence-numbers">Section 6</a>.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
   <li>Compose the AEAD nonce by XORing the Context IV (Recipient IV) with the padded &#8216;Partial IV&#8217; parameter, received in the COSE Object.</li>
@@ -896,7 +896,7 @@ external_aad = [
 
 <ol>
   <li>Process outer Block options according to <a href="#RFC7959">[RFC7959]</a>, until all blocks of the protected CoAP message have been received, see <a href="#block-options">Section 4.3.1.2</a>.</li>
-  <li>Retrieve the Recipient Context associated with the Token.</li>
+  <li>Retrieve the Recipient Context associated with the Token. Decompress the COSE Object (<a href="#app-compression">Section 8</a>).</li>
   <li>For Observe notifications, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers">Section 6</a>.</li>
   <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object">Section 5</a>.</li>
   <li>Compose the AEAD nonce  <ul><li>If the Observe option is not present in the response, compose the AEAD nonce by XORing the Context IV (Recipient IV with the the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li><li>If the Observe option is present in the response, compose the AEAD nonce by XORing the Context IV (Recipient IV) with the padded Partial IV parameter from the response.</li></ul></li>
