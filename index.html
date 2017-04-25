@@ -334,7 +334,7 @@ address {
 
   <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-object-security-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-20" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-4-25" />
   <meta name="dct.abstract" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
   <meta name="description" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
 
@@ -358,7 +358,7 @@ address {
   <td class="right">F. Palombini</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 22, 2017</td>
+  <td class="left">Expires: October 27, 2017</td>
   <td class="right">Ericsson AB</td>
 </tr>
 <tr>
@@ -371,7 +371,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 20, 2017</td>
+  <td class="right">April 25, 2017</td>
 </tr>
 
     	
@@ -391,7 +391,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 22, 2017.</p>
+<p>This Internet-Draft will expire on October 27, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1145,7 +1145,7 @@ h'aea0155667924dff8a24e4cb35b9'
       <td class="reference">
         <b id="I-D.ietf-core-coap-tcp-tls">[I-D.ietf-core-coap-tcp-tls]</b>
       </td>
-      <td class="top"><a>Bormann, C.</a>, <a>Lemay, S.</a>, <a>Tschofenig, H.</a>, <a>Hartke, K.</a>, <a>Silverajan, B.</a> and <a>B. Raymor</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-coap-tcp-tls-07">CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets</a>", Internet-Draft draft-ietf-core-coap-tcp-tls-07, March 2017.</td>
+      <td class="top"><a>Bormann, C.</a>, <a>Lemay, S.</a>, <a>Tschofenig, H.</a>, <a>Hartke, K.</a>, <a>Silverajan, B.</a> and <a>B. Raymor</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-coap-tcp-tls-08">CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets</a>", Internet-Draft draft-ietf-core-coap-tcp-tls-08, April 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1358,7 +1358,7 @@ Client  Proxy  Server
                                {04:h'a1534e3c',
                                 06:h'a3'}
     {},                      # unprotected
-    TAG                      # ciphertext + truncated 8-byte TAG
+    ciphertext               # ciphertext including truncated 8-byte TAG
   ]
 )
 </pre>
@@ -1385,7 +1385,7 @@ Client  Proxy  Server
                                 06:h'a3'}
     {9:SIG},                 # unprotected: 
                                 09: 64 bytes signature
-    TAG                      # ciphertext + truncated 8-byte TAG
+    ciphertext               # ciphertext including truncated 8-byte TAG
   ]
 )
 </pre>
