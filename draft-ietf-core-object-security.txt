@@ -1836,11 +1836,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           June 2017
    The "application/oscon" content format is added to the CoAP Content
    Format registry:
 
-         +-------------------+----------+----+-------------------+
-         | Media type        | Encoding | ID | Reference         |
-         +-------------------+----------+----+-------------------+
-         | application/oscon | -        | 70 | [[this document]] |
-         +-------------------+----------+----+-------------------+
+        +-------------------+----------+-----+-------------------+
+        | Media type        | Encoding |  ID | Reference         |
+        +-------------------+----------+-----+-------------------+
+        | application/oscon | -        | TBD | [[this document]] |
+        +-------------------+----------+-----+-------------------+
 
 
 
@@ -1853,8 +1853,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           June 2017
 13.  Acknowledgments
 
    The following individuals provided input to this document: Christian
-   Amsuess, Carsten Bormann, Joakim Brorsson, Martin Gunnarsson, Klaus
-   Hartke, Jim Schaad, Marco Tiloca, and Malisa Vu&#269;ini&#263;.
+   Amsuess, Tobias Andersson, Carsten Bormann, Joakim Brorsson, Thomas
+   Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Marco Tiloca,
+   and Malisa Vu&#269;ini&#263;.
 
    Ludwig Seitz and Goeran Selander worked on this document as part of
    the CelticPlus project CyberWI, with funding from Vinnova.
@@ -1894,10 +1895,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           June 2017
               DOI 10.17487/RFC7252, June 2014,
               <http://www.rfc-editor.org/info/rfc7252>.
 
-   [RFC7641]  Hartke, K., "Observing Resources in the Constrained
-              Application Protocol (CoAP)", RFC 7641,
-              DOI 10.17487/RFC7641, September 2015,
-              <http://www.rfc-editor.org/info/rfc7641>.
+
+
+
 
 
 
@@ -1905,6 +1905,11 @@ Selander, et al.        Expires December 31, 2017              [Page 34]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           June 2017
 
+
+   [RFC7641]  Hartke, K., "Observing Resources in the Constrained
+              Application Protocol (CoAP)", RFC 7641,
+              DOI 10.17487/RFC7641, September 2015,
+              <http://www.rfc-editor.org/info/rfc7641>.
 
    [RFC7959]  Bormann, C. and Z. Shelby, Ed., "Block-Wise Transfers in
               the Constrained Application Protocol (CoAP)", RFC 7959,
@@ -1949,11 +1954,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           June 2017
               mattsson-core-coap-actuators-02 (work in progress),
               November 2016.
 
-   [I-D.seitz-ace-oscoap-profile]
-              Seitz, L., Gunnarsson, M., and F. Palombini, "OSCOAP
-              profile of ACE", draft-seitz-ace-oscoap-profile-02 (work
-              in progress), May 2017.
-
 
 
 
@@ -1961,6 +1961,11 @@ Selander, et al.        Expires December 31, 2017              [Page 35]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           June 2017
 
+
+   [I-D.seitz-ace-oscoap-profile]
+              Seitz, L., Gunnarsson, M., and F. Palombini, "OSCOAP
+              profile of ACE", draft-seitz-ace-oscoap-profile-02 (work
+              in progress), May 2017.
 
    [I-D.selander-ace-cose-ecdhe]
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
@@ -1994,11 +1999,6 @@ B.1.  Secure Access to Sensor
    This example targets the scenario in Section 3.1 of
    [I-D.hartke-core-e2e-security-reqs] and illustrates a client
    requesting the alarm status from a server.
-
-
-
-
-
 
 
 
