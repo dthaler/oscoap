@@ -329,12 +329,12 @@ address {
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.6.1 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.6.2 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-object-security-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-6-13" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-6-29" />
   <meta name="dct.abstract" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
   <meta name="description" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
 
@@ -358,7 +358,7 @@ address {
 <td class="right">F. Palombini</td>
 </tr>
 <tr>
-<td class="left">Expires: December 15, 2017</td>
+<td class="left">Expires: December 31, 2017</td>
 <td class="right">Ericsson AB</td>
 </tr>
 <tr>
@@ -371,7 +371,7 @@ address {
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">June 13, 2017</td>
+<td class="right">June 29, 2017</td>
 </tr>
 
     	
@@ -387,7 +387,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on December 15, 2017.</p>
+<p>This Internet-Draft will expire on December 31, 2017.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -777,12 +777,12 @@ U=Unprotected, *=Special
 </h1>
 <p id="rfc.section.4.3.1.2.p.1">Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a> is an optional feature. An implementation MAY comply with <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without implementing <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
 <p id="rfc.section.4.3.1.2.p.2">The Block options (Block1, Block2, Size1 and Size2) MAY be either only inner options, only outer options or both inner and outer options. The inner and outer options are processed independently.</p>
-<p id="rfc.section.4.3.1.2.p.3">The inner block options are used for endpoint-to-endpoint secure fragmentation of payload into blocks and protection of information about the fragmentation (block number, block size, last block). In this case, the CoAP client fragments the CoAP message as defined in <a href="#RFC7959" class="xref">[RFC7959]</a> before the message is processed by OSCOAP. The CoAP server first processes the OSCOAP message before processing blockwise as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
-<p id="rfc.section.4.3.1.2.p.4">There SHALL be a security policy defining a maximum unfragmented message size for inner Block options such that messages exceeding this size SHALL be fragmented by the sending endpoint.</p>
-<p id="rfc.section.4.3.1.2.p.5">Additionally, a proxy may arbitrarily do block fragmentation on any CoAP message, in particular an OSCOAP message, as defined in <a href="#RFC7959" class="xref">[RFC7959]</a> and thereby add outer Block options to a block and send on the next hop. The outer block options are thus neither encrypted nor integrity protected.</p>
-<p id="rfc.section.4.3.1.2.p.6">An endpoint receiving a message with an outer Block option SHALL first process this option according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the protected CoAP message has been received, or the cumulated message size of the exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the protected CoAP message continues as defined in this document.</p>
-<p id="rfc.section.4.3.1.2.p.7">If the unprotected CoAP message in turn contains Block options, the receiving endpoint processes this according to <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
-<p id="rfc.section.4.3.1.2.p.8">TODO: Update processing to support multiple concurrently proceeding requests</p>
+<p id="rfc.section.4.3.1.2.p.3">The inner Block options are used for endpoint-to-endpoint secure fragmentation of payload into blocks and protection of information about the fragmentation (block number, block size, last block). In this case, the CoAP client fragments the CoAP message as defined in <a href="#RFC7959" class="xref">[RFC7959]</a> before the message is processed by OSCOAP. The CoAP server first processes the OSCOAP message before processing blockwise as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
+<p id="rfc.section.4.3.1.2.p.4">The CoAP client using inner Block options MUST use the Request-Tag as defined in Section 3 of TODO:I-D.draft-amsuess-core-repeat-request-tag to allow for parallel blockwise operations. In particular, the rules in section 3.3.2. of TODO:I-D.draft-amsuess-core-repeat-request-tag MUST be followed, which guarantee that a specific request body is assembled only from the corresponding request blocks.</p>
+<p id="rfc.section.4.3.1.2.p.5">There SHALL be a security policy defining a maximum unfragmented message size for inner Block options such that messages exceeding this size SHALL be fragmented by the sending endpoint.</p>
+<p id="rfc.section.4.3.1.2.p.6">Additionally, a proxy may arbitrarily do block fragmentation on any CoAP message, in particular an OSCOAP message, as defined in <a href="#RFC7959" class="xref">[RFC7959]</a> and thereby add outer Block options to a block and send on the next hop. The outer block options are thus neither encrypted nor integrity protected.</p>
+<p id="rfc.section.4.3.1.2.p.7">An endpoint receiving a message with an outer Block option SHALL first process this option according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the protected CoAP message have been received, or the cumulated message size of the blocks exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the protected CoAP message continues as defined in this document.</p>
+<p id="rfc.section.4.3.1.2.p.8">If the unprotected CoAP message in turn contains Block options, the receiving endpoint processes this according to <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
 <h1 id="rfc.section.4.3.2">
 <a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#class-i" id="class-i">Class I Options</a>
 </h1>
@@ -937,7 +937,7 @@ external_aad = [
 <p id="rfc.section.6.3.1.p.3">To prevent accepting replay of previously received messages, the node MAY perform the following procedure:</p>
 <p></p>
 
-<ul><li>After boot, before verifying a message using a security context stored before boot, the server synchronizes the replay window so that no old messages are being accepted. The server uses the Repeat option <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a> for synchronizing the replay window: For each stored security context, the first time after boot the server receives an OSCOAP request, it generates a pseudo-random nonce and responds with the Repeat option set to the nonce as described in <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a>. If the server receives a repeated OSCOAP request containing the Repeat option and the same nonce, and if the server can verify the request, then the sequence number obtained in the repeated message is set as the lower limit of the replay window.</li></ul>
+<ul><li>After boot, before verifying a message using a security context stored before boot, the server synchronizes the replay window so that no old messages are being accepted. The server uses the Repeat option TODO:I-D.draft-amsuess-core-repeat-request-tag for synchronizing the replay window: For each stored security context, the first time after boot the server receives an OSCOAP request, it generates a pseudo-random nonce and responds with the Repeat option set to the nonce as described in TODO:I-D.draft-amsuess-core-repeat-request-tag. If the server receives a repeated OSCOAP request containing the Repeat option and the same nonce, and if the server can verify the request, then the sequence number obtained in the repeated message is set as the lower limit of the replay window.</li></ul>
 <h1 id="rfc.section.6.3.2">
 <a href="#rfc.section.6.3.2">6.3.2.</a> <a href="#the-observe-case" id="the-observe-case">The Observe Case</a>
 </h1>
