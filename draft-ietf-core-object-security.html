@@ -782,13 +782,13 @@ U=Unprotected, *=Special
 </h1>
 <p id="rfc.section.4.3.1.2.1.p.1">The inner Block options are used for endpoint-to-endpoint secure fragmentation of payload into blocks and protection of information about the fragmentation (block number, block size, last block). In this case, the sending CoAP endpoint fragments the CoAP message as defined in <a href="#RFC7959" class="xref">[RFC7959]</a> before the message is processed by OSCOAP. The receiving CoAP endpoint first processes the OSCOAP message before processing blockwise as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
 <p id="rfc.section.4.3.1.2.1.p.2">Applications using OSCOAP with inner Block options MUST specify a security policy defining a maximum unfragmented message size for inner Block options such that messages exceeding this size SHALL be fragmented by the sending endpoint.</p>
-<p id="rfc.section.4.3.1.2.1.p.3">For blockwise request operations (using Block1) the client MUST use and process the Request-Tag as defined in Section 3 of TODO:I-D.draft-amsuess-core-repeat-request-tag. In particular, the rules in section 3.3.1 of TODO:I-D.draft-amsuess-core-repeat-request-tag MUST be followed, which guarantee that a specific request body is assembled only from the corresponding request blocks.</p>
-<p id="rfc.section.4.3.1.2.1.p.4">For blockwise response operations (using Block2) the server MUST use and process the ETag as defined in Section 4 of TODO:I-D.draft-amsuess-core-repeat-request-tag.</p>
+<p id="rfc.section.4.3.1.2.1.p.3">For blockwise request operations (using Block1) the client MUST use and process the Request-Tag as defined in Section 3 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. In particular, the rules in section 3.3.1 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a> MUST be followed, which guarantee that a specific request body is assembled only from the corresponding request blocks.</p>
+<p id="rfc.section.4.3.1.2.1.p.4">For blockwise response operations (using Block2) the server MUST use and process the ETag as defined in Section 4 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>.</p>
 <h1 id="rfc.section.4.3.1.2.2">
 <a href="#rfc.section.4.3.1.2.2">4.3.1.2.2.</a> <a href="#outer-block-options" id="outer-block-options">Outer Block Options</a>
 </h1>
 <p id="rfc.section.4.3.1.2.2.p.1">A CoAP proxy may do block fragmentation on any CoAP message (including OSCOAP messages) as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>, and thereby decompose it into multiple blocks using outer Block options. The outer block options are thus neither encrypted nor integrity protected.</p>
-<p id="rfc.section.4.3.1.2.2.p.2">To allow multiple concurrent request operations to the same server (not only same resource), a CoAP proxy should use and process the Request-Tag as specified in section 3.3.2 of TODO:I-D.draft-amsuess-core-repeat-request-tag; an OSCOAP server that supports outer Block options MUST support the Request-Tag option.</p>
+<p id="rfc.section.4.3.1.2.2.p.2">To allow multiple concurrent request operations to the same server (not only same resource), a CoAP proxy should use and process the Request-Tag as specified in section 3.3.2 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>; an OSCOAP server that supports outer Block options MUST support the Request-Tag option.</p>
 <p id="rfc.section.4.3.1.2.2.p.3">An endpoint receiving an OSCOAP message with an outer Block option SHALL first process this option according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, or the cumulated message size of the blocks exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the OSCOAP message continues as defined in this document.</p>
 <h1 id="rfc.section.4.3.2">
 <a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#class-i" id="class-i">Class I Options</a>
@@ -944,7 +944,7 @@ external_aad = [
 <p id="rfc.section.6.3.1.p.3">To prevent accepting replay of previously received messages, the node MAY perform the following procedure:</p>
 <p></p>
 
-<ul><li>After boot, before verifying a message using a security context stored before boot, the server synchronizes the replay window so that no old messages are being accepted. The server uses the Repeat option TODO:I-D.draft-amsuess-core-repeat-request-tag for synchronizing the replay window: For each stored security context, the first time after boot the server receives an OSCOAP request, it generates a pseudo-random nonce and responds with the Repeat option set to the nonce as described in TODO:I-D.draft-amsuess-core-repeat-request-tag. If the server receives a repeated OSCOAP request containing the Repeat option and the same nonce, and if the server can verify the request, then the sequence number obtained in the repeated message is set as the lower limit of the replay window.</li></ul>
+<ul><li>After boot, before verifying a message using a security context stored before boot, the server synchronizes the replay window so that no old messages are being accepted. The server uses the Repeat option <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a> for synchronizing the replay window: For each stored security context, the first time after boot the server receives an OSCOAP request, it generates a pseudo-random nonce and responds with the Repeat option set to the nonce as described in <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. If the server receives a repeated OSCOAP request containing the Repeat option and the same nonce, and if the server can verify the request, then the sequence number obtained in the repeated message is set as the lower limit of the replay window.</li></ul>
 <h1 id="rfc.section.6.3.2">
 <a href="#rfc.section.6.3.2">6.3.2.</a> <a href="#the-observe-case" id="the-observe-case">The Observe Case</a>
 </h1>
@@ -1266,6 +1266,11 @@ h'aea0155667924dff8a24e4cb35b9'
 <a href="#rfc.references.1">14.1.</a> Normative References</h1>
 <table><tbody>
 <tr>
+<td class="reference"><b id="I-D.amsuess-core-repeat-request-tag">[I-D.amsuess-core-repeat-request-tag]</b></td>
+<td class="top">
+<a>Amsuess, C.</a>, <a>Mattsson, J.</a> and <a>G. Selander</a>, "<a href="http://tools.ietf.org/html/draft-amsuess-core-repeat-request-tag-00">Repeat And Request-Tag</a>", Internet-Draft draft-amsuess-core-repeat-request-tag-00, July 2017.</td>
+</tr>
+<tr>
 <td class="reference"><b id="I-D.ietf-cose-msg">[I-D.ietf-cose-msg]</b></td>
 <td class="top">
 <a>Schaad, J.</a>, "<a href="http://tools.ietf.org/html/draft-ietf-cose-msg-24">CBOR Object Signing and Encryption (COSE)</a>", Internet-Draft draft-ietf-cose-msg-24, November 2016.</td>
@@ -1274,11 +1279,6 @@ h'aea0155667924dff8a24e4cb35b9'
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
 <td class="top">
 <a>Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
-</tr>
-<tr>
-<td class="reference"><b id="RFC5869">[RFC5869]</b></td>
-<td class="top">
-<a>Krawczyk, H.</a> and <a>P. Eronen</a>, "<a href="http://tools.ietf.org/html/rfc5869">HMAC-based Extract-and-Expand Key Derivation Function (HKDF)</a>", RFC 5869, DOI 10.17487/RFC5869, May 2010.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC5988">[RFC5988]</b></td>
@@ -1358,6 +1358,11 @@ h'aea0155667924dff8a24e4cb35b9'
 <td class="reference"><b id="I-D.tiloca-core-multicast-oscoap">[I-D.tiloca-core-multicast-oscoap]</b></td>
 <td class="top">
 <a>Tiloca, M.</a>, <a>Selander, G.</a> and <a>F. Palombini</a>, "<a href="http://tools.ietf.org/html/draft-tiloca-core-multicast-oscoap-01">Secure group communication for CoAP</a>", Internet-Draft draft-tiloca-core-multicast-oscoap-01, March 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5869">[RFC5869]</b></td>
+<td class="top">
+<a>Krawczyk, H.</a> and <a>P. Eronen</a>, "<a href="http://tools.ietf.org/html/rfc5869">HMAC-based Extract-and-Expand Key Derivation Function (HKDF)</a>", RFC 5869, DOI 10.17487/RFC5869, May 2010.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7228">[RFC7228]</b></td>
