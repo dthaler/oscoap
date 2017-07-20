@@ -312,7 +312,7 @@ address {
 <link href="#rfc.references" rel="Chapter" title="14 References">
 <link href="#rfc.references.1" rel="Chapter" title="14.1 Normative References">
 <link href="#rfc.references.2" rel="Chapter" title="14.2 Informative References">
-<link href="#rfc.appendix.A" rel="Chapter" title="A CoAP-HTTP Mapping">
+<link href="#rfc.appendix.A" rel="Chapter" title="A HTTP-CoAP Mapping">
 <link href="#rfc.appendix.B" rel="Chapter" title="B Test Vectors">
 <link href="#rfc.appendix.C" rel="Chapter" title="C Examples">
 <link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 Secure Access to Sensor">
@@ -462,7 +462,7 @@ address {
 </li>
 <li>14.2.   <a href="#rfc.references.2">Informative References</a>
 </li>
-</ul><li>Appendix A.   <a href="#rfc.appendix.A">CoAP-HTTP Mapping</a>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">HTTP-CoAP Mapping</a>
 </li>
 <li>Appendix B.   <a href="#rfc.appendix.B">Test Vectors</a>
 </li>
@@ -1172,7 +1172,7 @@ h'aea0155667924dff8a24e4cb35b9'
 <h1 id="rfc.section.13">
 <a href="#rfc.section.13">13.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a>
 </h1>
-<p id="rfc.section.13.p.1">The following individuals provided input to this document: Christian Ams&#252;ss, Tobias Andersson, Carsten Bormann, Joakim Brorsson, Thomas Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Marco Tiloca, and Mali&#353;a Vu&#269;ini&#263;.</p>
+<p id="rfc.section.13.p.1">The following individuals provided input to this document: Christian Ams&#252;ss, Tobias Andersson, Carsten Bormann, Joakim Brorsson, Thomas Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Dave Thaler, Marco Tiloca, and Mali&#353;a Vu&#269;ini&#263;.</p>
 <p id="rfc.section.13.p.2">Ludwig Seitz and G&#246;ran Selander worked on this document as part of the CelticPlus project CyberWI, with funding from Vinnova.</p>
 <h1 id="rfc.references">
 <a href="#rfc.references">14.</a> References</h1>
@@ -1285,10 +1285,10 @@ h'aea0155667924dff8a24e4cb35b9'
 </tr>
 </tbody></table>
 <h1 id="rfc.appendix.A">
-<a href="#rfc.appendix.A">Appendix A.</a> <a href="#coap-http" id="coap-http">CoAP-HTTP Mapping</a>
+<a href="#rfc.appendix.A">Appendix A.</a> <a href="#http-coap" id="http-coap">HTTP-CoAP Mapping</a>
 </h1>
-<p id="rfc.section.A.p.1">As requested in [RFC8075] Section 1, this protocol extension describes a HTTP mapping as follows:</p>
-<p id="rfc.section.A.p.2">The presence and content of the Object-Security option, both in requests and responses, is expressed in a HTTP header field named Object-Security in the mapped request or response. The value of the field is the is the value of the CoAP Object-Security option in base64url encoding without padding [RFC7515].</p>
+<p id="rfc.section.A.p.1">As requested in Section 1 of [RFC8075], this section describes the new HTTP mapping resulting from the OSCOAP protocol extension of CoAP.</p>
+<p id="rfc.section.A.p.2">The presence and content of the Object-Security option, both in requests and responses, is expressed in a HTTP header field named Object-Security in the mapped request or response. The value of the field is the value of the CoAP Object-Security option in base64url encoding without padding [RFC7515].</p>
 <p id="rfc.section.A.p.3">In addition, whenever the Object-Security field is present, the protected message&#8217;s code is expressed in a HTTP header field named CoAP-Code in dotted code number notation with leading zero. When converting an HTTP request or response to CoAP, the code in the CoAP-Code field gets used in the CoAP message, and the response code mapping rules ([RFC8075] Section 7) are ignored.</p>
 <p id="rfc.section.A.p.4">Invalid base64url data, the absence of the CoAP-Code field or a CoAP-Code field value that can not be expressed as a CoAP code byte constitute an error, and MUST result in a 4.02 Bad Option or 400 Bad Request, depending on the protocol used in the request. If any mapper receives an Object-Security header, it MUST verify that the code classes match to the extent of being a request (CoAP code class 0 mapped to an HTTP request) or a response (CoAP code classes 1-5 mapped to a HTTP response) code.</p>
 <p id="rfc.section.A.p.5">Example:</p>

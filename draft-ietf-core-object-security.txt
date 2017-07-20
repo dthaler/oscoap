@@ -105,7 +105,7 @@ Table of Contents
    14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  32
      14.1.  Normative References . . . . . . . . . . . . . . . . . .  32
      14.2.  Informative References . . . . . . . . . . . . . . . . .  33
-   Appendix A.  CoAP-HTTP Mapping  . . . . . . . . . . . . . . . . .  34
+   Appendix A.  HTTP-CoAP Mapping  . . . . . . . . . . . . . . . . .  34
 
 
 
@@ -1758,8 +1758,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    The following individuals provided input to this document: Christian
    Amsuess, Tobias Andersson, Carsten Bormann, Joakim Brorsson, Thomas
-   Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Marco Tiloca,
-   and Malisa Vu&#269;ini&#263;.
+   Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Dave Thaler,
+   Marco Tiloca, and Malisa Vu&#269;ini&#263;.
 
    Ludwig Seitz and Goeran Selander worked on this document as part of
    the CelticPlus project CyberWI, with funding from Vinnova.
@@ -1888,16 +1888,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               DOI 10.17487/RFC7228, May 2014,
               <http://www.rfc-editor.org/info/rfc7228>.
 
-Appendix A.  CoAP-HTTP Mapping
+Appendix A.  HTTP-CoAP Mapping
 
-   As requested in [RFC8075] Section 1, this protocol extension
-   describes a HTTP mapping as follows:
+   As requested in Section 1 of [RFC8075], this section describes the
+   new HTTP mapping resulting from the OSCOAP protocol extension of
+   CoAP.
 
    The presence and content of the Object-Security option, both in
    requests and responses, is expressed in a HTTP header field named
    Object-Security in the mapped request or response.  The value of the
-   field is the is the value of the CoAP Object-Security option in
-   base64url encoding without padding [RFC7515].
+
 
 
 
@@ -1905,6 +1905,9 @@ Selander, et al.        Expires January 21, 2018               [Page 34]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   field is the value of the CoAP Object-Security option in base64url
+   encoding without padding [RFC7515].
 
    In addition, whenever the Object-Security field is present, the
    protected message's code is expressed in a HTTP header field named
@@ -1951,9 +1954,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    Body: 00 47 01 02 03 04 05 06 07 08 [binary]
 
    IANA consideration: The option is registered according to BCP90
-
-
-
 
 
 
