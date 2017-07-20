@@ -1651,29 +1651,29 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    forwarding (see Section 4).  DTLS and OSCOAP can be combined, thereby
    enabling end-to-end security of CoAP payload, in combination with
    hop-by-hop protection of the entire CoAP message, during transport
-   between end-point and intermediary node.
-
-   The CoAP message layer, however, cannot be protected end-to-end
-   through intermediary devices since the parameters Type and Message
-   ID, as well as Token and Token Length may be changed by a proxy.
-   Moreover, messages that are not possible to verify should for
-   security reasons not always be acknowledged but in some cases be
-   silently dropped.  This would not comply with CoAP message layer, but
-   does not have an impact on the application layer security solution,
-   since message layer is excluded from that.
+   between end-point and intermediary node.  The CoAP message layer,
+   however, cannot be protected end-to-end through intermediary devices
+   since the parameters Type and Message ID, as well as Token and Token
+   Length may be changed by a proxy.
 
    The use of COSE to protect CoAP messages as specified in this
    document requires an established security context.  The method to
    establish the security context described in Section 3.2 is based on a
    common shared secret material in client and server, which may be
-   obtained e.g. by using EDHOC [I-D.selander-ace-cose-ecdhe] or the ACE
-   framework [I-D.ietf-ace-oauth-authz].  An OSCOAP profile of ACE is
-   described in [I-D.seitz-ace-oscoap-profile].
+   obtained e.g. by using the ACE framework [I-D.ietf-ace-oauth-authz].
+   An OSCOAP profile of ACE is described in
+   [I-D.seitz-ace-oscoap-profile].
 
    The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is
    selected for broad applicability in terms of message size (2^64
    blocks) and maximum number of messages (2^56).  Compatibility with
+   CCM* is achieved by using the algorithm AES-CCM-16-64-128
+   [I-D.ietf-cose-msg].
 
+   Most AEAD algorithms require a unique nonce for each message, for
+   which the sequence numbers in the COSE message field "Partial IV" is
+   used.  If the recipient accepts any sequence number larger than the
+   one previously received, then the problem of sequence number
 
 
 
@@ -1682,13 +1682,6 @@ Selander, et al.        Expires January 21, 2018               [Page 30]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-   CCM* is achieved by using the algorithm AES-CCM-16-64-128
-   [I-D.ietf-cose-msg].
-
-   Most AEAD algorithms require a unique nonce for each message, for
-   which the sequence numbers in the COSE message field "Partial IV" is
-   used.  If the recipient accepts any sequence number larger than the
-   one previously received, then the problem of sequence number
    synchronization is avoided.  With reliable transport it may be
    defined that only messages with sequence number which are equal to
    previous sequence number + 1 are accepted.  The alternatives to
@@ -1700,11 +1693,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    The maximum sequence number to guarantee nonce uniqueness
    (Section 6.1) is algorithm dependent.  The maximum sequence number
-   SHALL be 2^(min(nonce length in bits, 56) - 1) - 1.  The "-1" in the
-   exponent stems from the same partial IV and flipped bit of IV
-   (Section 5) is used in request and response.  The compression
-   algorithm (Section 8) assumes that the partial IV is 56 bits or less
-   (which is the reason for min(,) in the exponent).
+   SHALL be 2^(min(nonce length in bits, 56) - 1) - 1, or any algorithm
+   specific lower limit.  The "-1" in the exponent stems from the same
+   partial IV and flipped bit of IV (Section 5) is used in request and
+   response.  The compression algorithm (Section 8) assumes that the
+   partial IV is 56 bits or less (which is the reason for min(,) in the
+   exponent).
 
    The inner block options enable the sender to split large messages
    into OSCOAP-protected blocks such that the receiving node can verify
@@ -1730,6 +1724,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    of 'yes' and 'no'.  2) Use a character which is not part of the
    responses to pad to a fixed length.  For example, pad with a space to
    three characters.  3) Use the PKCS #7 style padding scheme where m
+   bytes are appended each having the value of m.  For example,
+   appending a 0 to "YES" and two 1's to "NO".  This style of padding
+   means that all values need to be padded.
+
+
+
 
 
 
@@ -1737,10 +1737,6 @@ Selander, et al.        Expires January 21, 2018               [Page 31]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
-
-   bytes are appended each having the value of m.  For example,
-   appending a 0 to "YES" and two 1's to "NO".  This style of padding
-   means that all values need to be padded.
 
 11.  Privacy Considerations
 
@@ -1786,6 +1782,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Marco Tiloca,
    and Malisa Vu&#269;ini&#263;.
 
+   Ludwig Seitz and Goeran Selander worked on this document as part of
+   the CelticPlus project CyberWI, with funding from Vinnova.
+
+
 
 
 
@@ -1793,9 +1793,6 @@ Selander, et al.        Expires January 21, 2018               [Page 32]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
-
-   Ludwig Seitz and Goeran Selander worked on this document as part of
-   the CelticPlus project CyberWI, with funding from Vinnova.
 
 14.  References
 
@@ -1841,6 +1838,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               the Constrained Application Protocol (CoAP)", RFC 7959,
               DOI 10.17487/RFC7959, August 2016,
               <http://www.rfc-editor.org/info/rfc7959>.
+
+
+
 
 
 
