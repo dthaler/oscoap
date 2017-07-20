@@ -691,7 +691,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
                    |  3 | Uri-Host       |   |   | x |
                    |  4 | ETag           | x |   |   |
                    |  5 | If-None-Match  | x |   |   |
-                   |  6 | Observe        |   | * |   |
+                   |  6 | Observe        |   |   | * |
                    |  7 | Uri-Port       |   |   | x |
                    |  8 | Location-Path  | x |   |   |
                    | 11 | Uri-Path       | x |   |   |
@@ -845,44 +845,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 4.3.2.  Class I Options
 
    A Class I option is an outer option and hence visible in the options
-   part of the OSCOAP message.  Except for special options described in
-   the subsections, for options in Class I (see Figure 4) the option
-   value SHALL be integrity protected between the endpoints, see
-   (Section 5.2).  Unless otherwise specified, the sending endpoint
-   SHALL encode the Class I options in the OSCOAP message as described
-   in Section 4.3.4.
-
-4.3.2.1.  Observe
-
-   Observe [RFC7641] is an optional feature.  An implementation MAY
-   support [RFC7252] and the Object-Security option without supporting
-   [RFC7641].  The Observe option as used here targets the requirements
-   on forwarding of [I-D.hartke-core-e2e-security-reqs]
-   (Section 2.2.1.2).
-
-   In order for a proxy to support forwarding of Observe messages, there
-   must be an Observe option present in options part of the OSCOAP
-   message ([RFC7641]), so Observe must have an outer value:
-
-   o  The Observe option of the original CoAP request SHALL be encoded
-      in the OSCOAP request as described in Section 4.3.4.
-
-   To secure the order of the notifications, responses with the Observe
-   option SHALL be integrity protected in the following way:
-
-   o  The Observe option SHALL be included in the external_aad of the
-      response (see Section 5.2), with value set to the 3 least
-      significant bytes of the Sequence Number of the response.
-
-   The Observe option in the CoAP request SHALL NOT be integrity
-   protected, since it may be legitimately removed by a proxy.
-
-   If the Observe option is removed from a CoAP request by a proxy, then
-   the server can still verify the request (as a non-Observe request),
-   and produce a non-Observe response.  If the OSCOAP client receives a
-   response to an Observe request without an outer Observe value, then
-   it MUST verify the response as a non-Observe response, i.e. not
-   include the Sequence Number of the response in the external_aad.
+   part of the OSCOAP message.  Unless otherwise specified, Class I
+   options SHALL be integrity protected between the endpoints, see
+   (Section 5.2).  The sending endpoint SHALL encode the Class I options
+   in the OSCOAP message as described in Section 4.3.4.
 
 4.3.3.  Class U Options
 
@@ -890,13 +856,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    proxy operations.  Unless otherwise specified, the sending endpoint
    SHALL encode the Class U options in the options part of the OSCOAP
    message as described in Section 4.3.4.
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 16]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
 
 4.3.3.1.  Uri-Host, Uri-Port, and Proxy-Scheme
 
@@ -932,6 +891,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    During OSCOAP processing, Proxy-Uri is split into:
 
+
+
+Selander, et al.        Expires January 21, 2018               [Page 16]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
+
    o  Proxy-Scheme = "coap"
 
    o  Uri-Host = "example.com"
@@ -947,14 +913,46 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    object.  The remaining options are composed into the Proxy-Uri
    included in the options part of the OSCOAP message, which has value:
 
+   o  Proxy-Uri = "coap://example.com"
+
+4.3.3.3.  Observe
+
+   Observe [RFC7641] is an optional feature.  An implementation MAY
+   support [RFC7252] and the Object-Security option without supporting
+   [RFC7641].  The Observe option as used here targets the requirements
+   on forwarding of [I-D.hartke-core-e2e-security-reqs]
+   (Section 2.2.1.2).
+
+   In order for a proxy to support forwarding of Observe messages, there
+   must be an Observe option present in options part of the OSCOAP
+   message ([RFC7641]), so Observe must have an outer value.
+
+   To secure the order of the notifications, the client SHALL verify
+   that the Partial IV of the latest notification is greater than any
+   previously received Partial IV bound to the Observe request.  If the
+   verification fails, the client SHALL stop processing the response,
+   and in the case of CON respond with and empty ACK.
+
+   The Observe option in the CoAP request may be legitimately removed by
+   a proxy.  If the Observe option is removed from a CoAP request by a
+   proxy, then the server can still verify the request (as a non-Observe
+   request), and produce a non-Observe response.  If the OSCOAP client
+   receives a response to an Observe request without an outer Observe
+   value, then it MUST verify the response as a non-Observe response.
+   (The reverse case is covered in the verification of the response
+   Section 7.)
+
+
+
+
+
+
 
 
 Selander, et al.        Expires January 21, 2018               [Page 17]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
-
-   o  Proxy-Uri = "coap://example.com"
 
 4.3.4.  Outer Options in the OSCOAP Message
 
@@ -1002,6 +1000,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       *  The "Partial IV" parameter.  The value is set to the Sequence
          Number.  The Partial IV SHALL be of minimum length needed to
          encode the sequence number.  This parameter SHALL be present in
+         requests.  In case of Observe (Section 4.3.3.3) the Partial IV
+
 
 
 
@@ -1010,7 +1010,6 @@ Selander, et al.        Expires January 21, 2018               [Page 18]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-         requests.  In case of Observe (Section 4.3.2.1) the Partial IV
          SHALL be present in the response, and otherwise the Partial IV
          SHALL NOT be present in the response.
 
@@ -1053,6 +1052,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 5.2.  Additional Authenticated Data
 
    The external_aad SHALL be a CBOR array as defined below:
+
 
 
 
