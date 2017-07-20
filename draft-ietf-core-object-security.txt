@@ -101,7 +101,7 @@ Table of Contents
    11. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  32
    12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  32
      12.1.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  32
-   13. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  32
+   13. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  33
    14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  33
      14.1.  Normative References . . . . . . . . . . . . . . . . . .  33
      14.2.  Informative References . . . . . . . . . . . . . . . . .  34
@@ -691,7 +691,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
                    |  3 | Uri-Host       |   |   | x |
                    |  4 | ETag           | x |   |   |
                    |  5 | If-None-Match  | x |   |   |
-                   |  6 | Observe        |   | * |   |
+                   |  6 | Observe        |   |   | * |
                    |  7 | Uri-Port       |   |   | x |
                    |  8 | Location-Path  | x |   |   |
                    | 11 | Uri-Path       | x |   |   |
@@ -845,44 +845,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 4.3.2.  Class I Options
 
    A Class I option is an outer option and hence visible in the options
-   part of the OSCOAP message.  Except for special options described in
-   the subsections, for options in Class I (see Figure 4) the option
-   value SHALL be integrity protected between the endpoints, see
-   (Section 5.2).  Unless otherwise specified, the sending endpoint
-   SHALL encode the Class I options in the OSCOAP message as described
-   in Section 4.3.4.
-
-4.3.2.1.  Observe
-
-   Observe [RFC7641] is an optional feature.  An implementation MAY
-   support [RFC7252] and the Object-Security option without supporting
-   [RFC7641].  The Observe option as used here targets the requirements
-   on forwarding of [I-D.hartke-core-e2e-security-reqs]
-   (Section 2.2.1.2).
-
-   In order for a proxy to support forwarding of Observe messages, there
-   must be an Observe option present in options part of the OSCOAP
-   message ([RFC7641]), so Observe must have an outer value:
-
-   o  The Observe option of the original CoAP request SHALL be encoded
-      in the OSCOAP request as described in Section 4.3.4.
-
-   To secure the order of the notifications, responses with the Observe
-   option SHALL be integrity protected in the following way:
-
-   o  The Observe option SHALL be included in the external_aad of the
-      response (see Section 5.2), with value set to the 3 least
-      significant bytes of the Sequence Number of the response.
-
-   The Observe option in the CoAP request SHALL NOT be integrity
-   protected, since it may be legitimately removed by a proxy.
-
-   If the Observe option is removed from a CoAP request by a proxy, then
-   the server can still verify the request (as a non-Observe request),
-   and produce a non-Observe response.  If the OSCOAP client receives a
-   response to an Observe request without an outer Observe value, then
-   it MUST verify the response as a non-Observe response, i.e. not
-   include the Sequence Number of the response in the external_aad.
+   part of the OSCOAP message.  Unless otherwise specified, Class I
+   options SHALL be integrity protected between the endpoints, see
+   (Section 5.2).  The sending endpoint SHALL encode the Class I options
+   in the OSCOAP message as described in Section 4.3.4.
 
 4.3.3.  Class U Options
 
@@ -890,13 +856,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    proxy operations.  Unless otherwise specified, the sending endpoint
    SHALL encode the Class U options in the options part of the OSCOAP
    message as described in Section 4.3.4.
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 16]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
 
 4.3.3.1.  Uri-Host, Uri-Port, and Proxy-Scheme
 
@@ -932,6 +891,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    During OSCOAP processing, Proxy-Uri is split into:
 
+
+
+Selander, et al.        Expires January 21, 2018               [Page 16]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
+
    o  Proxy-Scheme = "coap"
 
    o  Uri-Host = "example.com"
@@ -947,14 +913,46 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    object.  The remaining options are composed into the Proxy-Uri
    included in the options part of the OSCOAP message, which has value:
 
+   o  Proxy-Uri = "coap://example.com"
+
+4.3.3.3.  Observe
+
+   Observe [RFC7641] is an optional feature.  An implementation MAY
+   support [RFC7252] and the Object-Security option without supporting
+   [RFC7641].  The Observe option as used here targets the requirements
+   on forwarding of [I-D.hartke-core-e2e-security-reqs]
+   (Section 2.2.1.2).
+
+   In order for a proxy to support forwarding of Observe messages, there
+   must be an Observe option present in options part of the OSCOAP
+   message ([RFC7641]), so Observe must have an outer value.
+
+   To secure the order of the notifications, the client SHALL verify
+   that the Partial IV of the latest notification is greater than any
+   previously received Partial IV bound to the Observe request.  If the
+   verification fails, the client SHALL stop processing the response,
+   and in the case of CON respond with and empty ACK.
+
+   The Observe option in the CoAP request may be legitimately removed by
+   a proxy.  If the Observe option is removed from a CoAP request by a
+   proxy, then the server can still verify the request (as a non-Observe
+   request), and produce a non-Observe response.  If the OSCOAP client
+   receives a response to an Observe request without an outer Observe
+   value, then it MUST verify the response as a non-Observe response.
+   (The reverse case is covered in the verification of the response
+   Section 7.)
+
+
+
+
+
+
 
 
 Selander, et al.        Expires January 21, 2018               [Page 17]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
-
-   o  Proxy-Uri = "coap://example.com"
 
 4.3.4.  Outer Options in the OSCOAP Message
 
@@ -1002,6 +1000,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       *  The "Partial IV" parameter.  The value is set to the Sequence
          Number.  The Partial IV SHALL be of minimum length needed to
          encode the sequence number.  This parameter SHALL be present in
+         requests.  In case of Observe (Section 4.3.3.3) the Partial IV
+
 
 
 
@@ -1010,7 +1010,6 @@ Selander, et al.        Expires January 21, 2018               [Page 18]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-         requests.  In case of Observe (Section 4.3.2.1) the Partial IV
          SHALL be present in the response, and otherwise the Partial IV
          SHALL NOT be present in the response.
 
@@ -1053,6 +1052,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 5.2.  Additional Authenticated Data
 
    The external_aad SHALL be a CBOR array as defined below:
+
 
 
 
@@ -1483,29 +1483,29 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    The value of the Object-Security option SHALL be encoded as follows:
 
-   o  The first byte encode a set of flags and the length of the Partial
-      IV parameter.
+   o  The first byte MUST encode a set of flags and the length of the
+      Partial IV parameter.
 
-      *  The three least significant bits encode the Partial IV size n.
+      *  The three least significant bits encode the Partial IV size.
          If their value is 0, the Partial IV is not present in the
          compressed message.
 
-      *  The fourth least significant bit k is set to 1 if the kid is
+      *  The fourth least significant bit is set to 1 if the kid is
          present in the compressed message.
 
       *  The fifth-eighth least significant bits (= most significant
          half-byte) are reserved and SHALL be set to zero when not in
          use.
 
-   o  The following n bytes encode the value of the Partial IV, if the
-      Partial IV is present (n is not 0).
+   o  The following n bytes (n being the value of the Partial IV size in
+      the first byte) encode the value of the Partial IV, if the Partial
+      IV is present (size not 0).
 
-   o  The following 1 byte encodes the kid size m, if the kid is present
-      (k is 1)
+   o  The following byte encodes the size of the kid parameter, if the
+      kid is present (flag bit set to 1)
 
-   o  The following m bytes encode the value of the kid, if the kid is
-      present (k is 1)
-
+   o  The following m bytes (m given by the previous byte) encode the
+      value of the kid, if the kid is present (flag bit set to 1)
 
 
 
@@ -1516,21 +1516,21 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    o  The remainining bytes encode the ciphertext.
 
-    7 6 5 4 3 2 1 0
-   +-+-+-+-+-+-+-+-+  k: kid flag bit
-   |0 0 0 0|k|  n  |  n: Partial IV size (3 bits)
-   +-+-+-+-+-+-+-+-+
-
    The presence of Partial IV and kid in requests and responses is
    specified in Section 5, and summarized in Figure 6.
 
-                 +--------------------------+-----+-----+
-                 |                          |  k  |  n  |
-                 +--------------------------+-----+-----+
-                 | Request                  |  1  | > 0 |
-                 | Response without Observe |  0  |   0 |
-                 | Response with Observe    |  0  | > 0 |
-                 +--------------------------+-----+-----+
+              7 6 5 4 3 2 1 0
+             +-+-+-+-+-+-+-+-+  k: kid flag bit
+             |0 0 0 0|k|pivsz|  pivsz: Partial IV size (3 bits)
+             +-+-+-+-+-+-+-+-+
+
+           +-------+---------+------------+-----------+
+           |       | Request | Resp with- | Resp with |
+           |       |         | out observe| observe   |
+           +-------+---------+------------+-----------+
+           |     k |    1    |     0      |      0    |
+           | pivsz |  > 0    |     0      |    > 0    |
+           +-------+---------+------------+-----------+
 
                 Figure 6: Flag byte for OSCOAP compression
 
@@ -1651,29 +1651,29 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    forwarding (see Section 4).  DTLS and OSCOAP can be combined, thereby
    enabling end-to-end security of CoAP payload, in combination with
    hop-by-hop protection of the entire CoAP message, during transport
-   between end-point and intermediary node.  The CoAP message layer,
-   however, cannot be protected end-to-end through intermediary devices
-   since the parameters Type and Message ID, as well as Token and Token
-   Length may be changed by a proxy.
+   between end-point and intermediary node.
+
+   The CoAP message layer, however, cannot be protected end-to-end
+   through intermediary devices since the parameters Type and Message
+   ID, as well as Token and Token Length may be changed by a proxy.
+   Moreover, messages that are not possible to verify should for
+   security reasons not always be acknowledged but in some cases be
+   silently dropped.  This would not comply with CoAP message layer, but
+   does not have an impact on the application layer security solution,
+   since message layer is excluded from that.
 
    The use of COSE to protect CoAP messages as specified in this
    document requires an established security context.  The method to
    establish the security context described in Section 3.2 is based on a
    common shared secret material in client and server, which may be
-   obtained e.g. by using the ACE framework [I-D.ietf-ace-oauth-authz].
-   An OSCOAP profile of ACE is described in
-   [I-D.seitz-ace-oscoap-profile].
+   obtained e.g. by using EDHOC [I-D.selander-ace-cose-ecdhe] or the ACE
+   framework [I-D.ietf-ace-oauth-authz].  An OSCOAP profile of ACE is
+   described in [I-D.seitz-ace-oscoap-profile].
 
    The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is
    selected for broad applicability in terms of message size (2^64
    blocks) and maximum number of messages (2^56).  Compatibility with
-   CCM* is achieved by using the algorithm AES-CCM-16-64-128
-   [I-D.ietf-cose-msg].
 
-   Most AEAD algorithms require a unique nonce for each message, for
-   which the sequence numbers in the COSE message field "Partial IV" is
-   used.  If the recipient accepts any sequence number larger than the
-   one previously received, then the problem of sequence number
 
 
 
@@ -1682,6 +1682,13 @@ Selander, et al.        Expires January 21, 2018               [Page 30]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+   CCM* is achieved by using the algorithm AES-CCM-16-64-128
+   [I-D.ietf-cose-msg].
+
+   Most AEAD algorithms require a unique nonce for each message, for
+   which the sequence numbers in the COSE message field "Partial IV" is
+   used.  If the recipient accepts any sequence number larger than the
+   one previously received, then the problem of sequence number
    synchronization is avoided.  With reliable transport it may be
    defined that only messages with sequence number which are equal to
    previous sequence number + 1 are accepted.  The alternatives to
@@ -1693,12 +1700,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    The maximum sequence number to guarantee nonce uniqueness
    (Section 6.1) is algorithm dependent.  The maximum sequence number
-   SHALL be 2^(min(nonce length in bits, 56) - 1) - 1, or any algorithm
-   specific lower limit.  The "-1" in the exponent stems from the same
-   partial IV and flipped bit of IV (Section 5) is used in request and
-   response.  The compression algorithm (Section 8) assumes that the
-   partial IV is 56 bits or less (which is the reason for min(,) in the
-   exponent).
+   SHALL be 2^(min(nonce length in bits, 56) - 1) - 1.  The "-1" in the
+   exponent stems from the same partial IV and flipped bit of IV
+   (Section 5) is used in request and response.  The compression
+   algorithm (Section 8) assumes that the partial IV is 56 bits or less
+   (which is the reason for min(,) in the exponent).
 
    The inner block options enable the sender to split large messages
    into OSCOAP-protected blocks such that the receiving node can verify
@@ -1724,12 +1730,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    of 'yes' and 'no'.  2) Use a character which is not part of the
    responses to pad to a fixed length.  For example, pad with a space to
    three characters.  3) Use the PKCS #7 style padding scheme where m
-   bytes are appended each having the value of m.  For example,
-   appending a 0 to "YES" and two 1's to "NO".  This style of padding
-   means that all values need to be padded.
-
-
-
 
 
 
@@ -1737,6 +1737,16 @@ Selander, et al.        Expires January 21, 2018               [Page 31]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   bytes are appended each having the value of m.  For example,
+   appending a 0 to "YES" and two 1's to "NO".  This style of padding
+   means that all values need to be padded.
+
+   The security considerations of Section 11.3 of RFC7252 (amplification
+   mitigation) apply to OSCOAP even though it is not a NoSec mode.  In
+   addition to the mitigation strategies recommended there, the Repeat
+   option can be used to mitigate unprotected requests from spoofed
+   client [I-D.amsuess-core-repeat-request-tag].
 
 11.  Privacy Considerations
 
@@ -1775,6 +1785,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
              |  TBD   | Object-Security | [[this document]] |
              +--------+-----------------+-------------------+
 
+
+
+
+
+Selander, et al.        Expires January 21, 2018               [Page 32]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
+
 13.  Acknowledgments
 
    The following individuals provided input to this document: Christian
@@ -1784,15 +1803,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    Ludwig Seitz and Goeran Selander worked on this document as part of
    the CelticPlus project CyberWI, with funding from Vinnova.
-
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 32]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
 
 14.  References
 
@@ -1829,16 +1839,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               DOI 10.17487/RFC7252, June 2014,
               <http://www.rfc-editor.org/info/rfc7252>.
 
-   [RFC7641]  Hartke, K., "Observing Resources in the Constrained
-              Application Protocol (CoAP)", RFC 7641,
-              DOI 10.17487/RFC7641, September 2015,
-              <http://www.rfc-editor.org/info/rfc7641>.
-
-   [RFC7959]  Bormann, C. and Z. Shelby, Ed., "Block-Wise Transfers in
-              the Constrained Application Protocol (CoAP)", RFC 7959,
-              DOI 10.17487/RFC7959, August 2016,
-              <http://www.rfc-editor.org/info/rfc7959>.
-
 
 
 
@@ -1849,6 +1849,16 @@ Selander, et al.        Expires January 21, 2018               [Page 33]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   [RFC7641]  Hartke, K., "Observing Resources in the Constrained
+              Application Protocol (CoAP)", RFC 7641,
+              DOI 10.17487/RFC7641, September 2015,
+              <http://www.rfc-editor.org/info/rfc7641>.
+
+   [RFC7959]  Bormann, C. and Z. Shelby, Ed., "Block-Wise Transfers in
+              the Constrained Application Protocol (CoAP)", RFC 7959,
+              DOI 10.17487/RFC7959, August 2016,
+              <http://www.rfc-editor.org/info/rfc7959>.
 
 14.2.  Informative References
 
@@ -1888,6 +1898,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               mattsson-core-coap-actuators-02 (work in progress),
               November 2016.
 
+
+
+
+Selander, et al.        Expires January 21, 2018               [Page 34]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
+
    [I-D.seitz-ace-oscoap-profile]
               Seitz, L., Gunnarsson, M., and F. Palombini, "OSCOAP
               profile of ACE", draft-seitz-ace-oscoap-profile-03 (work
@@ -1897,14 +1915,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
               Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-
               cose-ecdhe-07 (work in progress), July 2017.
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 34]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
 
    [I-D.tiloca-core-multicast-oscoap]
               Tiloca, M., Selander, G., and F. Palombini, "Secure group
@@ -1938,16 +1948,6 @@ B.1.  Secure Access to Sensor
    This example targets the scenario in Section 3.1 of
    [I-D.hartke-core-e2e-security-reqs] and illustrates a client
    requesting the alarm status from a server.
-
-
-
-
-
-
-
-
-
-
 
 
 
