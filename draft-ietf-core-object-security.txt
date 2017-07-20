@@ -1501,10 +1501,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       Partial IV is present (n is not 0).
 
    o  The following 1 byte encodes the kid size m, if the kid is present
-      (k is set to 1)
+      (k is 1)
 
    o  The following m bytes encode the value of the kid, if the kid is
-      present (k is set to 1)
+      present (k is 1)
 
 
 
