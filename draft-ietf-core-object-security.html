@@ -312,10 +312,11 @@ address {
 <link href="#rfc.references" rel="Chapter" title="14 References">
 <link href="#rfc.references.1" rel="Chapter" title="14.1 Normative References">
 <link href="#rfc.references.2" rel="Chapter" title="14.2 Informative References">
-<link href="#rfc.appendix.A" rel="Chapter" title="A Test Vectors">
-<link href="#rfc.appendix.B" rel="Chapter" title="B Examples">
-<link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Secure Access to Sensor">
-<link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 Secure Subscribe to Sensor">
+<link href="#rfc.appendix.A" rel="Chapter" title="A CoAP-HTTP Mapping">
+<link href="#rfc.appendix.B" rel="Chapter" title="B Test Vectors">
+<link href="#rfc.appendix.C" rel="Chapter" title="C Examples">
+<link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 Secure Access to Sensor">
+<link href="#rfc.appendix.C.2" rel="Chapter" title="C.2 Secure Subscribe to Sensor">
 <link href="#rfc.authors" rel="Chapter">
 
 
@@ -461,13 +462,15 @@ address {
 </li>
 <li>14.2.   <a href="#rfc.references.2">Informative References</a>
 </li>
-</ul><li>Appendix A.   <a href="#rfc.appendix.A">Test Vectors</a>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">CoAP-HTTP Mapping</a>
 </li>
-<li>Appendix B.   <a href="#rfc.appendix.B">Examples</a>
+<li>Appendix B.   <a href="#rfc.appendix.B">Test Vectors</a>
 </li>
-<ul><li>B.1.   <a href="#rfc.appendix.B.1">Secure Access to Sensor</a>
+<li>Appendix C.   <a href="#rfc.appendix.C">Examples</a>
 </li>
-<li>B.2.   <a href="#rfc.appendix.B.2">Secure Subscribe to Sensor</a>
+<ul><li>C.1.   <a href="#rfc.appendix.C.1">Secure Access to Sensor</a>
+</li>
+<li>C.2.   <a href="#rfc.appendix.C.2">Secure Subscribe to Sensor</a>
 </li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a>
 </li>
@@ -499,7 +502,7 @@ Client                                           Server
    |                                               |
 </pre>
 <p class="figure">Figure 1: Sketch of OSCOAP</p>
-<p id="rfc.section.1.p.5">OSCOAP may be used in very constrained settings, thanks to its small message size, its restricted code and memory requirements, and is independent of underlying layer below CoAP. OSCOAP can be combined with transport layer security such as DTLS or TLS, thereby enabling end-to-end security of e.g. CoAP payload and options, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. Examples of the use of OSCOAP are given in <a href="#app-examples" class="xref">Appendix B</a>.</p>
+<p id="rfc.section.1.p.5">OSCOAP may be used in very constrained settings, thanks to its small message size, its restricted code and memory requirements, and is independent of underlying layer below CoAP. OSCOAP can be combined with transport layer security such as DTLS or TLS, thereby enabling end-to-end security of e.g. CoAP payload and options, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. Examples of the use of OSCOAP are given in <a href="#app-examples" class="xref">Appendix C</a>.</p>
 <h1 id="rfc.section.1.1">
 <a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a>
 </h1>
@@ -1285,17 +1288,53 @@ h'aea0155667924dff8a24e4cb35b9'
 </tr>
 </tbody></table>
 <h1 id="rfc.appendix.A">
-<a href="#rfc.appendix.A">Appendix A.</a> <a href="#app-vectors" id="app-vectors">Test Vectors</a>
+<a href="#rfc.appendix.A">Appendix A.</a> <a href="#coap-http" id="coap-http">CoAP-HTTP Mapping</a>
 </h1>
-<p id="rfc.section.A.p.1">TODO: This section needs to be updated.</p>
+<p id="rfc.section.A.p.1">As requested in [RFC8075] Section 1, this protocol extension describes a HTTP mapping as follows:</p>
+<p id="rfc.section.A.p.2">The presence and content of the Object-Security option, both in requests and responses, is expressed in a HTTP header field named Object-Security in the mapped request or response. The value of the field is the is the value of the CoAP Object-Security option in base64url encoding [RFC4648].</p>
+<p id="rfc.section.A.p.3">In addition, whenever the Object-Security field is present, the protected message&#8217;s code is expressed in a HTTP header field named CoAP-Code in dotted code number notation with leading zero. When converting an HTTP request or response to CoAP, the code in the CoAP-Code field gets used in the CoAP message, and the response code mapping rules ([RFC8075] Section 7) are ignored.</p>
+<p id="rfc.section.A.p.4">Invalid base64url data, the absence of the CoAP-Code field or a CoAP-Code field value that can not be expressed as a CoAP code byte constitute an error, and MUST result in a 4.02 Bad Option or 400 Bad Request, depending on the protocol used in the request. If any mapper receives an Object-Security header, it MUST verify that the code classes match to the extent of being a request (CoAP code class 0 mapped to an HTTP request) or a response (CoAP code classes 1-5 mapped to a HTTP response) code.</p>
+<p id="rfc.section.A.p.5">Example:</p>
+<pre>
+[Client to Proxy -- HTTP]
+
+GET /hc/coap://device.local/ HTTP/1.1
+Hostname: proxy.local
+CoAP-Code: 0.01
+Object-Security: gQEFY2xpZW50u3RlbXBlcmF0dXJlLi4uLi4uLi4=
+
+[Proxy to Server -- CoAP]
+
+GET /
+Uri-Host: device.local
+Object-Security: 81 01 05 63 ...
+
+[Sever to Proxy -- CoAP response]
+
+2.05 Content
+Object-Security: [empty]
+Payload: 00 47 01 02 03 04 05 06 07 08 [binary]
+
+[Proxy to Client -- HTTP response]
+
+HTTP/1.1 200 OK
+Object-Security: [empty]
+CoAP-Code: 2.05
+Body: 00 47 01 02 03 04 05 06 07 08 [binary]
+</pre>
+<p id="rfc.section.A.p.6">IANA consideration: The option is registered according to BCP90</p>
 <h1 id="rfc.appendix.B">
-<a href="#rfc.appendix.B">Appendix B.</a> <a href="#app-examples" id="app-examples">Examples</a>
+<a href="#rfc.appendix.B">Appendix B.</a> <a href="#app-vectors" id="app-vectors">Test Vectors</a>
 </h1>
-<p id="rfc.section.B.p.1">This section gives examples of OSCOAP. The message exchanges are made, based on the assumption that there is a security context established between client and server. For simplicity, these examples only indicate the content of the messages without going into detail of the COSE message format.</p>
-<h1 id="rfc.appendix.B.1">
-<a href="#rfc.appendix.B.1">B.1.</a> <a href="#secure-access-to-sensor" id="secure-access-to-sensor">Secure Access to Sensor</a>
+<p id="rfc.section.B.p.1">TODO: This section needs to be updated.</p>
+<h1 id="rfc.appendix.C">
+<a href="#rfc.appendix.C">Appendix C.</a> <a href="#app-examples" id="app-examples">Examples</a>
 </h1>
-<p id="rfc.section.B.1.p.1">This example targets the scenario in Section 3.1 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting the alarm status from a server.</p>
+<p id="rfc.section.C.p.1">This section gives examples of OSCOAP. The message exchanges are made, based on the assumption that there is a security context established between client and server. For simplicity, these examples only indicate the content of the messages without going into detail of the COSE message format.</p>
+<h1 id="rfc.appendix.C.1">
+<a href="#rfc.appendix.C.1">C.1.</a> <a href="#secure-access-to-sensor" id="secure-access-to-sensor">Secure Access to Sensor</a>
+</h1>
+<p id="rfc.section.C.1.p.1">This example targets the scenario in Section 3.1 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting the alarm status from a server.</p>
 <div id="rfc.figure.7"></div>
 <div id="fig-alarm"></div>
 <pre>
@@ -1325,13 +1364,13 @@ Client  Proxy  Server
    |      |      |
 </pre>
 <p class="figure">Figure 7: Secure Access to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
-<p id="rfc.section.B.1.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
-<p id="rfc.section.B.1.p.3">The COSE header of the request contains an identifier (5f), indicating which security context was used to protect the message and a Partial IV (42). The option Uri-Path (&#8220;alarm_status&#8221;) and payload (&#8220;OFF&#8221;) are encrypted.</p>
-<p id="rfc.section.B.1.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the response is bound to the request.</p>
-<h1 id="rfc.appendix.B.2">
-<a href="#rfc.appendix.B.2">B.2.</a> <a href="#secure-subscribe-to-sensor" id="secure-subscribe-to-sensor">Secure Subscribe to Sensor</a>
+<p id="rfc.section.C.1.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
+<p id="rfc.section.C.1.p.3">The COSE header of the request contains an identifier (5f), indicating which security context was used to protect the message and a Partial IV (42). The option Uri-Path (&#8220;alarm_status&#8221;) and payload (&#8220;OFF&#8221;) are encrypted.</p>
+<p id="rfc.section.C.1.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the response is bound to the request.</p>
+<h1 id="rfc.appendix.C.2">
+<a href="#rfc.appendix.C.2">C.2.</a> <a href="#secure-subscribe-to-sensor" id="secure-subscribe-to-sensor">Secure Subscribe to Sensor</a>
 </h1>
-<p id="rfc.section.B.2.p.1">This example targets the scenario in Section 3.2 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting subscription to a blood sugar measurement resource (GET /glucose), first receiving the value 220 mg/dl and then a second value 180 mg/dl.</p>
+<p id="rfc.section.C.2.p.1">This example targets the scenario in Section 3.2 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting subscription to a blood sugar measurement resource (GET /glucose), first receiving the value 220 mg/dl and then a second value 180 mg/dl.</p>
 <div id="rfc.figure.8"></div>
 <div id="get-protected-enc"></div>
 <pre>
@@ -1378,9 +1417,9 @@ Client  Proxy  Server
    |      |      |
 </pre>
 <p class="figure">Figure 8: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
-<p id="rfc.section.B.2.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
-<p id="rfc.section.B.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and 36). The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted. The Observe option is not protected.</p>
-<p id="rfc.section.B.2.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any in any Partial IV previously received in a response bound to the request.</p>
+<p id="rfc.section.C.2.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
+<p id="rfc.section.C.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and 36). The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted. The Observe option is not protected.</p>
+<p id="rfc.section.C.2.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any in any Partial IV previously received in a response bound to the request.</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
