@@ -1124,23 +1124,26 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 6.2.  Replay Protection
 
-   In order to protect from replay of messages, each Recipient Context
-   contains a Replay Window used to verify request, and - in case of
-   Observe - responses.  A receiving endpoint SHALL verify that a
-   Sequence Number (Partial IV) received in the COSE object has not been
-   received before in the Recipient Context.  For requests, if this
-   verification fails and the message received is a CON message, the
-   server SHALL respond with a 4.00 Bad Request error message.  The
-   diagnostic payload MAY contain the "Replay protection failed" string.
-   For responses, if this verification fails and the message received is
-   a CON message, the client SHALL respond with an empty ACK and stop
-   processing the response.
+   In order to protect from replay of requests, the server's Recipient
+   Context contains a Replay Window.  A server SHALL verify that a
+   Partial IV received in the COSE object has not been received before
+   in the Recipient Context.  If this verification fails and the message
+   received is a CON message, the server SHALL respond with a 5.03
+   Service Unavailable error message with the option Max-Age set to 0.
+   The diagnostic payload MAY contain the "Replay protection failed"
+   string.
 
    The size and type of the Replay Window depends on the use case and
    lower protocol layers.  In case of reliable and ordered transport
-   from endpoint to endpoint, the recipient MAY just store the last
-   received sequence number and require that newly received Sequence
-   Numbers equals the last received Sequence Number + 1.
+   from endpoint to endpoint, the server MAY just store the last
+   received Partial IV and require that newly received Partial IVs
+   equals the last received Partial IV + 1.
+
+   Reponses are protected against replay as they are cryptographically
+   bound to the request.  In the case of Observe only monotonically
+   increasing Partial IVs are accepted.  If this verification fails and
+   the message received is a CON message, the client SHALL respond with
+   an empty ACK and stop processing the response.
 
 6.3.  Sequence Number and Replay Window State
 
@@ -1167,9 +1170,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    o  Before sending a message, the client stores in persistent memory a
       sequence number associated to the stored security context higher
-      than any sequence number which has been or are being sent using
-      this security context.  After boot, the client does not use any
-
 
 
 
@@ -1178,6 +1178,8 @@ Selander, et al.        Expires January 21, 2018               [Page 21]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+      than any sequence number which has been or are being sent using
+      this security context.  After boot, the client does not use any
       lower sequence number in a request than what was persistently
       stored with that security context.
 
@@ -1224,8 +1226,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
          current sequence number and K > 1.  This is a trade-off between
          the number of storage operations and efficient use of sequence
          numbers.
-
-
 
 
 
