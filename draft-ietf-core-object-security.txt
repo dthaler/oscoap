@@ -230,17 +230,26 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    The Object-Security option (see Figure 2) indicates that OSCOAP is
    used to protect the CoAP message exchange.  The Object-Security
-   option is critical, safe to forward, part of the cache key, not
-   repeatable, and opaque.
+   option is critical, safe to forward, part of the cache key and not
+   repeatable.
 
-        +-----+---+---+---+---+-----------------+--------+--------+
-        | No. | C | U | N | R | Name            | Format | Length |
-        +-----+---+---+---+---+-----------------+--------+--------|
-        | TBD | x |   |   |   | Object-Security | opaque | 0-     |
-        +-----+---+---+---+---+-----------------+--------+--------+
-             C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable
+     +-----+---+---+---+---+-----------------+-----------+-----------+
+     | No. | C | U | N | R | Name            | Format    | Length    |
+     +-----+---+---+---+---+-----------------+-----------+-----------|
+     | TBD | x |   |   |   | Object-Security | see below | see below |
+     +-----+---+---+---+---+-----------------+-----------+-----------+
+          C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable
 
                    Figure 2: The Object-Security Option
+
+   The option is either empty or contains a COSE object (see Section 5),
+   and has no default value (except for certain methods, see below).
+   The length of the Object-Security option is either zero or the sum of
+   length of the COSE header and the lengths of the options and payload
+   (if present) of the original CoAP message.  Note that the payload and
+   most options are encrypted Figure 4, and the corresponding plain
+   message fields are removed from the message so these fields does not
+   expand the total message size.
 
    A successful response to a request with the Object-Security option
    SHALL contain the Object-Security option.  A CoAP endpoint SHOULD NOT
@@ -265,6 +274,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    o  If the method/response code does not allow payload, then the
       compressed COSE object Section 8 is the value of the Object-
+
+
+
+Selander, et al.        Expires January 21, 2018                [Page 5]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
+
       Security option and the length of the Object-Security option is
       equal to the size of the compressed COSE object.  An endpoint
       receiving a CoAP message without payload, that also contains an
@@ -274,14 +291,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    The size of the COSE object depends on whether the method/response
    code allows payload, if the message is a request or response, on the
    set of options that are included in the original message, the AEAD
-
-
-
-Selander, et al.        Expires January 21, 2018                [Page 5]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
    algorithm, the length of the information identifying the security
    context, and the length of the sequence number.
 
@@ -319,15 +328,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    contexts identified by the same IDs in the two endpoints are not the
    same, but they are partly mirrored.  Retrieval and use of the
    security context are shown in Figure 3.
-
-
-
-
-
-
-
-
-
 
 
 

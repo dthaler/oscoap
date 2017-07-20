@@ -512,27 +512,28 @@ Client                                           Server
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#option" id="option">The Object-Security Option</a>
 </h1>
-<p id="rfc.section.2.p.1">The Object-Security option (see <a href="#fig-option" class="xref">Figure 2</a>) indicates that OSCOAP is used to protect the CoAP message exchange. The Object-Security option is critical, safe to forward, part of the cache key, not repeatable, and opaque.</p>
+<p id="rfc.section.2.p.1">The Object-Security option (see <a href="#fig-option" class="xref">Figure 2</a>) indicates that OSCOAP is used to protect the CoAP message exchange. The Object-Security option is critical, safe to forward, part of the cache key and not repeatable.</p>
 <div id="rfc.figure.2"></div>
 <div id="fig-option"></div>
 <pre>
-+-----+---+---+---+---+-----------------+--------+--------+
-| No. | C | U | N | R | Name            | Format | Length |
-+-----+---+---+---+---+-----------------+--------+--------|
-| TBD | x |   |   |   | Object-Security | opaque | 0-     |
-+-----+---+---+---+---+-----------------+--------+--------+
++-----+---+---+---+---+-----------------+-----------+-----------+
+| No. | C | U | N | R | Name            | Format    | Length    |
++-----+---+---+---+---+-----------------+-----------+-----------|
+| TBD | x |   |   |   | Object-Security | see below | see below |
++-----+---+---+---+---+-----------------+-----------+-----------+
      C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable
 </pre>
 <p class="figure">Figure 2: The Object-Security Option</p>
-<p id="rfc.section.2.p.2">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP endpoint SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age" class="xref">Section 4.3.1.1</a>.</p>
-<p id="rfc.section.2.p.3">The protection is achieved by means of a COSE object (see <a href="#cose-object" class="xref">Section 5</a>), which is compressed and then included in the OSCOAP message. The placement of the COSE object depends on whether the method/response code allows payload (see <a href="#RFC7252" class="xref">[RFC7252]</a>):</p>
+<p id="rfc.section.2.p.2">The option is either empty or contains a COSE object (see <a href="#cose-object" class="xref">Section 5</a>), and has no default value (except for certain methods, see below). The length of the Object-Security option is either zero or the sum of length of the COSE header and the lengths of the options and payload (if present) of the original CoAP message.  Note that the payload and most options are encrypted <a href="#protected-coap-options" class="xref">Figure 4</a>, and the corresponding plain message fields are removed from the message so these fields does not expand the total message size.</p>
+<p id="rfc.section.2.p.3">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP endpoint SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age" class="xref">Section 4.3.1.1</a>.</p>
+<p id="rfc.section.2.p.4">The protection is achieved by means of a COSE object (see <a href="#cose-object" class="xref">Section 5</a>), which is compressed and then included in the OSCOAP message. The placement of the COSE object depends on whether the method/response code allows payload (see <a href="#RFC7252" class="xref">[RFC7252]</a>):</p>
 <p></p>
 
 <ul>
 <li>If the method/response code allows payload, then the compressed COSE object <a href="#app-compression" class="xref">Section 8</a> is the payload of the OSCOAP message, and the Object-Security option has length zero. An endpoint receiving a CoAP message with payload, that also contains a non-empty Object-Security option SHALL treat it as malformed and reject it.</li>
 <li>If the method/response code does not allow payload, then the compressed COSE object <a href="#app-compression" class="xref">Section 8</a> is the value of the Object-Security option and the length of the Object-Security option is equal to the size of the compressed COSE object. An endpoint receiving a CoAP message without payload, that also contains an empty Object-Security option SHALL treat it as malformed and reject it.</li>
 </ul>
-<p id="rfc.section.2.p.5">The size of the COSE object depends on whether the method/response code allows payload, if the message is a request or response, on the set of options that are included in the original message, the AEAD algorithm, the length of the information identifying the security context, and the length of the sequence number.</p>
+<p id="rfc.section.2.p.6">The size of the COSE object depends on whether the method/response code allows payload, if the message is a request or response, on the set of options that are included in the original message, the AEAD algorithm, the length of the information identifying the security context, and the length of the sequence number.</p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#context" id="context">The Security Context</a>
 </h1>
