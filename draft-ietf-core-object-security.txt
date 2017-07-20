@@ -1420,7 +1420,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
        simply stop processing the response.
 
    1.  For Observe notifications, verify the Sequence Number in the
-       'Partial IV' parameter as described in Section 6.
+       'Partial IV' parameter as described in Section 6.  If the client
+       receives a notification for which no Observe request was sent,
+       the client SHALL stop processing the response and, in the case of
+       CON send an empty ACK back.
 
    2.  Compose the Additional Authenticated Data, as described in
        Section 5.
@@ -1445,9 +1448,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
        *  If decryption succeeds and Observe is used, update the
           Recipient Replay Window, as described in Section 6.
 
-   5.  Add decrypted options or payload to the decrypted response
-       overwriting any outer E options (see Section 4).  The Object-
-       Security option is removed.
 
 
 
@@ -1457,6 +1457,10 @@ Selander, et al.        Expires January 21, 2018               [Page 26]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   5.  Add decrypted options or payload to the decrypted response
+       overwriting any outer E options (see Section 4).  The Object-
+       Security option is removed.
 
        *  If Observe is used, replace the Observe value with the 3 least
           significant bytes in the sequence number.
@@ -1503,16 +1507,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    o  The following m bytes (m given by the previous byte) encode the
       value of the kid, if the kid is present (flag bit set to 1)
 
-   o  The remainining bytes encode the ciphertext.
-
-
-
 
 
 Selander, et al.        Expires January 21, 2018               [Page 27]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   o  The remainining bytes encode the ciphertext.
 
    The presence of Partial IV and kid in requests and responses is
    specified in Section 5, and summarized in Figure 6.
@@ -1557,9 +1559,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    0x09 05 01 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
    35 b9 (18 bytes)
 
-8.2.2.  Example: Response (without Observe)
 
-   Before compression:
 
 
 
@@ -1569,6 +1569,10 @@ Selander, et al.        Expires January 21, 2018               [Page 28]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+8.2.2.  Example: Response (without Observe)
+
+   Before compression:
 
    [
    h'',
@@ -1615,10 +1619,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    security context material or any other information required to run
    OSCOAP.
 
-   A value MUST NOT be given for the "osc" attribute; any present value
-   MUST be ignored by parsers.  The "osc" attribute MUST NOT appear more
-
-
 
 
 Selander, et al.        Expires January 21, 2018               [Page 29]
@@ -1626,6 +1626,8 @@ Selander, et al.        Expires January 21, 2018               [Page 29]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+   A value MUST NOT be given for the "osc" attribute; any present value
+   MUST be ignored by parsers.  The "osc" attribute MUST NOT appear more
    than once in a given link-value; occurrences after the first MUST be
    ignored by parsers.
 
@@ -1671,8 +1673,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is
    selected for broad applicability in terms of message size (2^64
    blocks) and maximum number of messages (2^56).  Compatibility with
-   CCM* is achieved by using the algorithm AES-CCM-16-64-128
-   [I-D.ietf-cose-msg].
 
 
 
@@ -1681,6 +1681,9 @@ Selander, et al.        Expires January 21, 2018               [Page 30]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   CCM* is achieved by using the algorithm AES-CCM-16-64-128
+   [I-D.ietf-cose-msg].
 
    Most AEAD algorithms require a unique nonce for each message, for
    which the sequence numbers in the COSE message field "Partial IV" is
@@ -1727,9 +1730,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    of 'yes' and 'no'.  2) Use a character which is not part of the
    responses to pad to a fixed length.  For example, pad with a space to
    three characters.  3) Use the PKCS #7 style padding scheme where m
-   bytes are appended each having the value of m.  For example,
-   appending a 0 to "YES" and two 1's to "NO".  This style of padding
-   means that all values need to be padded.
 
 
 
@@ -1737,6 +1737,10 @@ Selander, et al.        Expires January 21, 2018               [Page 31]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   bytes are appended each having the value of m.  For example,
+   appending a 0 to "YES" and two 1's to "NO".  This style of padding
+   means that all values need to be padded.
 
 11.  Privacy Considerations
 
@@ -1782,10 +1786,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Marco Tiloca,
    and Malisa Vu&#269;ini&#263;.
 
-   Ludwig Seitz and Goeran Selander worked on this document as part of
-   the CelticPlus project CyberWI, with funding from Vinnova.
-
-
 
 
 
@@ -1793,6 +1793,9 @@ Selander, et al.        Expires January 21, 2018               [Page 32]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   Ludwig Seitz and Goeran Selander worked on this document as part of
+   the CelticPlus project CyberWI, with funding from Vinnova.
 
 14.  References
 
@@ -1838,9 +1841,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               the Constrained Application Protocol (CoAP)", RFC 7959,
               DOI 10.17487/RFC7959, August 2016,
               <http://www.rfc-editor.org/info/rfc7959>.
-
-
-
 
 
 

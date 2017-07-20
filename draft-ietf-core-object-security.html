@@ -1016,7 +1016,7 @@ external_aad = [
 <p></p>
 
 <ol>
-<li>For Observe notifications, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
+<li>For Observe notifications, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers" class="xref">Section 6</a>. If the client receives a notification for which no Observe request was sent, the client SHALL stop processing the response and, in the case of CON send an empty ACK back.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compose the AEAD nonce  <ul>
 <li>If the Observe option is not present in the response, compose the AEAD nonce by XORing the Context IV (Recipient IV with the the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
