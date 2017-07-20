@@ -1296,14 +1296,14 @@ h'aea0155667924dff8a24e4cb35b9'
 <p id="rfc.section.A.p.4">Invalid base64url data, the absence of the CoAP-Code field or a CoAP-Code field value that can not be expressed as a CoAP code byte constitute an error, and MUST result in a 4.02 Bad Option or 400 Bad Request, depending on the protocol used in the request. If any mapper receives an Object-Security header, it MUST verify that the code classes match to the extent of being a request (CoAP code class 0 mapped to an HTTP request) or a response (CoAP code classes 1-5 mapped to a HTTP response) code.</p>
 <p id="rfc.section.A.p.5">Example:</p>
 <pre>
-[Client to Proxy -- HTTP]
+[Client to Proxy -- HTTP request]
 
 GET /hc/coap://device.local/ HTTP/1.1
 Hostname: proxy.local
 CoAP-Code: 0.01
 Object-Security: gQEFY2xpZW50u3RlbXBlcmF0dXJlLi4uLi4uLi4
 
-[Proxy to Server -- CoAP]
+[Proxy to Server -- CoAP request]
 
 GET /
 Uri-Host: device.local
