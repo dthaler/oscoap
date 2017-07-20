@@ -308,8 +308,6 @@ address {
 <link href="#rfc.section.11" rel="Chapter" title="11 Privacy Considerations">
 <link href="#rfc.section.12" rel="Chapter" title="12 IANA Considerations">
 <link href="#rfc.section.12.1" rel="Chapter" title="12.1 CoAP Option Numbers Registry">
-<link href="#rfc.section.12.2" rel="Chapter" title="12.2 Media Type Registrations">
-<link href="#rfc.section.12.3" rel="Chapter" title="12.3 CoAP Content Format Registration">
 <link href="#rfc.section.13" rel="Chapter" title="13 Acknowledgments">
 <link href="#rfc.references" rel="Chapter" title="14 References">
 <link href="#rfc.references.1" rel="Chapter" title="14.1 Normative References">
@@ -318,12 +316,6 @@ address {
 <link href="#rfc.appendix.B" rel="Chapter" title="B Examples">
 <link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Secure Access to Sensor">
 <link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 Secure Subscribe to Sensor">
-<link href="#rfc.appendix.C" rel="Chapter" title="C Object Security of Content (OSCON)">
-<link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 Overhead OSCON">
-<link href="#rfc.appendix.C.2" rel="Chapter" title="C.2 MAC Only">
-<link href="#rfc.appendix.C.3" rel="Chapter" title="C.3 Signature Only">
-<link href="#rfc.appendix.C.4" rel="Chapter" title="C.4 Authenticated Encryption with Additional Data (AEAD)">
-<link href="#rfc.appendix.C.5" rel="Chapter" title="C.5 Symmetric Encryption with Asymmetric Signature (SEAS)">
 <link href="#rfc.authors" rel="Chapter">
 
 
@@ -461,10 +453,6 @@ address {
 </li>
 <ul><li>12.1.   <a href="#rfc.section.12.1">CoAP Option Numbers Registry</a>
 </li>
-<li>12.2.   <a href="#rfc.section.12.2">Media Type Registrations</a>
-</li>
-<li>12.3.   <a href="#rfc.section.12.3">CoAP Content Format Registration</a>
-</li>
 </ul><li>13.   <a href="#rfc.section.13">Acknowledgments</a>
 </li>
 <li>14.   <a href="#rfc.references">References</a>
@@ -480,18 +468,6 @@ address {
 <ul><li>B.1.   <a href="#rfc.appendix.B.1">Secure Access to Sensor</a>
 </li>
 <li>B.2.   <a href="#rfc.appendix.B.2">Secure Subscribe to Sensor</a>
-</li>
-</ul><li>Appendix C.   <a href="#rfc.appendix.C">Object Security of Content (OSCON)</a>
-</li>
-<ul><li>C.1.   <a href="#rfc.appendix.C.1">Overhead OSCON</a>
-</li>
-<li>C.2.   <a href="#rfc.appendix.C.2">MAC Only</a>
-</li>
-<li>C.3.   <a href="#rfc.appendix.C.3">Signature Only</a>
-</li>
-<li>C.4.   <a href="#rfc.appendix.C.4">Authenticated Encryption with Additional Data (AEAD)</a>
-</li>
-<li>C.5.   <a href="#rfc.appendix.C.5">Symmetric Encryption with Asymmetric Signature (SEAS)</a>
 </li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a>
 </li>
@@ -524,7 +500,6 @@ Client                                           Server
 </pre>
 <p class="figure">Figure 1: Sketch of OSCOAP</p>
 <p id="rfc.section.1.p.5">OSCOAP may be used in very constrained settings, thanks to its small message size, its restricted code and memory requirements, and is independent of underlying layer below CoAP. OSCOAP can be combined with DTLS, thereby enabling end-to-end security of e.g. CoAP payload and options, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. Examples of the use of OSCOAP are given in <a href="#app-examples" class="xref">Appendix B</a>.</p>
-<p id="rfc.section.1.p.6">The message protection provided by OSCOAP can alternatively be applied only to the payload of individual messages. We call this object security of content (OSCON), which is defined in <a href="#oscon" class="xref">Appendix C</a>.</p>
 <h1 id="rfc.section.1.1">
 <a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a>
 </h1>
@@ -1201,59 +1176,6 @@ h'aea0155667924dff8a24e4cb35b9'
 |  TBD   | Object-Security | [[this document]] |
 +--------+-----------------+-------------------+
 </pre>
-<h1 id="rfc.section.12.2">
-<a href="#rfc.section.12.2">12.2.</a> <a href="#media-type-registrations" id="media-type-registrations">Media Type Registrations</a>
-</h1>
-<p id="rfc.section.12.2.p.1">The &#8220;application/oscon&#8221; media type is added to the Media Types registry:</p>
-<pre>
-    Type name: application
-
-    Subtype name: oscon
-
-    Required parameters: N/A
-
-    Optional parameters: N/A
-
-    Encoding considerations: binary
-
-    Security considerations: See Appendix C of this document.
-
-    Interoperability considerations: N/A
-
-    Published specification: [[this document]] (this document)
-
-    Applications that use this media type: To be identified
-
-    Fragment identifier considerations: N/A
-
-    Additional information:
-
-    * Magic number(s): N/A
-
-    * File extension(s): N/A
-
-    * Macintosh file type code(s): N/A
-
-    Person &amp; email address to contact for further information:
-       G&#246;ran Selander &lt;goran.selander@ericsson.com&gt;
-
-    Intended usage: COMMON
-
-    Restrictions on usage: N/A
-
-    Author: G&#246;ran Selander, goran.selander@ericsson.com
-</pre>
-<h1 id="rfc.section.12.3">
-<a href="#rfc.section.12.3">12.3.</a> <a href="#coap-content-format-registration" id="coap-content-format-registration">CoAP Content Format Registration</a>
-</h1>
-<p id="rfc.section.12.3.p.1">The &#8220;application/oscon&#8221; content format is added to the CoAP Content Format registry:</p>
-<pre>
-+-------------------+----------+-----+-------------------+
-| Media type        | Encoding |  ID | Reference         |
-+-------------------+----------+-----+-------------------+
-| application/oscon | -        | TBD | [[this document]] |
-+-------------------+----------+-----+-------------------+
-</pre>
 <h1 id="rfc.section.13">
 <a href="#rfc.section.13">13.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a>
 </h1>
@@ -1466,151 +1388,6 @@ Client  Proxy  Server
 <p id="rfc.section.B.2.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
 <p id="rfc.section.B.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Sequence Number (15). The COSE header of the responses contains sequence numbers (32 and 36). The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted. The Observe option is integrity protected. The shown Observe values (000032 and 000036) are the ones that the client will see after OSCOAP processing.</p>
 <p id="rfc.section.B.2.p.4">The server verifies that the sequence number has not been received before. The client verifies that the sequence number has not been received before and that the responses are bound to the request.</p>
-<h1 id="rfc.appendix.C">
-<a href="#rfc.appendix.C">Appendix C.</a> <a href="#oscon" id="oscon">Object Security of Content (OSCON)</a>
-</h1>
-<p id="rfc.section.C.p.1">TODO: This section needs to be updated.</p>
-<p id="rfc.section.C.p.2">OSCOAP protects message exchanges end-to-end between a certain client and a certain server, targeting the security requirements for forward proxy of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a>. In contrast, many use cases require one and the same message to be protected for, and verified by, multiple endpoints, see caching proxy section of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a>. Those security requirements can be addressed by protecting essentially the payload/content of individual messages using the COSE format (<a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a>), rather than the entire request/response message exchange. This is referred to as Object Security of Content (OSCON).</p>
-<p id="rfc.section.C.p.3">OSCON transforms a CoAP message into an &#8220;OSCON message&#8221; in the following way: the payload of the original CoAP message is wrapped by a COSE object, which replaces the payload and this then becomes the OSCON message.</p>
-<p id="rfc.section.C.p.4">The original payload shall be the plaintext/payload of the COSE object.  The &#8216;protected&#8217; field of the COSE object &#8216;Headers&#8217; shall include the context identifier, both for requests and responses.  If the original CoAP message includes a Content-Format option, then the COSE object shall include a protected &#8216;content type&#8217; field, whose value is set to the original message Content-Format value. The Content-Format option of the OSCOON message shall be replaced with &#8220;application/oscon&#8221; (<a href="#iana" class="xref">Section 12</a>)</p>
-<p id="rfc.section.C.p.5">The COSE object shall be protected (encrypted) and verified (decrypted) as described in (<a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a>).</p>
-<p id="rfc.section.C.p.6">Most AEAD algorithms require a unique nonce for each message. Sequence numbers for partial IV as specified for OSCOAP may be used for replay protection as described in <a href="#sequence-numbers" class="xref">Section 6</a>. The use of time stamps in the COSE header parameter &#8216;operation time&#8217; <a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a> for freshness may be used.</p>
-<p id="rfc.section.C.p.7">OSCON shall not be used in cases where CoAP header fields (such as Code or Version) or CoAP options need to be integrity protected or encrypted. OSCON shall not be used in cases which require a secure binding between request and response.</p>
-<p id="rfc.section.C.p.8">The scenarios in Sections 3.3 - 3.5 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> assume multiple recipients for a particular content. In this case the use of symmetric keys does not provide data origin authentication. Therefore the COSE object should in general be protected with a digital signature.</p>
-<h1 id="rfc.appendix.C.1">
-<a href="#rfc.appendix.C.1">C.1.</a> <a href="#appendix-c" id="appendix-c">Overhead OSCON</a>
-</h1>
-<p id="rfc.section.C.1.p.1">In general there are four different kinds of modes that need to be supported: message authentication code, digital signature, authenticated encryption, and symmetric encryption + digital signature. The use of digital signature is necessary for applications with many legitimate recipients of a given message, and where data origin authentication is required.</p>
-<p id="rfc.section.C.1.p.2">To distinguish between these different cases, the tagged structures of COSE are used (see Section 2 of <a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a>).</p>
-<p id="rfc.section.C.1.p.3">The sizes of COSE messages for selected algorithms are detailed in this section.</p>
-<p id="rfc.section.C.1.p.4">The size of the header is shown separately from the size of the MAC/signature.  A 4-byte Context Identifier and a 1-byte Sequence Number are used throughout all examples, with these values:</p>
-<p></p>
-
-<ul>
-<li>Cid: 0xa1534e3c</li>
-<li>Seq: 0xa3</li>
-</ul>
-<p id="rfc.section.C.1.p.6">For each scheme, we indicate the fixed length of these two parameters (&#8220;Cid+Seq&#8221; column) and of the Tag (&#8220;MAC&#8221;/&#8221;SIG&#8221;/&#8221;TAG&#8221;). The &#8220;Message OH&#8221; column shows the total expansions of the CoAP message size, while the &#8220;COSE OH&#8221; column is calculated from the previous columns.</p>
-<p id="rfc.section.C.1.p.7">Overhead incurring from CBOR encoding is also included in the COSE overhead count.</p>
-<p id="rfc.section.C.1.p.8">To make it easier to read, COSE objects are represented using CBOR&#8217;s diagnostic notation rather than a binary dump.</p>
-<h1 id="rfc.appendix.C.2">
-<a href="#rfc.appendix.C.2">C.2.</a> <a href="#ssm-mac" id="ssm-mac">MAC Only</a>
-</h1>
-<p id="rfc.section.C.2.p.1">This example is based on HMAC-SHA256, with truncation to 8 bytes (HMAC 256/64).</p>
-<p id="rfc.section.C.2.p.2">Since the key is implicitly known by the recipient, the COSE_Mac0_Tagged structure is used (Section 6.2 of <a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a>).</p>
-<p id="rfc.section.C.2.p.3">The object in COSE encoding gives:</p>
-<pre>
-996(                         # COSE_Mac0_Tagged
-  [
-    h'a20444a1534e3c0641a3', # protected:
-                               {04:h'a1534e3c',
-                                06:h'a3'}
-    {},                      # unprotected
-    h'',                     # payload
-    MAC                      # truncated 8-byte MAC
-  ]
-)
-</pre>
-<p id="rfc.section.C.2.p.4">This COSE object encodes to a total size of 26 bytes.</p>
-<p><a href="#comp-hmac-sha256" class="xref">Figure 9</a> summarizes these results.</p>
-<div id="rfc.figure.9"></div>
-<div id="comp-hmac-sha256"></div>
-<pre>
-+------------------+-----+-----+---------+------------+
-|     Structure    | Tid | MAC | COSE OH | Message OH |
-+------------------+-----+-----+---------+------------+
-| COSE_Mac0_Tagged | 5 B | 8 B |   13 B  |    26 B    |
-+------------------+-----+-----+---------+------------+
-</pre>
-<p class="figure">Figure 9: Message overhead for a 5-byte Tid using HMAC 256/64</p>
-<h1 id="rfc.appendix.C.3">
-<a href="#rfc.appendix.C.3">C.3.</a> <a href="#ssm-dig-sig" id="ssm-dig-sig">Signature Only</a>
-</h1>
-<p id="rfc.section.C.3.p.1">This example is based on ECDSA, with a signature of 64 bytes.</p>
-<p id="rfc.section.C.3.p.2">Since only one signature is used, the COSE_Sign1_Tagged structure is used (Section 4.2 of <a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a>).</p>
-<p id="rfc.section.C.3.p.3">The object in COSE encoding gives:</p>
-<pre>
-997(                         # COSE_Sign1_Tagged
-  [
-    h'a20444a1534e3c0641a3', # protected:
-                               {04:h'a1534e3c',
-                                06:h'a3'}
-    {},                      # unprotected
-    h'',                     # payload
-    SIG                      # 64-byte signature
-  ]
-)
-</pre>
-<p id="rfc.section.C.3.p.4">This COSE object encodes to a total size of 83 bytes.</p>
-<p><a href="#comp-ecdsa" class="xref">Figure 10</a> summarizes these results.</p>
-<div id="rfc.figure.10"></div>
-<div id="comp-ecdsa"></div>
-<pre>
-+-------------------+-----+------+---------+------------+
-|     Structure     | Tid |  SIG | COSE OH | Message OH |
-+-------------------+-----+------+---------+------------+
-| COSE_Sign1_Tagged | 5 B | 64 B |   14 B  |  83 bytes  |
-+-------------------+-----+------+---------+------------+
-</pre>
-<p class="figure">Figure 10: Message overhead for a 5-byte Tid using 64 byte ECDSA signature.</p>
-<h1 id="rfc.appendix.C.4">
-<a href="#rfc.appendix.C.4">C.4.</a> <a href="#sem-auth-enc" id="sem-auth-enc">Authenticated Encryption with Additional Data (AEAD)</a>
-</h1>
-<p id="rfc.section.C.4.p.1">This example is based on AES-CCM with the Tag truncated to 8 bytes.</p>
-<p id="rfc.section.C.4.p.2">Since the key is implicitly known by the recipient, the COSE_Encrypt0_Tagged structure is used (Section 5.2 of <a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a>).</p>
-<p id="rfc.section.C.4.p.3">The object in COSE encoding gives:</p>
-<pre>
-993(                         # COSE_Encrypt0_Tagged
-  [
-    h'a20444a1534e3c0641a3', # protected:
-                               {04:h'a1534e3c',
-                                06:h'a3'}
-    {},                      # unprotected
-    ciphertext               # ciphertext including truncated 8-byte TAG
-  ]
-)
-</pre>
-<p id="rfc.section.C.4.p.4">This COSE object encodes to a total size of 25 bytes.</p>
-<p><a href="#comp-aes-ccm" class="xref">Figure 11</a> summarizes these results.</p>
-<div id="rfc.figure.11"></div>
-<div id="comp-aes-ccm"></div>
-<pre>
-+----------------------+-----+-----+---------+------------+
-|       Structure      | Tid | TAG | COSE OH | Message OH |
-+----------------------+-----+-----+---------+------------+
-| COSE_Encrypt0_Tagged | 5 B | 8 B |   12 B  |  25 bytes  |
-+----------------------+-----+-----+---------+------------+
-</pre>
-<p class="figure">Figure 11: Message overhead for a 5-byte Tid using AES_128_CCM_8.</p>
-<h1 id="rfc.appendix.C.5">
-<a href="#rfc.appendix.C.5">C.5.</a> <a href="#sem-seds" id="sem-seds">Symmetric Encryption with Asymmetric Signature (SEAS)</a>
-</h1>
-<p id="rfc.section.C.5.p.1">This example is based on AES-CCM and ECDSA with 64 bytes signature. The same assumption on the security context as in <a href="#sem-auth-enc" class="xref">Appendix C.4</a>.  COSE defines the field &#8216;counter signature w/o headers&#8217; that is used here to sign a COSE_Encrypt0_Tagged message (see Section 3 of <a href="#I-D.ietf-cose-msg" class="xref">[I-D.ietf-cose-msg]</a>).</p>
-<p id="rfc.section.C.5.p.2">The object in COSE encoding gives:</p>
-<pre>
-993(                         # COSE_Encrypt0_Tagged
-  [
-    h'a20444a1534e3c0641a3', # protected:
-                               {04:h'a1534e3c',
-                                06:h'a3'}
-    {9:SIG},                 # unprotected: 
-                                09: 64 bytes signature
-    ciphertext               # ciphertext including truncated 8-byte TAG
-  ]
-)
-</pre>
-<p id="rfc.section.C.5.p.3">This COSE object encodes to a total size of 92 bytes.</p>
-<p><a href="#comp-aes-ccm-ecdsa" class="xref">Figure 12</a> summarizes these results.</p>
-<div id="rfc.figure.12"></div>
-<div id="comp-aes-ccm-ecdsa"></div>
-<pre>
-+----------------------+-----+-----+------+---------+------------+
-|       Structure      | Tid | TAG | SIG  | COSE OH | Message OH |
-+----------------------+-----+-----+------+---------+------------+
-| COSE_Encrypt0_Tagged | 5 B | 8 B | 64 B |   15 B  |    92 B    |
-+----------------------+-----+-----+------+---------+------------+
-</pre>
-<p class="figure">Figure 12: Message overhead for a 5-byte Tid using AES-CCM countersigned with ECDSA.</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
   <address class="vcard">

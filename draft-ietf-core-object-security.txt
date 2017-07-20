@@ -101,11 +101,11 @@ Table of Contents
    11. Privacy Considerations  . . . . . . . . . . . . . . . . . . .  32
    12. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  32
      12.1.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  32
-     12.2.  Media Type Registrations . . . . . . . . . . . . . . . .  32
-     12.3.  CoAP Content Format Registration . . . . . . . . . . . .  33
-   13. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  34
-   14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  34
-     14.1.  Normative References . . . . . . . . . . . . . . . . . .  34
+   13. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  32
+   14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  33
+     14.1.  Normative References . . . . . . . . . . . . . . . . . .  33
+     14.2.  Informative References . . . . . . . . . . . . . . . . .  34
+   Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  35
 
 
 
@@ -114,18 +114,10 @@ Selander, et al.        Expires January 21, 2018                [Page 2]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-     14.2.  Informative References . . . . . . . . . . . . . . . . .  35
-   Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  36
-   Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  36
-     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  36
-     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  37
-   Appendix C.  Object Security of Content (OSCON) . . . . . . . . .  39
-     C.1.  Overhead OSCON  . . . . . . . . . . . . . . . . . . . . .  40
-     C.2.  MAC Only  . . . . . . . . . . . . . . . . . . . . . . . .  41
-     C.3.  Signature Only  . . . . . . . . . . . . . . . . . . . . .  41
-     C.4.  Authenticated Encryption with Additional Data (AEAD)  . .  42
-     C.5.  Symmetric Encryption with Asymmetric Signature (SEAS) . .  43
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  43
+   Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  35
+     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  35
+     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  36
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  38
 
 1.  Introduction
 
@@ -162,14 +154,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    OSCOAP builds on CBOR Object Signing and Encryption (COSE)
    [I-D.ietf-cose-msg], providing end-to-end encryption, integrity,
-
-
-
-Selander, et al.        Expires January 21, 2018                [Page 3]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
    replay protection, and secure message binding.  A compressed version
    of COSE is used, see Section 8.  The use of OSCOAP is signaled with
    the CoAP option Object-Security, defined in Section 2.  OSCOAP
@@ -178,6 +162,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    message" before sending, and vice versa after receiving.  The OSCOAP
    message is a CoAP message related to the original CoAP message in the
    following way: the original CoAP message is protected by including
+
+
+
+Selander, et al.        Expires January 21, 2018                [Page 3]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
+
    payload (if present), certain options, and header fields in a COSE
    object.  The message fields that have been encrypted are removed from
    the message whereas the Object-Security option and the compressed
@@ -206,10 +198,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    CoAP message, during transport between end-point and intermediary
    node.  Examples of the use of OSCOAP are given in Appendix B.
 
-   The message protection provided by OSCOAP can alternatively be
-   applied only to the payload of individual messages.  We call this
-   object security of content (OSCON), which is defined in Appendix C.
-
 1.1.  Terminology
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -217,14 +205,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    document are to be interpreted as described in [RFC2119].  These
    words may also appear in this document in lowercase, absent their
    normative meanings.
-
-
-
-
-Selander, et al.        Expires January 21, 2018                [Page 4]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
 
    Readers are expected to be familiar with the terms and concepts
    described in CoAP [RFC7252], Observe [RFC7641], Blockwise [RFC7959],
@@ -235,6 +215,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    The terms Common/Sender/Recipient Context, Master Secret/Salt, Sender
    ID/Key/IV, Recepient ID/Key/IV and Context IV are defined in
    Section 3.1.
+
+
+
+
+
+
+Selander, et al.        Expires January 21, 2018                [Page 4]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
 
 2.  The Object-Security Option
 
@@ -273,15 +263,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       a CoAP message with payload, that also contains a non-empty
       Object-Security option SHALL treat it as malformed and reject it.
 
-
-
-
-
-Selander, et al.        Expires January 21, 2018                [Page 5]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
    o  If the method/response code does not allow payload, then the
       compressed COSE object Section 8 is the value of the Object-
       Security option and the length of the Object-Security option is
@@ -293,6 +274,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    The size of the COSE object depends on whether the method/response
    code allows payload, if the message is a request or response, on the
    set of options that are included in the original message, the AEAD
+
+
+
+Selander, et al.        Expires January 21, 2018                [Page 5]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
+
    algorithm, the length of the information identifying the security
    context, and the length of the sequence number.
 
@@ -330,6 +319,17 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    contexts identified by the same IDs in the two endpoints are not the
    same, but they are partly mirrored.  Retrieval and use of the
    security context are shown in Figure 3.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1775,81 +1775,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
              |  TBD   | Object-Security | [[this document]] |
              +--------+-----------------+-------------------+
 
-12.2.  Media Type Registrations
-
-   The "application/oscon" media type is added to the Media Types
-   registry:
-
-
-
-
-
-
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 32]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
-       Type name: application
-
-       Subtype name: oscon
-
-       Required parameters: N/A
-
-       Optional parameters: N/A
-
-       Encoding considerations: binary
-
-       Security considerations: See Appendix C of this document.
-
-       Interoperability considerations: N/A
-
-       Published specification: [[this document]] (this document)
-
-       Applications that use this media type: To be identified
-
-       Fragment identifier considerations: N/A
-
-       Additional information:
-
-       * Magic number(s): N/A
-
-       * File extension(s): N/A
-
-       * Macintosh file type code(s): N/A
-
-       Person & email address to contact for further information:
-          Goeran Selander <goran.selander@ericsson.com>
-
-       Intended usage: COMMON
-
-       Restrictions on usage: N/A
-
-       Author: Goeran Selander, goran.selander@ericsson.com
-
-12.3.  CoAP Content Format Registration
-
-   The "application/oscon" content format is added to the CoAP Content
-   Format registry:
-
-        +-------------------+----------+-----+-------------------+
-        | Media type        | Encoding |  ID | Reference         |
-        +-------------------+----------+-----+-------------------+
-        | application/oscon | -        | TBD | [[this document]] |
-        +-------------------+----------+-----+-------------------+
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 33]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
 13.  Acknowledgments
 
    The following individuals provided input to this document: Christian
@@ -1859,6 +1784,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    Ludwig Seitz and Goeran Selander worked on this document as part of
    the CelticPlus project CyberWI, with funding from Vinnova.
+
+
+
+
+
+Selander, et al.        Expires January 21, 2018               [Page 32]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
 
 14.  References
 
@@ -1895,17 +1829,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               DOI 10.17487/RFC7252, June 2014,
               <http://www.rfc-editor.org/info/rfc7252>.
 
-
-
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 34]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
    [RFC7641]  Hartke, K., "Observing Resources in the Constrained
               Application Protocol (CoAP)", RFC 7641,
               DOI 10.17487/RFC7641, September 2015,
@@ -1915,6 +1838,17 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               the Constrained Application Protocol (CoAP)", RFC 7959,
               DOI 10.17487/RFC7959, August 2016,
               <http://www.rfc-editor.org/info/rfc7959>.
+
+
+
+
+
+
+
+Selander, et al.        Expires January 21, 2018               [Page 33]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
 
 14.2.  Informative References
 
@@ -1954,14 +1888,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               mattsson-core-coap-actuators-02 (work in progress),
               November 2016.
 
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 35]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
    [I-D.seitz-ace-oscoap-profile]
               Seitz, L., Gunnarsson, M., and F. Palombini, "OSCOAP
               profile of ACE", draft-seitz-ace-oscoap-profile-03 (work
@@ -1971,6 +1897,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
               Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-
               cose-ecdhe-07 (work in progress), July 2017.
+
+
+
+
+Selander, et al.        Expires January 21, 2018               [Page 34]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
 
    [I-D.tiloca-core-multicast-oscoap]
               Tiloca, M., Selander, G., and F. Palombini, "Secure group
@@ -2013,7 +1947,17 @@ B.1.  Secure Access to Sensor
 
 
 
-Selander, et al.        Expires January 21, 2018               [Page 36]
+
+
+
+
+
+
+
+
+
+
+Selander, et al.        Expires January 21, 2018               [Page 35]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
@@ -2069,7 +2013,7 @@ B.2.  Secure Subscribe to Sensor
 
 
 
-Selander, et al.        Expires January 21, 2018               [Page 37]
+Selander, et al.        Expires January 21, 2018               [Page 36]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
@@ -2125,7 +2069,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
 
-Selander, et al.        Expires January 21, 2018               [Page 38]
+Selander, et al.        Expires January 21, 2018               [Page 37]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
@@ -2147,267 +2091,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    before.  The client verifies that the sequence number has not been
    received before and that the responses are bound to the request.
 
-Appendix C.  Object Security of Content (OSCON)
-
-   TODO: This section needs to be updated.
-
-   OSCOAP protects message exchanges end-to-end between a certain client
-   and a certain server, targeting the security requirements for forward
-   proxy of [I-D.hartke-core-e2e-security-reqs].  In contrast, many use
-   cases require one and the same message to be protected for, and
-   verified by, multiple endpoints, see caching proxy section of
-   [I-D.hartke-core-e2e-security-reqs].  Those security requirements can
-   be addressed by protecting essentially the payload/content of
-   individual messages using the COSE format ([I-D.ietf-cose-msg]),
-   rather than the entire request/response message exchange.  This is
-   referred to as Object Security of Content (OSCON).
-
-   OSCON transforms a CoAP message into an "OSCON message" in the
-   following way: the payload of the original CoAP message is wrapped by
-   a COSE object, which replaces the payload and this then becomes the
-   OSCON message.
-
-   The original payload shall be the plaintext/payload of the COSE
-   object.  The 'protected' field of the COSE object 'Headers' shall
-   include the context identifier, both for requests and responses.  If
-   the original CoAP message includes a Content-Format option, then the
-   COSE object shall include a protected 'content type' field, whose
-   value is set to the original message Content-Format value.  The
-   Content-Format option of the OSCOON message shall be replaced with
-   "application/oscon" (Section 12)
-
-   The COSE object shall be protected (encrypted) and verified
-   (decrypted) as described in ([I-D.ietf-cose-msg]).
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 39]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
-   Most AEAD algorithms require a unique nonce for each message.
-   Sequence numbers for partial IV as specified for OSCOAP may be used
-   for replay protection as described in Section 6.  The use of time
-   stamps in the COSE header parameter 'operation time'
-   [I-D.ietf-cose-msg] for freshness may be used.
-
-   OSCON shall not be used in cases where CoAP header fields (such as
-   Code or Version) or CoAP options need to be integrity protected or
-   encrypted.  OSCON shall not be used in cases which require a secure
-   binding between request and response.
-
-   The scenarios in Sections 3.3 - 3.5 of
-   [I-D.hartke-core-e2e-security-reqs] assume multiple recipients for a
-   particular content.  In this case the use of symmetric keys does not
-   provide data origin authentication.  Therefore the COSE object should
-   in general be protected with a digital signature.
-
-C.1.  Overhead OSCON
-
-   In general there are four different kinds of modes that need to be
-   supported: message authentication code, digital signature,
-   authenticated encryption, and symmetric encryption + digital
-   signature.  The use of digital signature is necessary for
-   applications with many legitimate recipients of a given message, and
-   where data origin authentication is required.
-
-   To distinguish between these different cases, the tagged structures
-   of COSE are used (see Section 2 of [I-D.ietf-cose-msg]).
-
-   The sizes of COSE messages for selected algorithms are detailed in
-   this section.
-
-   The size of the header is shown separately from the size of the MAC/
-   signature.  A 4-byte Context Identifier and a 1-byte Sequence Number
-   are used throughout all examples, with these values:
-
-   o  Cid: 0xa1534e3c
-
-   o  Seq: 0xa3
-
-   For each scheme, we indicate the fixed length of these two parameters
-   ("Cid+Seq" column) and of the Tag ("MAC"/"SIG"/"TAG").  The "Message
-   OH" column shows the total expansions of the CoAP message size, while
-   the "COSE OH" column is calculated from the previous columns.
-
-   Overhead incurring from CBOR encoding is also included in the COSE
-   overhead count.
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 40]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
-   To make it easier to read, COSE objects are represented using CBOR's
-   diagnostic notation rather than a binary dump.
-
-C.2.  MAC Only
-
-   This example is based on HMAC-SHA256, with truncation to 8 bytes
-   (HMAC 256/64).
-
-   Since the key is implicitly known by the recipient, the
-   COSE_Mac0_Tagged structure is used (Section 6.2 of
-   [I-D.ietf-cose-msg]).
-
-   The object in COSE encoding gives:
-
-            996(                         # COSE_Mac0_Tagged
-              [
-                h'a20444a1534e3c0641a3', # protected:
-                                           {04:h'a1534e3c',
-                                            06:h'a3'}
-                {},                      # unprotected
-                h'',                     # payload
-                MAC                      # truncated 8-byte MAC
-              ]
-            )
-
-   This COSE object encodes to a total size of 26 bytes.
-
-   Figure 9 summarizes these results.
-
-          +------------------+-----+-----+---------+------------+
-          |     Structure    | Tid | MAC | COSE OH | Message OH |
-          +------------------+-----+-----+---------+------------+
-          | COSE_Mac0_Tagged | 5 B | 8 B |   13 B  |    26 B    |
-          +------------------+-----+-----+---------+------------+
-
-       Figure 9: Message overhead for a 5-byte Tid using HMAC 256/64
-
-C.3.  Signature Only
-
-   This example is based on ECDSA, with a signature of 64 bytes.
-
-   Since only one signature is used, the COSE_Sign1_Tagged structure is
-   used (Section 4.2 of [I-D.ietf-cose-msg]).
-
-   The object in COSE encoding gives:
-
-
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 41]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
-             997(                         # COSE_Sign1_Tagged
-               [
-                 h'a20444a1534e3c0641a3', # protected:
-                                            {04:h'a1534e3c',
-                                             06:h'a3'}
-                 {},                      # unprotected
-                 h'',                     # payload
-                 SIG                      # 64-byte signature
-               ]
-             )
-
-   This COSE object encodes to a total size of 83 bytes.
-
-   Figure 10 summarizes these results.
-
-         +-------------------+-----+------+---------+------------+
-         |     Structure     | Tid |  SIG | COSE OH | Message OH |
-         +-------------------+-----+------+---------+------------+
-         | COSE_Sign1_Tagged | 5 B | 64 B |   14 B  |  83 bytes  |
-         +-------------------+-----+------+---------+------------+
-
-     Figure 10: Message overhead for a 5-byte Tid using 64 byte ECDSA
-                                signature.
-
-C.4.  Authenticated Encryption with Additional Data (AEAD)
-
-   This example is based on AES-CCM with the Tag truncated to 8 bytes.
-
-   Since the key is implicitly known by the recipient, the
-   COSE_Encrypt0_Tagged structure is used (Section 5.2 of
-   [I-D.ietf-cose-msg]).
-
-   The object in COSE encoding gives:
-
-993(                         # COSE_Encrypt0_Tagged
-  [
-    h'a20444a1534e3c0641a3', # protected:
-                               {04:h'a1534e3c',
-                                06:h'a3'}
-    {},                      # unprotected
-    ciphertext               # ciphertext including truncated 8-byte TAG
-  ]
-)
-
-   This COSE object encodes to a total size of 25 bytes.
-
-   Figure 11 summarizes these results.
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 42]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
-        +----------------------+-----+-----+---------+------------+
-        |       Structure      | Tid | TAG | COSE OH | Message OH |
-        +----------------------+-----+-----+---------+------------+
-        | COSE_Encrypt0_Tagged | 5 B | 8 B |   12 B  |  25 bytes  |
-        +----------------------+-----+-----+---------+------------+
-
-     Figure 11: Message overhead for a 5-byte Tid using AES_128_CCM_8.
-
-C.5.  Symmetric Encryption with Asymmetric Signature (SEAS)
-
-   This example is based on AES-CCM and ECDSA with 64 bytes signature.
-   The same assumption on the security context as in Appendix C.4.  COSE
-   defines the field 'counter signature w/o headers' that is used here
-   to sign a COSE_Encrypt0_Tagged message (see Section 3 of
-   [I-D.ietf-cose-msg]).
-
-   The object in COSE encoding gives:
-
-993(                         # COSE_Encrypt0_Tagged
-  [
-    h'a20444a1534e3c0641a3', # protected:
-                               {04:h'a1534e3c',
-                                06:h'a3'}
-    {9:SIG},                 # unprotected:
-                                09: 64 bytes signature
-    ciphertext               # ciphertext including truncated 8-byte TAG
-  ]
-)
-
-   This COSE object encodes to a total size of 92 bytes.
-
-   Figure 12 summarizes these results.
-
-    +----------------------+-----+-----+------+---------+------------+
-    |       Structure      | Tid | TAG | SIG  | COSE OH | Message OH |
-    +----------------------+-----+-----+------+---------+------------+
-    | COSE_Encrypt0_Tagged | 5 B | 8 B | 64 B |   15 B  |    92 B    |
-    +----------------------+-----+-----+------+---------+------------+
-
-        Figure 12: Message overhead for a 5-byte Tid using AES-CCM
-                         countersigned with ECDSA.
-
 Authors' Addresses
 
    Goeran Selander
    Ericsson AB
 
    Email: goran.selander@ericsson.com
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 43]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
    John Mattsson
@@ -2436,29 +2125,4 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Selander, et al.        Expires January 21, 2018               [Page 44]
+Selander, et al.        Expires January 21, 2018               [Page 38]
