@@ -324,9 +324,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    and the other endpoint uses the same ID, now called Recipient ID
    (RID), to derive its Recipient Context.  In communication between two
    endpoints, the Sender Context of one endpoint matches the Recipient
-   Context of the other endpoint, and vice versa.  Thus the two security
-   contexts identified by the same IDs in the two endpoints are not the
-   same, but they are partly mirrored.  Retrieval and use of the
+   Context of the other endpoint, and vice versa.  Thus, the two
+   security contexts identified by the same IDs in the two endpoints are
+   not the same, but they are partly mirrored.  Retrieval and use of the
    security context are shown in Figure 3.
 
 
@@ -1214,8 +1214,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    For responses without Observe, OSCOAP provides absolute freshness.
    For requests, and responses with Observe, OSCOAP provides relative
-   freshness in the sense that the sequence numbers allows a recipient
-   to determine the relative order of messages.
+   freshness in the sense that the sequence numbers allow a recipient to
+   determine the relative order of messages.
 
    For applications having stronger demands on freshness (e.g. control
    of actuators), OSCOAP needs to be augmented with mechanisms providing

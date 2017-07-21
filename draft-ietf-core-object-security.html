@@ -544,7 +544,7 @@ Client                                           Server
 </h1>
 <p id="rfc.section.3.1.p.1">The security context is the set of information elements necessary to carry out the cryptographic operations in OSCOAP. For each endpoint, the security context is composed of a &#8220;Common Context&#8221;, a &#8220;Sender Context&#8221;, and a &#8220;Recipient Context&#8221;.</p>
 <p id="rfc.section.3.1.p.2">The endpoints protect messages to send using the Sender Context and verify messages received using the Recipient Context, both contexts being derived from the Common Context and other data. Clients need to be able to retrieve the correct security context to use.</p>
-<p id="rfc.section.3.1.p.3">An endpoint uses its Sender ID (SID) to derive its Sender Context, and the other endpoint uses the same ID, now called Recipient ID (RID), to derive its Recipient Context. In communication between two endpoints, the Sender Context of one endpoint matches the Recipient Context of the other endpoint, and vice versa. Thus the two security contexts identified by the same IDs in the two endpoints are not the same, but they are partly mirrored.  Retrieval and use of the security context are shown in <a href="#fig-context" class="xref">Figure 3</a>.</p>
+<p id="rfc.section.3.1.p.3">An endpoint uses its Sender ID (SID) to derive its Sender Context, and the other endpoint uses the same ID, now called Recipient ID (RID), to derive its Recipient Context. In communication between two endpoints, the Sender Context of one endpoint matches the Recipient Context of the other endpoint, and vice versa. Thus, the two security contexts identified by the same IDs in the two endpoints are not the same, but they are partly mirrored.  Retrieval and use of the security context are shown in <a href="#fig-context" class="xref">Figure 3</a>.</p>
 <div id="rfc.figure.3"></div>
 <div id="fig-context"></div>
 <pre>
@@ -925,7 +925,7 @@ external_aad = [
 <h1 id="rfc.section.6.4">
 <a href="#rfc.section.6.4">6.4.</a> <a href="#freshness" id="freshness">Freshness</a>
 </h1>
-<p id="rfc.section.6.4.p.1">For responses without Observe, OSCOAP provides absolute freshness. For requests, and responses with Observe, OSCOAP provides relative freshness in the sense that the sequence numbers allows a recipient to determine the relative order of messages.</p>
+<p id="rfc.section.6.4.p.1">For responses without Observe, OSCOAP provides absolute freshness. For requests, and responses with Observe, OSCOAP provides relative freshness in the sense that the sequence numbers allow a recipient to determine the relative order of messages.</p>
 <p id="rfc.section.6.4.p.2">For applications having stronger demands on freshness (e.g. control of actuators), OSCOAP needs to be augmented with mechanisms providing absolute freshness <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a>.</p>
 <h1 id="rfc.section.6.5">
 <a href="#rfc.section.6.5">6.5.</a> <a href="#delay-and-mismatch-attacks" id="delay-and-mismatch-attacks">Delay and Mismatch Attacks</a>
