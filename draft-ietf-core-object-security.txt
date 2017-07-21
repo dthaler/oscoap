@@ -105,7 +105,7 @@ Table of Contents
    14. References  . . . . . . . . . . . . . . . . . . . . . . . . .  32
      14.1.  Normative References . . . . . . . . . . . . . . . . . .  32
      14.2.  Informative References . . . . . . . . . . . . . . . . .  33
-   Appendix A.  HTTP-CoAP Mapping  . . . . . . . . . . . . . . . . .  35
+   Appendix A.  HTTP-CoAP Mapping  . . . . . . . . . . . . . . . . .  34
 
 
 
@@ -546,13 +546,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    As collisions may lead to the loss of both confidentiality and
    integrity, Sender ID SHALL be unique in the set of all security
-   contexts using the same Master Secret.  Normally (e.g. when using
-   EDHOC [I-D.selander-ace-cose-ecdhe]) Sender IDs can be very short.
-   Note that Sender IDs of different lengths can be used with the same
-   Master Secret.  E.g. the SID with value 0x00 is different from the
-   SID with the value 0x0000.  If Sender ID uniqueness cannot be
-   guaranteed, random Sender IDs MUST be used.  Random Sender IDs MUST
-   be long enough so that the probability of collisions is negligible.
+   contexts using the same Master Secret.  Normally (e.g. when using ACE
+   [I-D.ietf-ace-oauth-authz]) Sender IDs can be very short.  Note that
+   Sender IDs of different lengths can be used with the same Master
+   Secret.  E.g. the SID with value 0x00 is different from the SID with
+   the value 0x0000.  If Sender ID uniqueness cannot be guaranteed,
+   random Sender IDs MUST be used.  Random Sender IDs MUST be long
+   enough so that the probability of collisions is negligible.
 
 
 
@@ -1131,10 +1131,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    After boot, a node MAY reject to use existing security contexts from
    before it booted and MAY establish a new security context with each
-   party it communicates, e.g. using EDHOC
-   [I-D.selander-ace-cose-ecdhe].  However, establishing a fresh
-   security context may have a non-negligible cost in terms of e.g.
-   power consumption.
+   party it communicates, e.g. using ACE [I-D.ietf-ace-oauth-authz].
+   However, establishing a fresh security context may have a non-
+   negligible cost in terms of e.g. power consumption.
 
    If a stored security context is to be used after reboot, then the
    node MUST NOT reuse a previous Sequence Number and MUST NOT accept
@@ -1170,6 +1169,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       the first time after boot the server receives an OSCOAP request,
       it generates a pseudo-random nonce and responds with the Repeat
       option set to the nonce as described in
+      [I-D.amsuess-core-repeat-request-tag].  If the server receives a
 
 
 
@@ -1178,7 +1178,6 @@ Selander, et al.        Expires January 22, 2018               [Page 21]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-      [I-D.amsuess-core-repeat-request-tag].  If the server receives a
       repeated OSCOAP request containing the Repeat option and the same
       nonce, and if the server can verify the request, then the sequence
       number obtained in the repeated message is set as the lower limit
@@ -1226,6 +1225,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    In order to prevent response delay and mismatch attacks
    [I-D.mattsson-core-coap-actuators] from on-path attackers and
    compromised proxies, OSCOAP binds responses to the request by
+   including the request's ID (Sender ID or Recipient ID) and sequence
 
 
 
@@ -1234,7 +1234,6 @@ Selander, et al.        Expires January 22, 2018               [Page 22]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-   including the request's ID (Sender ID or Recipient ID) and sequence
    number in the AAD of the response.  The server therefore needs to
    store the request's ID (Sender ID or Recipient ID) and sequence
    number until all responses have been sent.
@@ -1282,6 +1281,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
           the server SHALL respond with a 4.02 Bad Option error message.
           The diagnostic payload SHOULD contain the string "Failed to
           decode COSE".
+
 
 
 
@@ -1868,11 +1868,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               profile of ACE", draft-seitz-ace-oscoap-profile-03 (work
               in progress), June 2017.
 
-   [I-D.selander-ace-cose-ecdhe]
-              Selander, G., Mattsson, J., and F. Palombini, "Ephemeral
-              Diffie-Hellman Over COSE (EDHOC)", draft-selander-ace-
-              cose-ecdhe-07 (work in progress), July 2017.
-
    [I-D.tiloca-core-multicast-oscoap]
               Tiloca, M., Selander, G., and F. Palombini, "Secure group
               communication for CoAP", draft-tiloca-core-multicast-
@@ -1898,6 +1893,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
               DOI 10.17487/RFC8075, February 2017,
               <http://www.rfc-editor.org/info/rfc8075>.
 
+Appendix A.  HTTP-CoAP Mapping
+
+   As requested in Section 1 of [RFC8075], this section describes the
+   HTTP mapping for the OSCOAP protocol extension of CoAP.
+
 
 
 
@@ -1905,11 +1905,6 @@ Selander, et al.        Expires January 22, 2018               [Page 34]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
-
-Appendix A.  HTTP-CoAP Mapping
-
-   As requested in Section 1 of [RFC8075], this section describes the
-   HTTP mapping for the OSCOAP protocol extension of CoAP.
 
    The presence and content of the Object-Security option, both in
    requests and responses, is expressed in a HTTP header field named
@@ -1935,6 +1930,11 @@ Appendix A.  HTTP-CoAP Mapping
    mapped to a HTTP response) code.
 
    Example:
+
+
+
+
+
 
 
 
