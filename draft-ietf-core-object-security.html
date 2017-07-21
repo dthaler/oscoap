@@ -1013,7 +1013,7 @@ external_aad = [
 <li>For Observe notifications, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers" class="xref">Section 6</a>. If the client receives a notification for which no Observe request was sent, the client SHALL stop processing the response and, in the case of CON send an empty ACK back.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compose the AEAD nonce  <ul>
-<li>If the Observe option is not present in the response, compose the AEAD nonce by XORing the Context IV (Recipient IV with the the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
+<li>If the Observe option is not present in the response, compose the AEAD nonce by XORing the Context IV (Recipient IV with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
 <li>If the Observe option is present in the response, compose the AEAD nonce by XORing the Context IV (Recipient IV) with the padded Partial IV parameter from the response.</li>
 </ul>
 </li>
@@ -1038,7 +1038,7 @@ external_aad = [
 <p></p>
 
 <ul>
-<li>The first byte encode a set of flags and the length of the Partial IV parameter.  <ul>
+<li>The first byte encodes a set of flags and the length of the Partial IV parameter.  <ul>
 <li>The three least significant bits encode the Partial IV size n. If their value is 0, the Partial IV is not present in the compressed message.</li>
 <li>The fourth least significant bit k is set to 1 if the kid is present in the compressed message.</li>
 <li>The fifth-eighth least significant bits (= most significant half-byte) are reserved and SHALL be set to zero when not in use.</li>
@@ -1047,7 +1047,7 @@ external_aad = [
 <li>The following n bytes encode the value of the Partial IV, if the Partial IV is present (n &gt; 0).</li>
 <li>The following 1 byte encodes the kid size m, if the kid is present (k = 1).</li>
 <li>The following m bytes encode the value of the kid, if the kid is present (k = 1).</li>
-<li>The remainining bytes encode the ciphertext.</li>
+<li>The remaining bytes encode the ciphertext.</li>
 </ul>
 <pre>
  7 6 5 4 3 2 1 0   

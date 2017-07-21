@@ -1404,7 +1404,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
        *  If the Observe option is not present in the response, compose
           the AEAD nonce by XORing the Context IV (Recipient IV with the
-          the most significant bit in the first byte flipped) with the
+          most significant bit in the first byte flipped) with the
           padded Partial IV parameter from the request.
 
        *  If the Observe option is present in the response, compose the
@@ -1445,8 +1445,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    The value of the Object-Security option SHALL be encoded as follows:
 
-   o  The first byte encode a set of flags and the length of the Partial
-      IV parameter.
+   o  The first byte encodes a set of flags and the length of the
+      Partial IV parameter.
 
 
 
@@ -1478,7 +1478,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    o  The following m bytes encode the value of the kid, if the kid is
       present (k = 1).
 
-   o  The remainining bytes encode the ciphertext.
+   o  The remaining bytes encode the ciphertext.
 
     7 6 5 4 3 2 1 0
    +-+-+-+-+-+-+-+-+  k: kid flag bit
