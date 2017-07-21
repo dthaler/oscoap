@@ -309,6 +309,7 @@ address {
 <link href="#rfc.section.12" rel="Chapter" title="12 Privacy Considerations">
 <link href="#rfc.section.13" rel="Chapter" title="13 IANA Considerations">
 <link href="#rfc.section.13.1" rel="Chapter" title="13.1 CoAP Option Numbers Registry">
+<link href="#rfc.section.13.2" rel="Chapter" title="13.2 Header Field Registrations">
 <link href="#rfc.section.14" rel="Chapter" title="14 Acknowledgments">
 <link href="#rfc.references" rel="Chapter" title="15 References">
 <link href="#rfc.references.1" rel="Chapter" title="15.1 Normative References">
@@ -455,6 +456,8 @@ address {
 <li>13.   <a href="#rfc.section.13">IANA Considerations</a>
 </li>
 <ul><li>13.1.   <a href="#rfc.section.13.1">CoAP Option Numbers Registry</a>
+</li>
+<li>13.2.   <a href="#rfc.section.13.2">Header Field Registrations</a>
 </li>
 </ul><li>14.   <a href="#rfc.section.14">Acknowledgments</a>
 </li>
@@ -1182,7 +1185,6 @@ h'aea0155667924dff8a24e4cb35b9'
   HTTP/1.1 200 OK
   Body: Exterminate! Exterminate!
 </pre>
-<p id="rfc.section.10.p.6">TODO: IANA considerations &#8212; the option is registered according to BCP90.</p>
 <h1 id="rfc.section.11">
 <a href="#rfc.section.11">11.</a> <a href="#sec-considerations" id="sec-considerations">Security Considerations</a>
 </h1>
@@ -1215,6 +1217,17 @@ h'aea0155667924dff8a24e4cb35b9'
 +--------+-----------------+-------------------+
 |  TBD   | Object-Security | [[this document]] |
 +--------+-----------------+-------------------+
+</pre>
+<h1 id="rfc.section.13.2">
+<a href="#rfc.section.13.2">13.2.</a> <a href="#header-field-registrations" id="header-field-registrations">Header Field Registrations</a>
+</h1>
+<p id="rfc.section.13.2.p.1">The HTTP header field CoAP-Code field is added to the Message Headers registry:</p>
+<pre>
++-------------------+----------+----------+-------------------+
+| Header Field Name | Protocol | Status   | Reference         |
++-------------------+----------+----------+-------------------+
+| CoAP-Code         | http     | standard | [[this document]] |
++-------------------+----------+----------+-------------------+
 </pre>
 <h1 id="rfc.section.14">
 <a href="#rfc.section.14">14.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a>
