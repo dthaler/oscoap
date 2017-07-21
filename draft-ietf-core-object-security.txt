@@ -1071,7 +1071,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    The external_aad SHALL be a CBOR array as defined below:
 
    external_aad = [
-      ver : uint,
+      version : uint,
       code : uint,
       options : bstr,
       alg : int,
@@ -1081,7 +1081,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    where:
 
-   o  ver: contains the OSCOAP version number.
+   o  version: contains the OSCOAP version number.  Implementations of
+      this specification MUST set this field to 1.  Other values are
+      reserved for future versions.
 
    o  code: contains is the CoAP Code of the original CoAP message, as
       defined in Section 3 of [RFC7252].
@@ -1112,8 +1114,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    Number used to protect requests, and - in case of Observe -
    responses.  The maximum sequence number is algorithm dependent, see
    Section 11.  If the Sequence Number exceeds the maximum sequence
-   number, the endpoint MUST NOT process any more messages with the
-   given Sender Context.  The endpoint SHOULD acquire a new security
 
 
 
@@ -1122,6 +1122,8 @@ Selander, et al.        Expires January 22, 2018               [Page 20]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+   number, the endpoint MUST NOT process any more messages with the
+   given Sender Context.  The endpoint SHOULD acquire a new security
    context (and consequently inform the other endpoint) before this
    happens.  The latter is out of scope of this document.
 
@@ -1165,10 +1167,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    node MUST NOT reuse a previous Sequence Number and MUST NOT accept
    previously accepted messages.
 
-6.3.1.  The Basic Case
 
-   To prevent reuse of Sequence Number, the node MAY perform the
-   following procedure during normal operations:
+
 
 
 
@@ -1177,6 +1177,11 @@ Selander, et al.        Expires January 22, 2018               [Page 21]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+6.3.1.  The Basic Case
+
+   To prevent reuse of Sequence Number, the node MAY perform the
+   following procedure during normal operations:
 
    o  Before sending a message, the client stores in persistent memory a
       sequence number associated to the stored security context higher
@@ -1222,11 +1227,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       response than what was persistently stored with that security
       context.
 
-      *  Storing to persistent memory can be costly.  Instead of storing
-         a sequence number for each notification, the server may store
-         Seq + K to persistent memory every K requests, where Seq is the
-         current sequence number and K > 1.  This is a trade-off between
-
 
 
 Selander, et al.        Expires January 22, 2018               [Page 22]
@@ -1234,6 +1234,10 @@ Selander, et al.        Expires January 22, 2018               [Page 22]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+      *  Storing to persistent memory can be costly.  Instead of storing
+         a sequence number for each notification, the server may store
+         Seq + K to persistent memory every K requests, where Seq is the
+         current sequence number and K > 1.  This is a trade-off between
          the number of storage operations and efficient use of sequence
          numbers.
 
@@ -1279,16 +1283,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    3.  Compose the AEAD nonce by XORing the Context IV (Sender IV) with
        the partial IV (Sequence Number in network byte order).
 
-   4.  Encrypt the COSE object using the Sender Key. Compress the COSE
-       Object as specified in Section 8.
-
-
 
 
 Selander, et al.        Expires January 22, 2018               [Page 23]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   4.  Encrypt the COSE object using the Sender Key. Compress the COSE
+       Object as specified in Section 8.
 
    5.  Format the OSCOAP message according to Section 4.  The Object-
        Security option is added, see Section 4.3.4.
@@ -1334,9 +1337,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    2.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
-   3.  Compose the AEAD nonce by XORing the Context IV (Recipient IV)
-       with the padded 'Partial IV' parameter, received in the COSE
-       Object.
 
 
 
@@ -1345,6 +1345,10 @@ Selander, et al.        Expires January 22, 2018               [Page 24]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   3.  Compose the AEAD nonce by XORing the Context IV (Recipient IV)
+       with the padded 'Partial IV' parameter, received in the COSE
+       Object.
 
    4.  Decrypt the COSE object using the Recipient Key.
 
@@ -1390,10 +1394,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    5.  Format the OSCOAP message according to Section 4.  The Object-
        Security option is added, see Section 4.3.4.
 
-   6.  If Observe is used, increment the Sequence Number by one.
-
-
-
 
 
 
@@ -1401,6 +1401,8 @@ Selander, et al.        Expires January 22, 2018               [Page 25]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
+
+   6.  If Observe is used, increment the Sequence Number by one.
 
 7.4.  Verifying the Response
 
@@ -1447,8 +1449,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
        *  If decryption succeeds and Observe is used, update the
           Recipient Replay Window, as described in Section 6.
-
-
 
 
 
