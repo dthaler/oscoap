@@ -521,7 +521,7 @@ Client                                           Server
 +-----+---+---+---+---+-----------------+-----------+-----------|
 | TBD | x |   |   |   | Object-Security | see below | see below |
 +-----+---+---+---+---+-----------------+-----------+-----------+
-     C=Critical, U=Unsafe, N=NoCacheKey, R=Repeatable
+   C = Critical,  U = Unsafe,  N = NoCacheKey,  R = Repeatable      
 </pre>
 <p class="figure">Figure 2: The Object-Security Option</p>
 <p id="rfc.section.2.p.2">The option is either empty or contains a COSE object (see <a href="#cose-object" class="xref">Section 5</a>), and has no default value (except for certain methods, see below). The length of the Object-Security option is either zero or the sum of length of the COSE header and the lengths of the options and payload (if present) of the original CoAP message.  Note that the payload and most options are encrypted <a href="#protected-coap-options" class="xref">Figure 4</a>, and the corresponding plain message fields are removed from the message so these fields does not expand the total message size.</p>
