@@ -869,6 +869,7 @@ Verify request with   |                       |
 <p id="rfc.section.5.2.p.1">The external_aad SHALL be a CBOR array as defined below:</p>
 <pre>
 external_aad = [
+   ver : uint,
    code : uint,
    options : bstr,
    alg : int,
@@ -880,6 +881,7 @@ external_aad = [
 <p></p>
 
 <ul>
+<li>ver: contains the OSCOAP version number.</li>
 <li>code: contains is the CoAP Code of the original CoAP message, as defined in Section 3 of <a href="#RFC7252" class="xref">[RFC7252]</a>.</li>
 <li>options: contains the Class I options <a href="#class-i" class="xref">Section 4.3.2</a>&#160;present in the original CoAP message encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included class I option</li>
 <li>alg: contains the Algorithm from the security context used for the exchange (see <a href="#context-definition" class="xref">Section 3.1</a>).</li>
