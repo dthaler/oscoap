@@ -300,6 +300,7 @@ address {
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Verifying the Request">
 <link href="#rfc.section.7.3" rel="Chapter" title="7.3 Protecting the Response">
 <link href="#rfc.section.7.4" rel="Chapter" title="7.4 Verifying the Response">
+<link href="#rfc.section.7.5" rel="Chapter" title="7.5 Nonce generation examples">
 <link href="#rfc.section.8" rel="Chapter" title="8 OSCOAP Compression">
 <link href="#rfc.section.8.1" rel="Chapter" title="8.1 Encoding of the Object-Security Option">
 <link href="#rfc.section.8.2" rel="Chapter" title="8.2 Examples">
@@ -438,6 +439,8 @@ address {
 <li>7.3.   <a href="#rfc.section.7.3">Protecting the Response</a>
 </li>
 <li>7.4.   <a href="#rfc.section.7.4">Verifying the Response</a>
+</li>
+<li>7.5.   <a href="#rfc.section.7.5">Nonce generation examples</a>
 </li>
 </ul><li>8.   <a href="#rfc.section.8">OSCOAP Compression</a>
 </li>
@@ -941,6 +944,7 @@ external_aad = [
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#processing" id="processing">Processing</a>
 </h1>
+<p id="rfc.section.7.p.1">This section describes the OSCOAP message processing. An illustration of the nonce generation used in the processing is given in <a href="#nonce-generation" class="xref">Section 7.5</a>.</p>
 <h1 id="rfc.section.7.1">
 <a href="#rfc.section.7.1">7.1.</a> <a href="#protecting-the-request" id="protecting-the-request">Protecting the Request</a>
 </h1>
@@ -1034,6 +1038,48 @@ external_aad = [
 <li>The decrypted CoAP response is processed according to <a href="#RFC7252" class="xref">[RFC7252]</a>
 </li>
 </ol>
+<h1 id="rfc.section.7.5">
+<a href="#rfc.section.7.5">7.5.</a> <a href="#nonce-generation" id="nonce-generation">Nonce generation examples</a>
+</h1>
+<p id="rfc.section.7.5.p.1">This section illustrates the nonce generation in the different processing steps. Assume that:</p>
+<p></p>
+
+<ul>
+<li>Endpoint A has the following security context parameters: Sender Key=K1, Sender IV=IV1, Partial IV=PIV1 and Recipient Key=K2, Recipient IV=IV2, Partial IV=PIV2.</li>
+<li>Endpoint B has the following security context parameters: Sender Key=K2, Sender IV=IV2, Partial IV=PIV2 and Recipient Key=K1, Recipient IV=IV1, Partial IV=PIV1.</li>
+</ul>
+<p id="rfc.section.7.5.p.3">The examples below illustrate the key and nonce used with the given parameters above.</p>
+<p id="rfc.section.7.5.p.4">Example 1. Endpoint A as client and endpoint B as server.</p>
+<p></p>
+
+<ul>
+<li>Example 1a. Ordinary request/response.  <ul>
+<li>Endpoint A sends a request, which is verified by Endpoint B: key=K1, nonce=IV1 XOR PIV1.</li>
+<li>Endpoint B sends a response, which is verified by Endpoint A: key=K2, nonce=BF(IV2) XOR PIV1, where BF(.) means that the most significant bit in the first byte is flipped.</li>
+</ul>
+</li>
+<li>Example 1b. Observe.  <ul>
+<li>Endpoint A sends a request, which is verified by Endpoint B: key=K1, nonce=IV1 XOR PIV1.</li>
+<li>Endpoint B sends a notification, which is verified by Endpoint A: key=K2, nonce=IV2 XOR PIV2.</li>
+</ul>
+</li>
+</ul>
+<p id="rfc.section.7.5.p.6">Example 2. Endpoint B as client and endpoint A as server.</p>
+<p></p>
+
+<ul>
+<li>Example 2a. Ordinary request/response.  <ul>
+<li>Endpoint B sends a request, which is verified by Endpoint A: key=K2, nonce=IV2 XOR PIV2.</li>
+<li>Endpoint A sends a response, which is verified by Endpoint B: key=K1, nonce=BF(IV1) XOR PIV2, where BF(.) means that the most significant bit in the first byte is flipped.</li>
+</ul>
+</li>
+<li>Example 2b. Observe.  <ul>
+<li>Endpoint B sends a request, which is verified by Endpoint A: key=K2, nonce=IV2 XOR PIV2.</li>
+<li>Endpoint A sends a notification, which is verified by Endpoint B: key=K1, nonce=IV1 XOR PIV1.</li>
+</ul>
+</li>
+</ul>
+<p id="rfc.section.7.5.p.8">Note that endpoint A always uses key K1 for encrypting and K2 for verification, and conversely for endpoint B.</p>
 <h1 id="rfc.section.8">
 <a href="#rfc.section.8">8.</a> <a href="#app-compression" id="app-compression">OSCOAP Compression</a>
 </h1>
