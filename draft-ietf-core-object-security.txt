@@ -128,19 +128,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    protocol, designed for constrained nodes and networks [RFC7228].
    CoAP specifies the use of proxies for scalability and efficiency.  At
    the same time CoAP [RFC7252] references DTLS [RFC6347] for security.
-   Proxy operations on CoAP messages require DTLS to be terminated at
-   the proxy.  The proxy therefore not only has access to the data
-   required for performing the intended proxy functionality, but is also
-   able to eavesdrop on, or manipulate any part of the CoAP payload and
-   metadata, in transit between client and server.  The proxy can also
-   inject, delete, or reorder packages since they are no longer
-   protected by DTLS.
+   CoAP proxies require DTLS to be terminated at the proxy.  The proxy
+   therefore not only has access to the data required for performing the
+   intended proxy functionality, but is also able to eavesdrop on, or
+   manipulate any part of the CoAP payload and metadata, in transit
+   between client and server.  The proxy can also inject, delete, or
+   reorder packages since they are no longer protected by DTLS.
 
    This document defines the security protocol Object Security of CoAP
    (OSCOAP), protecting CoAP message exchanges end-to-end across
    intermediary nodes such as CoAP proxies and HTTP-to-CoAP proxies
    [RFC8075].  An analysis of end-to-end security for CoAP messages
-   through intermediary nodes is performed in
+   through some types of intermediary nodes is performed in
    [I-D.hartke-core-e2e-security-reqs].  In addition to the core
    features defined in [RFC7252], OSCOAP supports Observe [RFC7641] and
    Blockwise [RFC7959].
@@ -162,6 +161,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    replay protection, and secure message binding.  A compressed version
    of COSE is used, see Section 8.  The use of OSCOAP is signaled with
    the CoAP option Object-Security, defined in Section 2.  OSCOAP
+   provides protection of CoAP payload, most options, and certain header
 
 
 
@@ -170,7 +170,6 @@ Selander, et al.        Expires January 25, 2018                [Page 3]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-   provides protection of CoAP payload, most options, and certain header
    fields.  The solution transforms a CoAP message into an "OSCOAP
    message" before sending, and vice versa after receiving.  The OSCOAP
    message is a CoAP message related to the original CoAP message in the
@@ -217,7 +216,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    Readers are expected to be familiar with the terms and concepts
    described in CoAP [RFC7252], Observe [RFC7641], Blockwise [RFC7959],
    COSE [I-D.ietf-cose-msg], CBOR [RFC7049], CDDL
-
+   [I-D.greevenbosch-appsawg-cbor-cddl], and constrained environments
+   [RFC7228].
 
 
 
@@ -225,9 +225,6 @@ Selander, et al.        Expires January 25, 2018                [Page 4]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
-
-   [I-D.greevenbosch-appsawg-cbor-cddl], and constrained environments
-   [RFC7228].
 
    The terms Common/Sender/Recipient Context, Master Secret/Salt, Sender
    ID/Key/IV, Recepient ID/Key/IV and Context IV are defined in
@@ -274,6 +271,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    depends on whether the CoAP code allows payload ([RFC7252],
    illustrated in Figure 1):
 
+   o  If the CoAP code allows payload, then the compressed COSE object
+      is the payload of the OSCOAP message, and the Object-Security
+      option has length zero.  An endpoint receiving a CoAP message with
 
 
 
@@ -282,9 +282,6 @@ Selander, et al.        Expires January 25, 2018                [Page 5]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-   o  If the CoAP code allows payload, then the compressed COSE object
-      is the payload of the OSCOAP message, and the Object-Security
-      option has length zero.  An endpoint receiving a CoAP message with
       payload, that also contains a non-empty Object-Security option
       SHALL treat it as malformed and reject it.
 
@@ -330,6 +327,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    security contexts identified by the same IDs in the two endpoints are
    not the same, but they are partly mirrored.  Retrieval and use of the
    security context are shown in Figure 3.
+
+
+
 
 
 
