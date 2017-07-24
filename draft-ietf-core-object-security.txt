@@ -1000,8 +1000,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
          Number.  The Partial IV SHALL be of minimum length needed to
          encode the sequence number.  This parameter SHALL be present in
          requests.  In case of Observe (Section 4.3.3.3) the Partial IV
-         SHALL be present in the response, and otherwise the Partial IV
-         SHALL NOT be present in the response.
+         SHALL be present in responses, and otherwise the Partial IV
+         SHALL NOT be present in responses.
 
 
 

@@ -835,7 +835,7 @@ Verify request with   |                       |
 <ul>
 <li>The &#8220;protected&#8221; field is empty.</li>
 <li>The &#8220;unprotected&#8221; field includes:  <ul>
-<li>The &#8220;Partial IV&#8221; parameter. The value is set to the Sequence Number. The Partial IV SHALL be of minimum length needed to encode the sequence number. This parameter SHALL be present in requests. In case of Observe (<a href="#observe" class="xref">Section 4.3.3.3</a>) the Partial IV SHALL be present in the response, and otherwise the Partial IV SHALL NOT be present in the response.</li>
+<li>The &#8220;Partial IV&#8221; parameter. The value is set to the Sequence Number. The Partial IV SHALL be of minimum length needed to encode the sequence number. This parameter SHALL be present in requests. In case of Observe (<a href="#observe" class="xref">Section 4.3.3.3</a>) the Partial IV SHALL be present in responses, and otherwise the Partial IV SHALL NOT be present in responses.</li>
 <li>The &#8220;kid&#8221; parameter. The value is set to the Sender ID (see <a href="#context" class="xref">Section 3</a>). This parameter SHALL be present in requests and SHALL NOT be present in responses.</li>
 </ul>
 </li>
