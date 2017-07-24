@@ -494,19 +494,19 @@ address {
 <div id="rfc.figure.1"></div>
 <div id="fig-sketch"></div>
 <pre>
-Client                                           Server
-   |  OSCOAP request:                              |
-   |    GET example.com                            |
-   |    [Header, Token, Options: {...,             |
-   |     Object-Security: Compressed COSE object}] |
-   +----------------------------------------------&gt;|
-   |  OSCOAP response:                             |
-   |    2.05 (Content)                             |
-   |    [Header, Token, Options: {...,             |
-   |     Object-Security:-},                       |
-   |     Payload: Compressed COSE object]          |
-   |&lt;----------------------------------------------+
-   |                                               |
+Client                                            Server
+   |  OSCOAP request:                               |
+   |    GET example.com                             |
+   |    [Header, Token, Options: {...,              |
+   |     Object-Security: Compressed COSE object}]  |
+   +-----------------------------------------------&gt;|
+   |  OSCOAP response:                              |
+   |    2.05 (Content)                              |
+   |    [Header, Token, Options: {...,              |
+   |     Object-Security:-},                        |
+   |     Payload: Compressed COSE object]           |
+   |&lt;-----------------------------------------------+
+   |                                                |
 </pre>
 <p class="figure">Figure 1: Sketch of OSCOAP</p>
 <p id="rfc.section.1.p.5">OSCOAP may be used in very constrained settings, thanks to its small message size and the restricted code and memory requirements in addition to what is required by CoAP. OSCOAP can be combined with transport layer security such as DTLS or TLS, thereby enabling end-to-end security of e.g. CoAP payload and options, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. Examples of the use of OSCOAP are given in <a href="#app-examples" class="xref">Appendix B</a>.</p>

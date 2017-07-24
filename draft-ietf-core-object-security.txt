@@ -181,19 +181,19 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    OSCOAP message, and instead the Object-Security option and the
    compressed COSE object are added, see Figure 1.
 
-          Client                                           Server
-             |  OSCOAP request:                              |
-             |    GET example.com                            |
-             |    [Header, Token, Options: {...,             |
-             |     Object-Security: Compressed COSE object}] |
-             +---------------------------------------------->|
-             |  OSCOAP response:                             |
-             |    2.05 (Content)                             |
-             |    [Header, Token, Options: {...,             |
-             |     Object-Security:-},                       |
-             |     Payload: Compressed COSE object]          |
-             |<----------------------------------------------+
-             |                                               |
+         Client                                            Server
+            |  OSCOAP request:                               |
+            |    GET example.com                             |
+            |    [Header, Token, Options: {...,              |
+            |     Object-Security: Compressed COSE object}]  |
+            +----------------------------------------------->|
+            |  OSCOAP response:                              |
+            |    2.05 (Content)                              |
+            |    [Header, Token, Options: {...,              |
+            |     Object-Security:-},                        |
+            |     Payload: Compressed COSE object]           |
+            |<-----------------------------------------------+
+            |                                                |
 
                         Figure 1: Sketch of OSCOAP
 
