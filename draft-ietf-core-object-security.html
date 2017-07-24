@@ -827,7 +827,7 @@ Verify request with   |                       |
 </h1>
 <p id="rfc.section.5.p.1">This section defines how to use COSE <a href="#RFC8152" class="xref">[RFC8152]</a> to wrap and protect data in the original CoAP message. OSCOAP uses the untagged COSE_Encrypt0 structure with an Authenticated Encryption with Additional Data (AEAD) algorithm. The key lengths, IV lengths, and maximum sequence number are algorithm dependent.</p>
 <p id="rfc.section.5.p.2">The AEAD algorithm AES-CCM-64-64-128 defined in Section 10.2 of <a href="#RFC8152" class="xref">[RFC8152]</a> is mandatory to implement. For AES-CCM-64-64-128 the length of Sender Key and Recipient Key is 128 bits, the length of nonce, Sender IV, and Recipient IV is 7 bytes. The maximum Sequence Number is specified in <a href="#sec-considerations" class="xref">Section 11</a>.</p>
-<p id="rfc.section.5.p.3">The nonce is constructed as described in Section 3.1 of <a href="#RFC8152" class="xref">[RFC8152]</a>, i.e. by padding the partial IV (Sequence Number in network byte order) with zeroes and XORing it with the Context IV (Sender IV or Recipient IV), with the following addition: The most significant bit in the first byte of the Context IV SHALL be flipped for responses, in case  there is a unique response (not Observe). In this way, the same sequence number can be reused for requests and corresponding responses, which reduces the size of the responses in the most common case. For detailed processing instructions, see <a href="#processing" class="xref">Section 7</a>.</p>
+<p id="rfc.section.5.p.3">The nonce is constructed as described in Section 3.1 of <a href="#RFC8152" class="xref">[RFC8152]</a>, i.e. by padding the partial IV (Sequence Number in network byte order) with zeroes and XORing it with the Context IV (Sender IV or Recipient IV), with the following addition: The most significant bit in the first byte of the Context IV SHALL be flipped for responses, in case  there is a single response (not Observe). In this way, the same sequence number can be reused for requests and corresponding responses, which reduces the size of the responses in the most common case. For detailed processing instructions, see <a href="#processing" class="xref">Section 7</a>.</p>
 <p id="rfc.section.5.p.4">We denote by Plaintext the data that is encrypted and integrity protected, and by Additional Authenticated Data (AAD) the data that is integrity protected only.</p>
 <p id="rfc.section.5.p.5">The COSE Object SHALL be a COSE_Encrypt0 object with fields defined as follows</p>
 <p></p>
@@ -877,7 +877,7 @@ external_aad = [
    options : bstr,
    alg : int,
    request_kid : bstr,
-   request_seq : bstr
+   request_piv : bstr
 ]
 </pre>
 <p id="rfc.section.5.2.p.2">where:</p>
@@ -889,7 +889,7 @@ external_aad = [
 <li>options: contains the Class I options <a href="#class-i" class="xref">Section 4.3.2</a>&#160;present in the original CoAP message encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included class I option</li>
 <li>alg: contains the Algorithm from the security context used for the exchange (see <a href="#context-definition" class="xref">Section 3.1</a>).</li>
 <li>request_kid:  contains the value of the &#8216;kid&#8217; in the COSE object of the request (see Section 5).</li>
-<li>request_seq: contains the value of the &#8216;Partial IV&#8217; in the COSE object of the request (see Section 5).</li>
+<li>request_piv: contains the value of the &#8216;Partial IV&#8217; in the COSE object of the request (see Section 5).</li>
 </ul>
 <h1 id="rfc.section.6">
 <a href="#rfc.section.6">6.</a> <a href="#sequence-numbers" id="sequence-numbers">Sequence Numbers, Replay, Message Binding, and Freshness</a>

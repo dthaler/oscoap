@@ -980,7 +980,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    order) with zeroes and XORing it with the Context IV (Sender IV or
    Recipient IV), with the following addition: The most significant bit
    in the first byte of the Context IV SHALL be flipped for responses,
-   in case there is a unique response (not Observe).  In this way, the
+   in case there is a single response (not Observe).  In this way, the
    same sequence number can be reused for requests and corresponding
    responses, which reduces the size of the responses in the most common
    case.  For detailed processing instructions, see Section 7.
@@ -1055,7 +1055,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       options : bstr,
       alg : int,
       request_kid : bstr,
-      request_seq : bstr
+      request_piv : bstr
    ]
 
 
@@ -1086,7 +1086,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    o  request_kid: contains the value of the 'kid' in the COSE object of
       the request (see Section 5).
 
-   o  request_seq: contains the value of the 'Partial IV' in the COSE
+   o  request_piv: contains the value of the 'Partial IV' in the COSE
       object of the request (see Section 5).
 
 6.  Sequence Numbers, Replay, Message Binding, and Freshness
