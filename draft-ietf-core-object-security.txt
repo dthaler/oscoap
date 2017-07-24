@@ -137,9 +137,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    This document defines the security protocol Object Security of CoAP
    (OSCOAP), protecting CoAP message exchanges end-to-end across
-   intermediary nodes such as CoAP proxies and HTTP-to-CoAP proxies
-   [RFC8075].  An analysis of end-to-end security for CoAP messages
-   through some types of intermediary nodes is performed in
+   intermediary nodes such as CoAP forward proxies and HTTP-to-CoAP
+   proxies [RFC8075].  An analysis of end-to-end security for CoAP
+   messages through some types of intermediary nodes is performed in
    [I-D.hartke-core-e2e-security-reqs].  In addition to the core
    features defined in [RFC7252], OSCOAP supports Observe [RFC7641] and
    Blockwise [RFC7959].
