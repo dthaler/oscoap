@@ -981,9 +981,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    Recipient IV), with the following addition: The most significant bit
    in the first byte of the Context IV SHALL be flipped for responses,
    in case there is a single response (not Observe).  In this way, the
-   same sequence number can be reused for requests and corresponding
-   responses, which reduces the size of the responses in the most common
-   case.  For detailed processing instructions, see Section 7.
+   partial IV can be reused for the corresponding responses, which
+   reduces the size of the response.  For detailed processing
+   instructions, see Section 7.
 
    We denote by Plaintext the data that is encrypted and integrity
    protected, and by Additional Authenticated Data (AAD) the data that
