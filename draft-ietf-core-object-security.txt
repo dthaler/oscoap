@@ -363,7 +363,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    The Common Context contains the following parameters:
 
-   o  AEAD Algorithm (Alg).  The COSE AEAD algorithm to use for
+   o  AEAD Algorithm (alg).  The COSE AEAD algorithm to use for
       encryption.  Its value is immutable once the security context is
       established.
 
