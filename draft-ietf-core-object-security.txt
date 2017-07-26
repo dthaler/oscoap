@@ -302,10 +302,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    This specification requires that client and server establish a
    security context to apply to the COSE objects protecting the CoAP
-   messages.  In this section we define the security context, and also
-   specify how to derive the security contexts in client and server
-   based on a common shared master secret and a key derivation function
-   (KDF).
+   messages.  In this section, we define the security context and how it
+   is derived in client and server based on a common shared master
+   secret and a key derivation function (KDF).
 
 3.1.  Security Context Definition
 
@@ -327,6 +326,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    security contexts identified by the same IDs in the two endpoints are
    not the same, but they are partly mirrored.  Retrieval and use of the
    security context are shown in Figure 3.
+
 
 
 
@@ -1547,8 +1547,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    of signed and encrypted data.  COSE is however constructed to support
    a large number of different stateless use cases, and is not fully
    optimized for use as a stateful security protocol, leading to a
-   larger than necessary message expansion.  In this section we define a
-   simple stateless compression mechanism for OSCOAP, which
+   larger than necessary message expansion.  In this section, we define
+   a simple stateless compression mechanism for OSCOAP, which
    significantly reduces the per-packet overhead.
 
 8.1.  Encoding of the Object-Security Option
@@ -1780,7 +1780,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    In scenarios with intermediary nodes such as proxies or brokers,
    transport layer security such as DTLS only protects data hop-by-hop.
-   As a consequence the intermediary nodes can read and modify
+   As a consequence, the intermediary nodes can read and modify
    information.  The trust model where all intermediate nodes are
    considered trustworthy is problematic, not only from a privacy
    perspective, but also from a security perspective, as the
@@ -1826,7 +1826,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    which the sequence numbers in the COSE message field "Partial IV" is
    used.  If the recipient accepts any sequence number larger than the
    one previously received, then the problem of sequence number
-   synchronization is avoided.  With reliable transport it may be
+   synchronization is avoided.  With reliable transport, it may be
    defined that only messages with sequence number which are equal to
    previous sequence number + 1 are accepted.  The alternatives to
    sequence numbers have their issues: very constrained devices may not
@@ -1873,7 +1873,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    this would be returning an integer between 0 and 100 where lengths of
    1, 2 and 3 will provide information about where in the range things
    are.  Three different methods to deal with this are: 1) ensure that
-   all messages are the same length.  For example using 0 and 1 instead
+   all messages are the same length.  For example, using 0 and 1 instead
    of 'yes' and 'no'.  2) Use a character which is not part of the
    responses to pad to a fixed length.  For example, pad with a space to
    three characters.  3) Use the PKCS #7 style padding scheme where m
@@ -2063,7 +2063,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    [I-D.tiloca-core-multicast-oscoap]
               Tiloca, M., Selander, G., and F. Palombini, "Secure group
               communication for CoAP", draft-tiloca-core-multicast-
-              oscoap-02 (work in progress), July 2017.
+              oscoap-03 (work in progress), July 2017.
 
 
 
