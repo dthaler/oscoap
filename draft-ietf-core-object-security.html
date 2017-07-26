@@ -702,14 +702,14 @@ Verify request with   |                       |
 <h1 id="rfc.section.4.2">
 <a href="#rfc.section.4.2">4.2.</a> <a href="#coap-header" id="coap-header">CoAP Header</a>
 </h1>
-<p id="rfc.section.4.2.p.1">Many CoAP header fields are required to be read and changed during a normal message exchange or when traversing a proxy and thus cannot in general be protected between the endpoints, e.g. CoAP message layer fields such as Message ID.</p>
+<p id="rfc.section.4.2.p.1">Many CoAP header fields are required to be read and changed by proxies and thus cannot in general be protected between the endpoints, e.g. CoAP message layer fields such as Message ID.</p>
 <p id="rfc.section.4.2.p.2">The CoAP header field Code MUST be sent in clear to support RESTful processing, but MUST be integrity protected (Class I) to prevent an intermediary from changing, e.g. from GET to DELETE. The other CoAP header fields SHALL neither be integrity protected nor encrypted (Class U). All CoAP header fields are thus outer message fields.</p>
 <p id="rfc.section.4.2.p.3">The sending endpoint SHALL copy the header fields from the original CoAP message to the header of the OSCOAP message. The receiving endpoint SHALL copy the header fields from the OSCOAP message to the header of the decrypted CoAP message. Both sender and receiver include the CoAP header field Code in the AAD of the COSE object (see <a href="#AAD" class="xref">Section 5.2</a>).</p>
 <h1 id="rfc.section.4.3">
 <a href="#rfc.section.4.3">4.3.</a> <a href="#coap-options" id="coap-options">CoAP Options</a>
 </h1>
 <p id="rfc.section.4.3.p.1">Most options are encrypted and integrity protected (Class E), and thus inner message fields. But to allow certain proxy operations, some options have outer values, i.e. are present as options in the OSCOAP message. Certain options may have both an inner value and a potentially different outer value, where the inner value is intended for the destination endpoint and the outer value is intended for a proxy.</p>
-<p id="rfc.section.4.3.p.2">A summary of how options are protected and processed is shown in <a href="#protected-coap-options" class="xref">Figure 4</a>. Options within each class are protected and processed in a similar way, but certain options which require special processing as indicated by a * in <a href="#protected-coap-options" class="xref">Figure 4</a> and described in the processing of the respective option.</p>
+<p id="rfc.section.4.3.p.2">A summary of how options are protected is shown in <a href="#protected-coap-options" class="xref">Figure 4</a>. Options denoted by a &#8216;x&#8217; within each class are protected and processed in the same way, but certain options denoted by a &#8216;*&#8217; require special processing.</p>
 <div id="rfc.figure.4"></div>
 <div id="protected-coap-options"></div>
 <pre>
@@ -720,7 +720,7 @@ Verify request with   |                       |
 |  3 | Uri-Host       |   |   | x |
 |  4 | ETag           | x |   |   |
 |  5 | If-None-Match  | x |   |   |
-|  6 | Observe        |   |   | * |
+|  6 | Observe        |   | * | * |
 |  7 | Uri-Port       |   |   | x |
 |  8 | Location-Path  | x |   |   |
 | 11 | Uri-Path       | x |   |   |
@@ -732,7 +732,7 @@ Verify request with   |                       |
 | 23 | Block2         | * |   |   |
 | 27 | Block1         | * |   |   |
 | 28 | Size2          | * |   |   |
-| 35 | Proxy-Uri      |   |   | * |
+| 35 | Proxy-Uri      | * |   | * |
 | 39 | Proxy-Scheme   |   |   | x |
 | 60 | Size1          | * |   |   |
 +----+----------------+---+---+---+
@@ -782,7 +782,7 @@ Verify request with   |                       |
 <h1 id="rfc.section.4.3.3">
 <a href="#rfc.section.4.3.3">4.3.3.</a> <a href="#class-u" id="class-u">Class U Options</a>
 </h1>
-<p id="rfc.section.4.3.3.p.1">Options in Class U have outer values and are used to support forward proxy operations. Unless otherwise specified, the sending endpoint SHALL encode the Class U options in the options part of the OSCOAP message as described in <a href="#options-in-protected" class="xref">Section 4.3.4</a>.</p>
+<p id="rfc.section.4.3.3.p.1">Options in Class U have outer values and are used to support proxy operations. Unless otherwise specified, the sending endpoint SHALL encode the Class U options in the options part of the OSCOAP message as described in <a href="#options-in-protected" class="xref">Section 4.3.4</a>.</p>
 <h1 id="rfc.section.4.3.3.1">
 <a href="#rfc.section.4.3.3.1">4.3.3.1.</a> <a href="#uri-host-uri-port-and-proxy-scheme" id="uri-host-uri-port-and-proxy-scheme">Uri-Host, Uri-Port, and Proxy-Scheme</a>
 </h1>
