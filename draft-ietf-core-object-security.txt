@@ -2186,54 +2186,54 @@ Selander, et al.        Expires January 27, 2018               [Page 39]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-Client  Proxy  Server
-   |      |      |
-   +----->|      |            Code: 0.01 (GET)
-   | GET  |      |           Token: 0x83
-   |      |      |         Observe: 0
-   |      |      | Object-Security: [kid:ca, Partial IV:15,
-   |      |      |                   {Uri-Path:"glucose"}]
-   |      |      |         Payload: -
-   |      |      |
-   |      +----->|            Code: 0.01 (GET)
-   |      | GET  |           Token: 0xbe
-   |      |      |         Observe: 0
-   |      |      | Object-Security: [kid:ca, Partial IV:15,
-   |      |      |                   {Uri-Path:"glucose"}]
-   |      |      |         Payload: -
-   |      |      |
-   |      |<-----+            Code: 2.05 (Content)
-   |      | 2.05 |           Token: 0xbe
-   |      |      |         Observe: 7
-   |      |      | Object-Security: -
-   |      |      |         Payload: [Partial IV:32, {Content-Format:0, "220"}]
-   |      |      |
-   |<-----+      |            Code: 2.05 (Content)
-   | 2.05 |      |           Token: 0x83
-   |      |      |         Observe: 7
-   |      |      | Object-Security: -
-   |      |      |         Payload: [Partial IV:32, {Content-Format:0, "220"}]
-  ...    ...    ...
-   |      |      |
-   |      |<-----+            Code: 2.05 (Content)
-   |      | 2.05 |           Token: 0xbe
-   |      |      |         Observe: 8
-   |      |      | Object-Security: -
-   |      |      |         Payload: [Partial IV:36, {Content-Format:0, "180"}]
-   |      |      |
-   |<-----+      |            Code: 2.05 (Content)
-   | 2.05 |      |           Token: 0x83
-   |      |      |         Observe: 8
-   |      |      | Object-Security: -
-   |      |      |         Payload: [Partial IV:36, {Content-Format:0, "180"}]
-   |      |      |
+      Client  Proxy  Server
+         |      |      |
+         +----->|      |            Code: 0.01 (GET)
+         | GET  |      |           Token: 0x83
+         |      |      |         Observe: 0
+         |      |      | Object-Security: [kid:ca, Partial IV:15,
+         |      |      |                   {Uri-Path:"glucose"}]
+         |      |      |         Payload: -
+         |      |      |
+         |      +----->|            Code: 0.01 (GET)
+         |      | GET  |           Token: 0xbe
+         |      |      |         Observe: 0
+         |      |      | Object-Security: [kid:ca, Partial IV:15,
+         |      |      |                   {Uri-Path:"glucose"}]
+         |      |      |         Payload: -
+         |      |      |
+         |      |<-----+            Code: 2.05 (Content)
+         |      | 2.05 |           Token: 0xbe
+         |      |      |         Observe: 7
+         |      |      | Object-Security: -
+         |      |      |         Payload: [Partial IV:32,
+         |      |      |                   {Content-Format:0, "220"}]
+         |      |      |
+         |<-----+      |            Code: 2.05 (Content)
+         | 2.05 |      |           Token: 0x83
+         |      |      |         Observe: 7
+         |      |      | Object-Security: -
+         |      |      |         Payload: [Partial IV:32,
+         |      |      |                   {Content-Format:0, "220"}]
+        ...    ...    ...
+         |      |      |
+         |      |<-----+            Code: 2.05 (Content)
+         |      | 2.05 |           Token: 0xbe
+         |      |      |         Observe: 8
+         |      |      | Object-Security: -
+         |      |      |         Payload: [Partial IV:36,
+         |      |      |                   {Content-Format:0, "180"}]
+         |      |      |
+         |<-----+      |            Code: 2.05 (Content)
+         | 2.05 |      |           Token: 0x83
+         |      |      |         Observe: 8
+         |      |      | Object-Security: -
+         |      |      |         Payload: [Partial IV:36,
+         |      |      |                   {Content-Format:0, "180"}]
+         |      |      |
 
-      Figure 8: Secure Subscribe to Sensor.  Square brackets [ ... ]
-    indicate a COSE object.  Curly brackets { ... } indicate encrypted
-                                   data.
 
-   Since the method (GET) doesn't allow payload, the Object-Security
-   option carries the COSE object as its value.  Since the response code
+
 
 
 
@@ -2242,6 +2242,12 @@ Selander, et al.        Expires January 27, 2018               [Page 40]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+      Figure 8: Secure Subscribe to Sensor.  Square brackets [ ... ]
+    indicate a COSE object.  Curly brackets { ... } indicate encrypted
+                                   data.
+
+   Since the method (GET) doesn't allow payload, the Object-Security
+   option carries the COSE object as its value.  Since the response code
    (Content) allows payload, the COSE object is carried as the CoAP
    payload.
 
@@ -2281,12 +2287,6 @@ Authors' Addresses
    SICS Swedish ICT
 
    Email: ludwig@sics.se
-
-
-
-
-
-
 
 
 
