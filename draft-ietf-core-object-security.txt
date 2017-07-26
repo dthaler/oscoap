@@ -394,18 +394,18 @@ Selander, et al.        Expires January 27, 2018                [Page 7]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-      Length is determined by Algorithm.  Its value is immutable once
-      the security context is established.
+      Length is determined by the AEAD Algorithm.  Its value is
+      immutable once the security context is established.
 
    o  Sender IV.  Byte string containing the IV to protect messages to
       send.  Derived from Common Context and Sender ID.  Length is
-      determined by Algorithm.  Its value is immutable once the security
-      context is established.
+      determined by the AEAD Algorithm.  Its value is immutable once the
+      security context is established.
 
    o  Sequence Number.  Non-negative integer used to protect requests
       and observe responses to send.  Used as partial IV [RFC8152] to
       generate unique nonces for the AEAD.  Maximum value is determined
-      by Algorithm.
+      by the AEAD Algorithm.
 
    The Recipient Context contains the following parameters:
 
@@ -415,13 +415,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    o  Recipient Key. Byte string containing the symmetric key to verify
       messages received.  Derived from Common Context and Recipient ID.
-      Length is determined by the Algorithm.  Its value is immutable
-      once the security context is established.
+      Length is determined by the AEAD Algorithm.  Its value is
+      immutable once the security context is established.
 
    o  Recipient IV.  Byte string containing the IV to verify messages
       received.  Derived from Common Context and Recipient ID.  Length
-      is determined by Algorithm.  Its value is immutable once the
-      security context is established.
+      is determined by the AEAD Algorithm.  Its value is immutable once
+      the security context is established.
 
    o  Replay Window (Server only).  The replay window to verify requests
       received.
@@ -1093,8 +1093,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       [RFC7252], where the delta is the difference to the previously
       included class I option
 
-   o  alg: contains the Algorithm from the security context used for the
-      exchange (see Section 3.1).
+   o  alg: contains the AEAD Algorithm from the security context used
+      for the exchange (see Section 3.1).
 
    o  request_kid: contains the value of the 'kid' in the COSE object of
       the request (see Section 5).
@@ -1836,11 +1836,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    specification to think about implementing key renewal.
 
    The maximum sequence number to guarantee nonce uniqueness
-   (Section 6.1) is algorithm dependent.  The maximum sequence number
-   SHALL be 2^(min(nonce length in bits, 56) - 1) - 1, or any algorithm
-   specific lower limit.  The "-1" in the exponent stems from the same
-   partial IV and flipped bit of IV (Section 5) is used in request and
-   response.  The compression algorithm (Section 8) assumes that the
+   (Section 6.1) is dependent on the AEAD algorithm.  The maximum
+   sequence number SHALL be 2^(min(nonce length in bits, 56) - 1) - 1,
+   or any algorithm specific lower limit.  The "-1" in the exponent
+   stems from the same partial IV and flipped bit of IV (Section 5) is
+   used in request and response.  The compression mechanism (Section 8)
 
 
 
@@ -1850,8 +1850,8 @@ Selander, et al.        Expires January 27, 2018               [Page 33]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-   partial IV is 56 bits or less (which is the reason for min(,) in the
-   exponent).
+   assumes that the partial IV is 56 bits or less (which is the reason
+   for min(,) in the exponent).
 
    The inner block options enable the sender to split large messages
    into OSCOAP-protected blocks such that the receiving node can verify
