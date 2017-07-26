@@ -588,16 +588,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    OSCOAP transforms a CoAP message into an OSCOAP message, and vice
    versa.  This section defines how the CoAP message fields are
-   protected.  Note that OSCOAP protects messages from the CoAP Request/
-   Response layer only, and not from the Messaging layer (Section 2 of
-   [RFC7252]): this means that RST and ACK empty messages are not
-   protected, while ACK with piggybacked responses are protected using
-   the process defined in this document.  All the messages mentioned in
-   this document refer to CON, NON, and non-empty ACK messages.
+   protected.  Note that OSCOAP protects the CoAP Request/Response layer
+   only, and not the Messaging layer (Section 2 of [RFC7252]); this
+   means that empty CON, ACK, and RST messages are not protected.  All
+   the messages mentioned in this document refer to non-empty CON, NON,
+   and ACK messages.
 
    OSCOAP protects as much of the original CoAP message as possible,
    while still allowing proxy operations
-   [I-D.hartke-core-e2e-security-reqs].  Message fields may either be
+   [I-D.hartke-core-e2e-security-reqs] }}[RFC8075].  Message fields may
+   either be
 
    o  Class E: encrypted and integrity protected,
 
@@ -656,16 +656,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    general be protected between the endpoints, e.g.  CoAP message layer
    fields such as Message ID.
 
-   The CoAP header field Code MUST be sent in plaintext to support
-   RESTful processing, but MUST be integrity protected (Class I) to
-   prevent an intermediary from changing, e.g. from GET to DELETE.  The
-   other CoAP header fields SHALL neither be integrity protected nor
-   encrypted (Class U).  All CoAP header fields are thus outer message
-   fields.
+   The CoAP header field Code MUST be sent in clear to support RESTful
+   processing, but MUST be integrity protected (Class I) to prevent an
+   intermediary from changing, e.g. from GET to DELETE.  The other CoAP
+   header fields SHALL neither be integrity protected nor encrypted
+   (Class U).  All CoAP header fields are thus outer message fields.
 
    The sending endpoint SHALL copy the header fields from the original
    CoAP message to the header of the OSCOAP message.  The receiving
    endpoint SHALL copy the header fields from the OSCOAP message to the
+   header of the decrypted CoAP message.  Both sender and receiver
 
 
 
@@ -674,7 +674,6 @@ Selander, et al.        Expires January 27, 2018               [Page 12]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-   header of the decrypted CoAP message.  Both sender and receiver
    include the CoAP header field Code in the AAD of the COSE object (see
    Section 5.2).
 
@@ -693,6 +692,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    similar way, but certain options which require special processing as
    indicated by a * in Figure 4 and described in the processing of the
    respective option.
+
 
 
 

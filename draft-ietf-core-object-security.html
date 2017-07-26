@@ -676,8 +676,8 @@ Verify request with   |                       |
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#coap-headers-and-options" id="coap-headers-and-options">Protected CoAP Message Fields</a>
 </h1>
-<p id="rfc.section.4.p.1">OSCOAP transforms a CoAP message into an OSCOAP message, and vice versa. This section defines how the CoAP message fields are protected. Note that OSCOAP protects messages from the CoAP Request/Response layer only, and not from the Messaging layer (Section 2 of <a href="#RFC7252" class="xref">[RFC7252]</a>): this means that RST and ACK empty messages are not protected, while ACK with piggybacked responses are protected using the process defined in this document. All the messages mentioned in this document refer to CON, NON, and non-empty ACK messages.</p>
-<p id="rfc.section.4.p.2">OSCOAP protects as much of the original CoAP message as possible, while still allowing proxy operations <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a>. Message fields may either be</p>
+<p id="rfc.section.4.p.1">OSCOAP transforms a CoAP message into an OSCOAP message, and vice versa. This section defines how the CoAP message fields are protected. Note that OSCOAP protects the CoAP Request/Response layer only, and not the Messaging layer (Section 2 of <a href="#RFC7252" class="xref">[RFC7252]</a>); this means that empty CON, ACK, and RST messages are not protected. All the messages mentioned in this document refer to non-empty CON, NON, and ACK messages.</p>
+<p id="rfc.section.4.p.2">OSCOAP protects as much of the original CoAP message as possible, while still allowing proxy operations <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> }}<a href="#RFC8075" class="xref">[RFC8075]</a>. Message fields may either be</p>
 <p></p>
 
 <ul>
@@ -703,7 +703,7 @@ Verify request with   |                       |
 <a href="#rfc.section.4.2">4.2.</a> <a href="#coap-header" id="coap-header">CoAP Header</a>
 </h1>
 <p id="rfc.section.4.2.p.1">Many CoAP header fields are required to be read and changed during a normal message exchange or when traversing a proxy and thus cannot in general be protected between the endpoints, e.g. CoAP message layer fields such as Message ID.</p>
-<p id="rfc.section.4.2.p.2">The CoAP header field Code MUST be sent in plaintext to support RESTful processing, but MUST be integrity protected (Class I) to prevent an intermediary from changing, e.g. from GET to DELETE. The other CoAP header fields SHALL neither be integrity protected nor encrypted (Class U). All CoAP header fields are thus outer message fields.</p>
+<p id="rfc.section.4.2.p.2">The CoAP header field Code MUST be sent in clear to support RESTful processing, but MUST be integrity protected (Class I) to prevent an intermediary from changing, e.g. from GET to DELETE. The other CoAP header fields SHALL neither be integrity protected nor encrypted (Class U). All CoAP header fields are thus outer message fields.</p>
 <p id="rfc.section.4.2.p.3">The sending endpoint SHALL copy the header fields from the original CoAP message to the header of the OSCOAP message. The receiving endpoint SHALL copy the header fields from the OSCOAP message to the header of the decrypted CoAP message. Both sender and receiver include the CoAP header field Code in the AAD of the COSE object (see <a href="#AAD" class="xref">Section 5.2</a>).</p>
 <h1 id="rfc.section.4.3">
 <a href="#rfc.section.4.3">4.3.</a> <a href="#coap-options" id="coap-options">CoAP Options</a>
