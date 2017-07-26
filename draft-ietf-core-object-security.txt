@@ -96,7 +96,7 @@ Table of Contents
      7.5.  Nonce generation examples . . . . . . . . . . . . . . . .  27
    8.  OSCOAP Compression  . . . . . . . . . . . . . . . . . . . . .  28
      8.1.  Encoding of the Object-Security Option  . . . . . . . . .  28
-     8.2.  Examples  . . . . . . . . . . . . . . . . . . . . . . . .  29
+     8.2.  Compression Examples  . . . . . . . . . . . . . . . . . .  29
    9.  Web Linking . . . . . . . . . . . . . . . . . . . . . . . . .  31
    10. HTTP-CoAP Mapping . . . . . . . . . . . . . . . . . . . . . .  31
    11. Security Considerations . . . . . . . . . . . . . . . . . . .  32
@@ -1606,7 +1606,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
                 Figure 6: Flag byte for OSCOAP compression
 
-8.2.  Examples
+8.2.  Compression Examples
 
    This section provides examples of COSE Objects before and after
    OSCOAP compression.
