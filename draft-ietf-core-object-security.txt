@@ -570,11 +570,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    assigns identifiers (e.g. using [I-D.ietf-ace-oauth-authz]) or by
    using a protocol that allows the parties to negotiate locally unique
    identifiers in each endpoint, the Sender IDs can be very short.  Note
-   that Sender IDs of different lengths can be used with the same Master
-   Secret.  E.g. the SID with value 0x00 is different from the SID with
-   the value 0x0000.  If Sender ID uniqueness cannot be guaranteed,
-   random Sender IDs MUST be used.  Random Sender IDs MUST be long
-   enough so that the probability of collisions is negligible.
+   that that the empty string is a valid Sender ID and that Sender IDs
+   of different lengths can be used with the same Master Secret.  E.g.
+   the SID with value 0x00 is different from the SID with the value
+   0x0000.  If Sender ID uniqueness cannot be guaranteed, random Sender
+   IDs MUST be used.  Random Sender IDs MUST be long enough so that the
+   probability of collisions is negligible.
 
    To enable retrieval of the right Recipient Context, the Recipient ID
    SHOULD be unique in the sets of all Recipient Contexts used by an
@@ -609,7 +610,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    the header/options part of the OSCOAP message, or in the plaintext of
    the COSE object.  Depending on which, the location of the message
    field in the OSCOAP message is called "outer" or "inner":
-
 
 
 
