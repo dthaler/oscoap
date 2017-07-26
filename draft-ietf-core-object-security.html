@@ -581,7 +581,7 @@ Verify request with   |                       |
 
 <ul>
 <li>AEAD Algorithm (alg). The COSE AEAD algorithm to use for encryption. Its value is immutable once the security context is established.</li>
-<li>HKDF Algorithm. The HMAC based HKDF used to derive Sender Key, Sender IV, Recipient Key, and Recipient IV.</li>
+<li>Key Derivation Function. The HMAC based HKDF used to derive Sender Key, Sender IV, Recipient Key, and Recipient IV.</li>
 <li>Master Secret. Variable length, uniformly random byte string containing the key used to derive traffic keys and IVs. Its value is immutable once the security context is established.</li>
 <li>Master Salt (OPTIONAL). Variable length byte string containing the salt used to derive traffic keys and IVs. Its value is immutable once the security context is established.</li>
 </ul>
@@ -621,7 +621,7 @@ Verify request with   |                       |
 <p></p>
 
 <ul>
-<li>AEAD Algorithm (Alg)  <ul><li>Default is AES-CCM-64-64-128 (COSE abbreviation: 12)</li></ul>
+<li>AEAD Algorithm (alg)  <ul><li>Default is AES-CCM-64-64-128 (COSE abbreviation: 12)</li></ul>
 </li>
 <li>Master Salt  <ul><li>Default is the empty string</li></ul>
 </li>
