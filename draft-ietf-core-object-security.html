@@ -750,7 +750,7 @@ Verify request with   |                       |
 </h1>
 <p id="rfc.section.4.3.1.p.1">For options in class E (see <a href="#protected-coap-options" class="xref">Figure 4</a>) the option value in the original CoAP message, if present, SHALL be encrypted and integrity protected between the endpoints.  Hence the actions resulting from the use of such options is analogous to communicating in a protected manner directly with the endpoint. For example, a client using an If-Match option will not be served by a proxy.</p>
 <p id="rfc.section.4.3.1.p.2">The sending endpoint SHALL write the class E option from the original CoAP message into the plaintext of the COSE object.</p>
-<p id="rfc.section.4.3.1.p.3">Except for the special options (* in <a href="#protected-coap-options" class="xref">Figure 4</a>), the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change or remove the value of an outer option.</p>
+<p id="rfc.section.4.3.1.p.3">Except for the special options (* in <a href="#protected-coap-options" class="xref">Figure 4</a>), the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change, or remove the value of an outer option.</p>
 <p id="rfc.section.4.3.1.p.4">Except for the special options, the receiving endpoint SHALL discard any outer options of class E from the OSCOAP message and SHALL write the Class E options present in the plaintext of the COSE object into the decrypted CoAP message.</p>
 <h1 id="rfc.section.4.3.1.1">
 <a href="#rfc.section.4.3.1.1">4.3.1.1.</a> <a href="#max-age" id="max-age">Max-Age</a>
