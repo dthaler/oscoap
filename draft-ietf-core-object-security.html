@@ -485,7 +485,7 @@ address {
   </ul>
 
   <h1 id="rfc.section.1">
-<a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a>
+<a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
 </h1>
 <p id="rfc.section.1.p.1">The Constrained Application Protocol (CoAP) is a web application protocol, designed for constrained nodes and networks <a href="#RFC7228" class="xref">[RFC7228]</a>. CoAP specifies the use of proxies for scalability and efficiency. At the same time CoAP <a href="#RFC7252" class="xref">[RFC7252]</a> references DTLS <a href="#RFC6347" class="xref">[RFC6347]</a> for security. CoAP proxies require DTLS to be terminated at the proxy. The proxy therefore not only has access to the data required for performing the intended proxy functionality, but is also able to eavesdrop on, or manipulate any part of the CoAP payload and metadata, in transit between client and server. The proxy can also inject, delete, or reorder packages since they are no longer protected by DTLS.</p>
 <p id="rfc.section.1.p.2">This document defines the security protocol Object Security of CoAP (OSCOAP), protecting CoAP request and responses end-to-end across intermediary nodes such as CoAP forward proxies and HTTP-to-CoAP proxies <a href="#RFC8075" class="xref">[RFC8075]</a>. An analysis of end-to-end security for CoAP messages through some types of intermediary nodes is performed in <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a>. In addition to the core features defined in <a href="#RFC7252" class="xref">[RFC7252]</a>, OSCOAP supports Observe <a href="#RFC7641" class="xref">[RFC7641]</a> and Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
