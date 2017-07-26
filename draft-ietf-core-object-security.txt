@@ -2260,8 +2260,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    The server verifies that the Partial IV has not been received before.
    The client verifies that the responses are bound to the request and
-   that the Partial IVs are greater than any in any Partial IV
-   previously received in a response bound to the request.
+   that the Partial IVs are greater than any Partial IV previously
+   received in a response bound to the request.
 
 Authors' Addresses
 

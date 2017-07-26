@@ -1500,7 +1500,7 @@ Client  Proxy  Server
 <p class="figure">Figure 8: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
 <p id="rfc.section.B.2.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
 <p id="rfc.section.B.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and 36). The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted. The Observe option is not protected.</p>
-<p id="rfc.section.B.2.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any in any Partial IV previously received in a response bound to the request.</p>
+<p id="rfc.section.B.2.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any Partial IV previously received in a response bound to the request.</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
