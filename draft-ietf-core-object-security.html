@@ -531,7 +531,7 @@ Client                                            Server
    C = Critical,  U = Unsafe,  N = NoCacheKey,  R = Repeatable   
 </pre>
 <p class="figure">Figure 2: The Object-Security Option</p>
-<p id="rfc.section.2.p.2">The option is either empty or contains a compressed COSE object (see <a href="#cose-object" class="xref">Section 5</a> and <a href="#compression" class="xref">Section 8</a>), and has no default value (except for certain CoAP codes, see below). The length of the Object-Security option is either zero or the sum of the length of the compressed COSE header, the lengths of the encrypted options and payload present in the original CoAP message, and the length of the authentication tag. Since the payload and most options are encrypted <a href="#protected-coap-options" class="xref">Figure 4</a>, and the corresponding plain message fields of the original are not included in the OSCOAP message, the processing of these fields does not expand the total message size.</p>
+<p id="rfc.section.2.p.2">The option is either empty or contains a compressed COSE object (see <a href="#cose-object" class="xref">Section 5</a> and <a href="#compression" class="xref">Section 8</a>), and has no default value (except for certain CoAP codes, see below). The length of the Object-Security option is either zero or the sum of the length of the compressed COSE header, the lengths of the encrypted options and payload present in the original CoAP message, and the length of the authentication tag. Since the payload and most options are encrypted <a href="#coap-headers-and-options" class="xref">Section 4</a>, and the corresponding plain message fields of the original are not included in the OSCOAP message, the processing of these fields does not expand the total message size.</p>
 <p id="rfc.section.2.p.3">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP endpoint SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age" class="xref">Section 4.3.1.1</a>.</p>
 <p id="rfc.section.2.p.4">The placement of the compressed COSE object in the OSCOAP message depends on whether the CoAP code allows payload (<a href="#RFC7252" class="xref">[RFC7252]</a>, illustrated in <a href="#fig-sketch" class="xref">Figure 1</a>):</p>
 <p></p>
@@ -709,9 +709,9 @@ Verify request with   |                       |
 <a href="#rfc.section.4.3">4.3.</a> <a href="#coap-options" id="coap-options">CoAP Options</a>
 </h1>
 <p id="rfc.section.4.3.p.1">Most options are encrypted and integrity protected (Class E), and thus inner message fields. But to allow certain proxy operations, some options have outer values, i.e. are present as options in the OSCOAP message. Certain options may have both an inner value and a potentially different outer value, where the inner value is intended for the destination endpoint and the outer value is intended for a proxy.</p>
-<p id="rfc.section.4.3.p.2">A summary of how options are protected is shown in <a href="#protected-coap-options" class="xref">Figure 4</a>. Options denoted by a &#8216;x&#8217; within each class are protected and processed in the same way, but certain options denoted by a &#8216;*&#8217; require special processing.</p>
+<p id="rfc.section.4.3.p.2">A summary of how options are protected is shown in <a href="#fig-option-protection" class="xref">Figure 4</a>. Options denoted by a &#8216;x&#8217; within each class are protected and processed in the same way, but certain options denoted by a &#8216;*&#8217; require special processing.</p>
 <div id="rfc.figure.4"></div>
-<div id="protected-coap-options"></div>
+<div id="fig-option-protection"></div>
 <pre>
 +----+----------------+---+---+---+
 | No.| Name           | E | I | U |
@@ -743,14 +743,14 @@ Verify request with   |                       |
  * = Special
 </pre>
 <p class="figure">Figure 4: Protection of CoAP Options</p>
-<p id="rfc.section.4.3.p.3">Unless specified otherwise, CoAP options not listed in <a href="#protected-coap-options" class="xref">Figure 4</a> SHALL be encrypted and integrity protected and processed as class E options.</p>
+<p id="rfc.section.4.3.p.3">Unless specified otherwise, CoAP options not listed in <a href="#fig-option-protection" class="xref">Figure 4</a> SHALL be encrypted and integrity protected and processed as class E options.</p>
 <p id="rfc.section.4.3.p.4">Specifications of new CoAP options SHOULD define how they are processed with OSCOAP. New COAP options SHOULD be of class E and SHOULD NOT have outer values unless a forwarding proxy needs to read that option value. If a certain option has both inner and outer values, the two values SHOULD NOT be the same.</p>
 <h1 id="rfc.section.4.3.1">
 <a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#class-e" id="class-e">Class E Options</a>
 </h1>
-<p id="rfc.section.4.3.1.p.1">For options in class E (see <a href="#protected-coap-options" class="xref">Figure 4</a>) the option value in the original CoAP message, if present, SHALL be encrypted and integrity protected between the endpoints. Hence the actions resulting from the use of such options is analogous to communicating in a protected manner directly with the endpoint. For example, a client using an If-Match option will not be served by a proxy.</p>
+<p id="rfc.section.4.3.1.p.1">For options in class E (see <a href="#fig-option-protection" class="xref">Figure 4</a>) the option value in the original CoAP message, if present, SHALL be encrypted and integrity protected between the endpoints. Hence the actions resulting from the use of such options is analogous to communicating in a protected manner directly with the endpoint. For example, a client using an If-Match option will not be served by a proxy.</p>
 <p id="rfc.section.4.3.1.p.2">The sending endpoint SHALL write the class E option from the original CoAP message into the plaintext of the COSE object.</p>
-<p id="rfc.section.4.3.1.p.3">Except for the special options (* in <a href="#protected-coap-options" class="xref">Figure 4</a>), the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change, or remove the value of an outer option.</p>
+<p id="rfc.section.4.3.1.p.3">Except for the special options (* in <a href="#fig-option-protection" class="xref">Figure 4</a>), the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change, or remove the value of an outer option.</p>
 <p id="rfc.section.4.3.1.p.4">Except for the special options, the receiving endpoint SHALL discard any outer options of class E from the OSCOAP message and SHALL write the Class E options present in the plaintext of the COSE object into the decrypted CoAP message.</p>
 <h1 id="rfc.section.4.3.1.1">
 <a href="#rfc.section.4.3.1.1">4.3.1.1.</a> <a href="#max-age" id="max-age">Max-Age</a>
@@ -1251,7 +1251,7 @@ h'aea0155667924dff8a24e4cb35b9'
 <a href="#rfc.section.12">12.</a> <a href="#privacy-considerations" id="privacy-considerations">Privacy Considerations</a>
 </h1>
 <p id="rfc.section.12.p.1">Privacy threats executed through intermediate nodes are considerably reduced by means of OSCOAP. End-to-end integrity protection and encryption of CoAP payload and all options that are not used for forwarding, provide mitigation against attacks on sensor and actuator communication, which may have a direct impact on the personal sphere.</p>
-<p id="rfc.section.12.p.2">The unprotected options (<a href="#protected-coap-options" class="xref">Figure 4</a>) may reveal privacy sensitive information. In particular Uri-Host SHOULD NOT contain privacy sensitive information.</p>
+<p id="rfc.section.12.p.2">The unprotected options (<a href="#fig-option-protection" class="xref">Figure 4</a>) may reveal privacy sensitive information. In particular Uri-Host SHOULD NOT contain privacy sensitive information.</p>
 <p id="rfc.section.12.p.3">CoAP headers sent in plaintext allow for example matching of CON and ACK (CoAP Message Identifier), matching of request and responses (Token) and traffic analysis.</p>
 <p id="rfc.section.12.p.4">Using the mechanisms described in <a href="#seqno-replay-state" class="xref">Section 6.3</a> reveals when a device goes through a reboot. This can be mitigated by the device storing the precise state of sender sequence number and recipient replay window on a clean shutdown.</p>
 <h1 id="rfc.section.13">
