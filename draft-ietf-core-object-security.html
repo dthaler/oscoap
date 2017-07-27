@@ -794,11 +794,12 @@ Verify request with   |                       |
 <p id="rfc.section.4.3.3.2.p.2">The sending endpoint SHALL first decompose the Proxy-Uri value of the original CoAP message into the Proxy-Scheme, Uri-Host, Uri-Port, Uri-Path and Uri-Query options (if present) according to section 6.4 of <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
 <p id="rfc.section.4.3.3.2.p.3">Uri-Path and Uri-Query are class E options and MUST be protected and processed as if obtained from the original CoAP message, see <a href="#class-e" class="xref">Section 4.3.1</a>.</p>
 <p id="rfc.section.4.3.3.2.p.4">The value of the Proxy-Uri option of the OSCOAP message MUST be replaced with Proxy-Scheme, Uri-Host and Uri-Port options (if present) composed according to section 6.5 of <a href="#RFC7252" class="xref">[RFC7252]</a> and MUST be processed as a class U option, see <a href="#class-u" class="xref">Section 4.3.3</a>.</p>
-<p id="rfc.section.4.3.3.2.p.5">An example of how Proxy-Uri is processed is given here. Assume that the original CoAP message contains:</p>
+<p id="rfc.section.4.3.3.2.p.5">Note that replacing the Proxy-Uri value with the Proxy-Scheme and Uri-* options works by design for all CoAP URIs. OSCOAP-aware HTTP servers should not use the userinfo component of the HTTP URI (as defined in section 3.2.1. of <a href="#RFC3986" class="xref">[RFC3986]</a>), so that this type of replacement is possible in the presence of CoAP-to-HTTP proxies. In other documents specifying cross-protocol proxying behavior using different URI structures, it is expected that the authors will create Uri-* options that allow decomposing the Proxy-Uri, and specify in which OSCOAP class they are.</p>
+<p id="rfc.section.4.3.3.2.p.6">An example of how Proxy-Uri is processed is given here. Assume that the original CoAP message contains:</p>
 <p></p>
 
 <ul><li>Proxy-Uri = &#8220;coap://example.com/resource?q=1&#8221;</li></ul>
-<p id="rfc.section.4.3.3.2.p.7">During OSCOAP processing, Proxy-Uri is split into:</p>
+<p id="rfc.section.4.3.3.2.p.8">During OSCOAP processing, Proxy-Uri is split into:</p>
 <p></p>
 
 <ul>
@@ -808,7 +809,7 @@ Verify request with   |                       |
 <li>Uri-Path = &#8220;resource&#8221;</li>
 <li>Uri-Query = &#8220;q=1&#8221;</li>
 </ul>
-<p id="rfc.section.4.3.3.2.p.9">Uri-Path and Uri-Query follow the processing defined in <a href="#class-e" class="xref">Section 4.3.1</a>, and are thus encrypted and transported in the COSE object. The remaining options are composed into the Proxy-Uri included in the options part of the OSCOAP message, which has value:</p>
+<p id="rfc.section.4.3.3.2.p.10">Uri-Path and Uri-Query follow the processing defined in <a href="#class-e" class="xref">Section 4.3.1</a>, and are thus encrypted and transported in the COSE object. The remaining options are composed into the Proxy-Uri included in the options part of the OSCOAP message, which has value:</p>
 <p></p>
 
 <ul><li>Proxy-Uri = &#8220;coap://example.com&#8221;</li></ul>
@@ -1378,6 +1379,11 @@ h'aea0155667924dff8a24e4cb35b9'
 <td class="reference"><b id="I-D.tiloca-core-multicast-oscoap">[I-D.tiloca-core-multicast-oscoap]</b></td>
 <td class="top">
 <a>Tiloca, M.</a>, <a>Selander, G.</a> and <a>F. Palombini</a>, "<a href="http://tools.ietf.org/html/draft-tiloca-core-multicast-oscoap-03">Secure group communication for CoAP</a>", Internet-Draft draft-tiloca-core-multicast-oscoap-03, July 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3986">[RFC3986]</b></td>
+<td class="top">
+<a>Berners-Lee, T.</a>, <a>Fielding, R.</a> and <a>L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>", STD 66, RFC 3986, DOI 10.17487/RFC3986, January 2005.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC5869">[RFC5869]</b></td>
