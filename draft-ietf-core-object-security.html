@@ -531,7 +531,7 @@ Client                                            Server
    C = Critical,  U = Unsafe,  N = NoCacheKey,  R = Repeatable   
 </pre>
 <p class="figure">Figure 2: The Object-Security Option</p>
-<p id="rfc.section.2.p.2">The option is either empty or contains a compressed COSE object (see <a href="#cose-object" class="xref">Section 5</a> and <a href="#compression" class="xref">Section 8</a>), and has no default value (except for certain CoAP codes, see below). The length of the Object-Security option is either zero or the sum of the length of the compressed COSE header, the lengths of the encrypted options and payload present in the original CoAP message, and the length of the authentication tag. Since the payload and most options are encrypted <a href="#coap-headers-and-options" class="xref">Section 4</a>, and the corresponding plain message fields of the original are not included in the OSCOAP message, the processing of these fields does not expand the total message size.</p>
+<p id="rfc.section.2.p.2">The option is either empty or contains a compressed COSE object (see <a href="#cose-object" class="xref">Section 5</a> and <a href="#compression" class="xref">Section 8</a>), and has no default value (except for certain CoAP codes, see below). The length of the Object-Security option is either zero or the sum of the length of the compressed COSE header, the lengths of the encrypted options and payload present in the original CoAP message, and the length of the authentication tag. Since the payload and most options are encrypted <a href="#protected-fields" class="xref">Section 4</a>, and the corresponding plain message fields of the original are not included in the OSCOAP message, the processing of these fields does not expand the total message size.</p>
 <p id="rfc.section.2.p.3">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP endpoint SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age" class="xref">Section 4.3.1.1</a>.</p>
 <p id="rfc.section.2.p.4">The placement of the compressed COSE object in the OSCOAP message depends on whether the CoAP code allows payload (<a href="#RFC7252" class="xref">[RFC7252]</a>, illustrated in <a href="#fig-sketch" class="xref">Figure 1</a>):</p>
 <p></p>
@@ -674,7 +674,7 @@ Verify request with   |                       |
 <p id="rfc.section.3.3.p.2">To enable retrieval of the right Recipient Context, the Recipient ID SHOULD be unique in the sets of all Recipient Contexts used by an endpoint.</p>
 <p id="rfc.section.3.3.p.3">The same Master Salt MAY be used with several Master Secrets.</p>
 <h1 id="rfc.section.4">
-<a href="#rfc.section.4">4.</a> <a href="#coap-headers-and-options" id="coap-headers-and-options">Protected CoAP Message Fields</a>
+<a href="#rfc.section.4">4.</a> <a href="#protected-fields" id="protected-fields">Protected CoAP Message Fields</a>
 </h1>
 <p id="rfc.section.4.p.1">OSCOAP transforms a CoAP message into an OSCOAP message, and vice versa. This section defines how the CoAP message fields are protected. Note that OSCOAP protects the CoAP Request/Response layer only, and not the Messaging layer (Section 2 of <a href="#RFC7252" class="xref">[RFC7252]</a>); this means that empty CON, ACK, and RST messages are not protected. All the messages mentioned in this document refer to non-empty CON, NON, and ACK messages.</p>
 <p id="rfc.section.4.p.2">OSCOAP protects as much of the original CoAP message as possible, while still allowing proxy operations <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> <a href="#RFC8075" class="xref">[RFC8075]</a>. Message fields may either be</p>
@@ -957,7 +957,7 @@ external_aad = [
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compose the AEAD nonce by XORing the Context IV (Sender IV) with the partial IV (Sequence Number in network byte order).</li>
 <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
-<li>Format the OSCOAP message according to <a href="#coap-headers-and-options" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.3.4</a>.</li>
+<li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.3.4</a>.</li>
 <li>Store the association Token - Security Context. The client SHALL be able to find the Recipient Context from the Token in the response.</li>
 <li>Increment the Sequence Number by one.</li>
 </ol>
@@ -987,7 +987,7 @@ external_aad = [
 <li>If decryption succeeds, update the Recipient Replay Window, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
 </ul>
 </li>
-<li>Add decrypted options and payload to the decrypted request, processing the E options as described in (<a href="#coap-headers-and-options" class="xref">Section 4</a>). The Object-Security option is removed.</li>
+<li>Add decrypted options and payload to the decrypted request, processing the E options as described in (<a href="#protected-fields" class="xref">Section 4</a>). The Object-Security option is removed.</li>
 <li>The decrypted CoAP request is processed according to <a href="#RFC7252" class="xref">[RFC7252]</a>
 </li>
 </ol>
@@ -1006,7 +1006,7 @@ external_aad = [
 </ul>
 </li>
 <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
-<li>Format the OSCOAP message according to <a href="#coap-headers-and-options" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.3.4</a>.</li>
+<li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.3.4</a>.</li>
 <li>If Observe is used, increment the Sequence Number by one.</li>
 </ol>
 <h1 id="rfc.section.7.4">
@@ -1034,7 +1034,7 @@ external_aad = [
 <li>If decryption succeeds and Observe is used, update the Recipient Replay Window, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
 </ul>
 </li>
-<li>Add decrypted options or payload to the decrypted response overwriting any outer E options (see <a href="#coap-headers-and-options" class="xref">Section 4</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the sequence number.</li></ul>
+<li>Add decrypted options or payload to the decrypted response overwriting any outer E options (see <a href="#protected-fields" class="xref">Section 4</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the sequence number.</li></ul>
 </li>
 <li>The decrypted CoAP response is processed according to <a href="#RFC7252" class="xref">[RFC7252]</a>
 </li>
@@ -1240,7 +1240,7 @@ h'aea0155667924dff8a24e4cb35b9'
 <a href="#rfc.section.11">11.</a> <a href="#sec-considerations" id="sec-considerations">Security Considerations</a>
 </h1>
 <p id="rfc.section.11.p.1">In scenarios with intermediary nodes such as proxies or brokers, transport layer security such as DTLS only protects data hop-by-hop. As a consequence, the intermediary nodes can read and modify information. The trust model where all intermediate nodes are considered trustworthy is problematic, not only from a privacy perspective, but also from a security perspective, as the intermediaries are free to delete resources on sensors and falsify commands to actuators (such as &#8220;unlock door&#8221;, &#8220;start fire alarm&#8221;, &#8220;raise bridge&#8221;). Even in the rare cases, where all the owners of the intermediary nodes are fully trusted, attacks and data breaches make such an architecture brittle.</p>
-<p id="rfc.section.11.p.2">DTLS protects hop-by-hop the entire CoAP message, including header, options, and payload. OSCOAP protects end-to-end the payload, and all information in the options and header, that is not required for forwarding (see <a href="#coap-headers-and-options" class="xref">Section 4</a>). DTLS and OSCOAP can be combined, thereby enabling end-to-end security of CoAP payload, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. The CoAP message layer, however, cannot be protected end-to-end through intermediary devices since the parameters Type and Message ID, as well as Token and Token Length may be changed by a proxy.</p>
+<p id="rfc.section.11.p.2">DTLS protects hop-by-hop the entire CoAP message, including header, options, and payload. OSCOAP protects end-to-end the payload, and all information in the options and header, that is not required for forwarding (see <a href="#protected-fields" class="xref">Section 4</a>). DTLS and OSCOAP can be combined, thereby enabling end-to-end security of CoAP payload, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. The CoAP message layer, however, cannot be protected end-to-end through intermediary devices since the parameters Type and Message ID, as well as Token and Token Length may be changed by a proxy.</p>
 <p id="rfc.section.11.p.3">The use of COSE to protect CoAP messages as specified in this document requires an established security context. The method to establish the security context described in <a href="#context-derivation" class="xref">Section 3.2</a> is based on a common shared secret material in client and server, which may be obtained e.g. by using the ACE framework <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>. An OSCOAP profile of ACE is described in <a href="#I-D.seitz-ace-oscoap-profile" class="xref">[I-D.seitz-ace-oscoap-profile]</a>.</p>
 <p id="rfc.section.11.p.4">The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is selected for broad applicability in terms of message size (2^64 blocks) and maximum number of messages (2^56). Compatibility with CCM* is achieved by using the algorithm AES-CCM-16-64-128 <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
 <p id="rfc.section.11.p.5">Most AEAD algorithms require a unique nonce for each message, for which the sequence numbers in the COSE message field &#8220;Partial IV&#8221; is used. If the recipient accepts any sequence number larger than the one previously received, then the problem of sequence number synchronization is avoided. With reliable transport, it may be defined that only messages with sequence number which are equal to previous sequence number + 1 are accepted. The alternatives to sequence numbers have their issues: very constrained devices may not be able to support accurate time, or to generate and store large numbers of random nonces. The requirement to change key at counter wrap is a complication, but it also forces the user of this specification to think about implementing key renewal.</p>
