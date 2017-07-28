@@ -605,7 +605,7 @@ Verify request with   |                       |
 </ul>
 <p id="rfc.section.3.1.p.10">When it is understood which context is referred to (Sender Context or Recipient Context), the term &#8220;Context IV&#8221; is used to denote the IV currently used with this context.</p>
 <p id="rfc.section.3.1.p.11">An endpoint may free up memory by not storing the Sender Key, Sender IV, Recipient Key, and Recipient IV, deriving them from the Common Context when needed. Alternatively, an endpoint may free up memory by not storing the Master Secret and Master Salt after the other parameters have been derived.</p>
-<p id="rfc.section.3.1.p.12">The endpoints MAY interchange the client and server roles while maintaining the same security context. When this happens, the former server still protects messages to send using its Sender Context, and verifies messages received using its Recipient Context. The same is also true for the former client. The endpoints MUST NOT change the Sender/Recipient ID. In other words, changing the roles does not change the set of keys to be used.</p>
+<p id="rfc.section.3.1.p.12">The endpoints MAY interchange the client and server roles while maintaining the same security context. When this happens, the former server still protects messages to send using its Sender Context, and verifies messages received using its Recipient Context. The same is also true for the former client. The endpoints MUST NOT change the Sender/Recipient ID when changing roles. In other words, changing the roles does not change the set of keys to be used.</p>
 <h1 id="rfc.section.3.2">
 <a href="#rfc.section.3.2">3.2.</a> <a href="#context-derivation" id="context-derivation">Derivation of Security Context Parameters</a>
 </h1>
@@ -672,7 +672,7 @@ Verify request with   |                       |
 </h1>
 <p id="rfc.section.3.3.p.1">As collisions may lead to the loss of both confidentiality and integrity, Sender ID SHALL be unique in the set of all security contexts using the same Master Secret and Master Salt. When a trusted third party assigns identifiers (e.g. using <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>) or by using a protocol that allows the parties to negotiate locally unique identifiers in each endpoint, the Sender IDs can be very short. Sender IDs can have any length between 0-255 bytes. Note that that the empty string is a valid Sender ID and that Sender IDs of different lengths can be used with the same Common Context. E.g. the SID with value 0x00 is different from the SID with the value 0x0000. If Sender ID uniqueness cannot be guaranteed, random Sender IDs MUST be used. Random Sender IDs MUST be long enough so that the probability of collisions is negligible.</p>
 <p id="rfc.section.3.3.p.2">To enable retrieval of the right Recipient Context, the Recipient ID SHOULD be unique in the sets of all Recipient Contexts used by an endpoint.</p>
-<p id="rfc.section.3.3.p.3">The same Master Salt MAY be used with several Master Secrets.</p>
+<p id="rfc.section.3.3.p.3">While the triple (Master Secret, Master Salt, Sender ID) MUST be unique, the same Master Salt MAY be used with several Master Secrets and the same Master Secret MAY be used with several Master Salts.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#protected-fields" id="protected-fields">Protected CoAP Message Fields</a>
 </h1>
@@ -685,7 +685,7 @@ Verify request with   |                       |
 <li>Class I: integrity protected only, or</li>
 <li>Class U: unprotected.</li>
 </ul>
-<p id="rfc.section.4.p.4">This section also outlines how the message fields are transferred, a detailed description of the processing is provided in <a href="#processing" class="xref">Section 7</a>. Message fields of the original CoAP message are either transferred in the header/options part of the OSCOAP message, or in the plaintext of the COSE object. Depending on which, the location of the message field in the OSCOAP message is called &#8220;outer&#8221; or &#8220;inner&#8221;:</p>
+<p id="rfc.section.4.p.4">This section outlines how the message fields are transferred, a detailed description of the processing is provided in <a href="#processing" class="xref">Section 7</a>. Message fields of the original CoAP message are either transferred in the header/options part of the OSCOAP message, or in the plaintext of the COSE object. Depending on which, the location of the message field in the OSCOAP message is called &#8220;outer&#8221; or &#8220;inner&#8221;:</p>
 <p></p>
 
 <ul>
@@ -709,7 +709,7 @@ Verify request with   |                       |
 <a href="#rfc.section.4.3">4.3.</a> <a href="#coap-options" id="coap-options">CoAP Options</a>
 </h1>
 <p id="rfc.section.4.3.p.1">Most options are encrypted and integrity protected (Class E), and thus inner message fields. But to allow certain proxy operations, some options have outer values, i.e. are present as options in the OSCOAP message. Certain options may have both an inner value and a potentially different outer value, where the inner value is intended for the destination endpoint and the outer value is intended for a proxy.</p>
-<p id="rfc.section.4.3.p.2">A summary of how options are protected is shown in <a href="#fig-option-protection" class="xref">Figure 4</a>. Options denoted by a &#8216;x&#8217; within each class are protected and processed in the same way, but certain options denoted by a &#8216;*&#8217; require special processing.</p>
+<p id="rfc.section.4.3.p.2">A summary of how options are protected is shown in <a href="#fig-option-protection" class="xref">Figure 4</a>. Options denoted by &#8216;x&#8217; within each class are protected and processed in the same way, but certain options denoted by &#8216;*&#8217; require special processing.</p>
 <div id="rfc.figure.4"></div>
 <div id="fig-option-protection"></div>
 <pre>
@@ -761,7 +761,7 @@ Verify request with   |                       |
 <a href="#rfc.section.4.3.1.2">4.3.1.2.</a> <a href="#block-options" id="block-options">The Block Options</a>
 </h1>
 <p id="rfc.section.4.3.1.2.p.1">Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a> is an optional feature. An implementation MAY comply with <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without implementing <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
-<p id="rfc.section.4.3.1.2.p.2">The Block options (Block1, Block2, Size1 and Size2) MAY be either only inner options, only outer options or both inner and outer options. The inner and outer options are processed independently.</p>
+<p id="rfc.section.4.3.1.2.p.2">The Block options (Block1, Block2, Size1, and Size2) MAY be either only inner options, only outer options or both inner and outer options. The inner and outer options are processed independently.</p>
 <h1 id="rfc.section.4.3.1.2.1">
 <a href="#rfc.section.4.3.1.2.1">4.3.1.2.1.</a> <a href="#inner-block-options" id="inner-block-options">Inner Block Options</a>
 </h1>
@@ -818,7 +818,7 @@ Verify request with   |                       |
 </h1>
 <p id="rfc.section.4.3.3.3.p.1">Observe <a href="#RFC7641" class="xref">[RFC7641]</a> is an optional feature. An implementation MAY support <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without supporting <a href="#RFC7641" class="xref">[RFC7641]</a>. The Observe option as used here targets the requirements on forwarding of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> (Section 2.2.1.2).</p>
 <p id="rfc.section.4.3.3.3.p.2">In order for a proxy to support forwarding of Observe messages, there must be an Observe option present in options part of the OSCOAP message (<a href="#RFC7641" class="xref">[RFC7641]</a>), so Observe must have an outer value.</p>
-<p id="rfc.section.4.3.3.3.p.3">To secure the order of the notifications, the client SHALL verify that the Partial IV of the latest notification is greater than any previously received Partial IV bound to the Observe request. If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with and empty ACK.</p>
+<p id="rfc.section.4.3.3.3.p.3">To secure the order of the notifications, the client SHALL verify that the Partial IV of a received notification is greater than any previously received Partial IV bound to the Observe request. If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with and empty ACK.</p>
 <p id="rfc.section.4.3.3.3.p.4">The Observe option in the CoAP request may be legitimately removed by a proxy. If the Observe option is removed from a CoAP request by a proxy, then the server can still verify the request (as a non-Observe request), and produce a non-Observe response. If the OSCOAP client receives a response to an Observe request without an outer Observe value, then it MUST verify the response as a non-Observe response. (The reverse case is covered in the verification of the response <a href="#processing" class="xref">Section 7</a>.)</p>
 <h1 id="rfc.section.4.3.4">
 <a href="#rfc.section.4.3.4">4.3.4.</a> <a href="#outer-options" id="outer-options">Outer Options in the OSCOAP Message</a>
@@ -906,7 +906,7 @@ external_aad = [
 </h1>
 <p id="rfc.section.6.2.p.1">In order to protect from replay of requests, the server&#8217;s Recipient Context contains a Replay Window. A server SHALL verify that a Partial IV received in the COSE object has not been received before in the Recipient Context. If this verification fails and the message received is a CON message, the server SHALL respond with a 5.03 Service Unavailable error message with the option Max-Age set to 0. The diagnostic payload MAY contain the &#8220;Replay protection failed&#8221; string.</p>
 <p id="rfc.section.6.2.p.2">The size and type of the Replay Window depends on the use case and lower protocol layers. In case of reliable and ordered transport from endpoint to endpoint, the server MAY just store the last received Partial IV and require that newly received Partial IVs equals the last received Partial IV + 1.</p>
-<p id="rfc.section.6.2.p.3">Reponses are protected against replay as they are cryptographically bound to the request. In the case of Observe only monotonically increasing Partial IVs are accepted. If this verification fails and the message received is a CON message, the client SHALL respond with an empty ACK and stop processing the response.</p>
+<p id="rfc.section.6.2.p.3">Reponses are protected against replay as they are cryptographically bound to the request. In the case of Observe, only strictly increasing Partial IVs are accepted. If this verification fails and the message received is a CON message, the client SHALL respond with an empty ACK and stop processing the response.</p>
 <h1 id="rfc.section.6.3">
 <a href="#rfc.section.6.3">6.3.</a> <a href="#replay-state" id="replay-state">Sequence Number and Replay Window State</a>
 </h1>
@@ -938,7 +938,7 @@ external_aad = [
 <a href="#rfc.section.6.4">6.4.</a> <a href="#freshness" id="freshness">Freshness</a>
 </h1>
 <p id="rfc.section.6.4.p.1">For responses without Observe, OSCOAP provides absolute freshness. For requests, and responses with Observe, OSCOAP provides relative freshness in the sense that the sequence numbers allow a recipient to determine the relative order of messages.</p>
-<p id="rfc.section.6.4.p.2">For applications having stronger demands on freshness (e.g. control of actuators), OSCOAP needs to be augmented with mechanisms providing absolute freshness <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a>.</p>
+<p id="rfc.section.6.4.p.2">For applications having stronger demands on freshness (e.g. control of actuators), OSCOAP needs to be augmented with mechanisms providing absolute freshness <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>.</p>
 <h1 id="rfc.section.6.5">
 <a href="#rfc.section.6.5">6.5.</a> <a href="#delay-and-mismatch-attacks" id="delay-and-mismatch-attacks">Delay and Mismatch Attacks</a>
 </h1>

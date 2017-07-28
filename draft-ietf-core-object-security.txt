@@ -450,8 +450,8 @@ Selander, et al.        Expires January 29, 2018                [Page 8]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
-   Sender/Recipient ID.  In other words, changing the roles does not
-   change the set of keys to be used.
+   Sender/Recipient ID when changing roles.  In other words, changing
+   the roles does not change the set of keys to be used.
 
 3.2.  Derivation of Security Context Parameters
 
@@ -582,7 +582,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    SHOULD be unique in the sets of all Recipient Contexts used by an
    endpoint.
 
-   The same Master Salt MAY be used with several Master Secrets.
+   While the triple (Master Secret, Master Salt, Sender ID) MUST be
+   unique, the same Master Salt MAY be used with several Master Secrets
+   and the same Master Secret MAY be used with several Master Salts.
 
 4.  Protected CoAP Message Fields
 
@@ -605,11 +607,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    o  Class U: unprotected.
 
-   This section also outlines how the message fields are transferred, a
+   This section outlines how the message fields are transferred, a
    detailed description of the processing is provided in Section 7.
    Message fields of the original CoAP message are either transferred in
-   the header/options part of the OSCOAP message, or in the plaintext of
-
 
 
 
@@ -618,6 +618,7 @@ Selander, et al.        Expires January 29, 2018               [Page 11]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+   the header/options part of the OSCOAP message, or in the plaintext of
    the COSE object.  Depending on which, the location of the message
    field in the OSCOAP message is called "outer" or "inner":
 
@@ -668,7 +669,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
 
-
 Selander, et al.        Expires January 29, 2018               [Page 12]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
@@ -688,8 +688,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    proxy.
 
    A summary of how options are protected is shown in Figure 4.  Options
-   denoted by a 'x' within each class are protected and processed in the
-   same way, but certain options denoted by a '*' require special
+   denoted by 'x' within each class are protected and processed in the
+   same way, but certain options denoted by '*' require special
    processing.
 
                     +----+----------------+---+---+---+
@@ -792,7 +792,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    comply with [RFC7252] and the Object-Security option without
    implementing [RFC7959].
 
-   The Block options (Block1, Block2, Size1 and Size2) MAY be either
+   The Block options (Block1, Block2, Size1, and Size2) MAY be either
    only inner options, only outer options or both inner and outer
    options.  The inner and outer options are processed independently.
 
@@ -959,7 +959,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    message ([RFC7641]), so Observe must have an outer value.
 
    To secure the order of the notifications, the client SHALL verify
-   that the Partial IV of the latest notification is greater than any
+   that the Partial IV of a received notification is greater than any
    previously received Partial IV bound to the Observe request.  If the
    verification fails, the client SHALL stop processing the response,
    and in the case of CON respond with and empty ACK.
@@ -1157,7 +1157,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    equals the last received Partial IV + 1.
 
    Reponses are protected against replay as they are cryptographically
-   bound to the request.  In the case of Observe only monotonically
+   bound to the request.  In the case of Observe, only strictly
    increasing Partial IVs are accepted.  If this verification fails and
    the message received is a CON message, the client SHALL respond with
    an empty ACK and stop processing the response.
@@ -1269,7 +1269,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    For applications having stronger demands on freshness (e.g. control
    of actuators), OSCOAP needs to be augmented with mechanisms providing
-   absolute freshness [I-D.mattsson-core-coap-actuators].
+   absolute freshness [I-D.amsuess-core-repeat-request-tag].
 
 6.5.  Delay and Mismatch Attacks
 
