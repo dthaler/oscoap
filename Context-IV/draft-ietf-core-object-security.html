@@ -1,0 +1,1597 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Object Security of CoAP (OSCOAP)</title>
+
+  
+<style type="text/css">/*<![CDATA[*/
+@viewport {
+  zoom: 1.0;
+  width: extend-to-zoom;
+}
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+
+@media screen and (min-width: 1024px) {
+  ul.toc, #rfc\.toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 525px);
+    width: 300px;
+    z-index: 1;
+  }
+  #rfc\.toc {
+    top: 15px;
+  }
+  ul.toc {
+    top: 80px;
+    overflow: auto;
+  }
+
+  body {
+    padding-right: 350px;
+  }
+}
+
+body {
+  font: 15px "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #333;
+  font-size-adjust: 0.5;
+  line-height: 130%;
+  margin: 25px auto;
+  max-width: 724px;
+}
+
+.title, .filename, h1, h2, h3, h4 {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size-adjust: 0.5;
+  font-weight: 500;
+  color: #333;
+  line-height: 100%;
+  margin: 0.8em 0 0.3em;
+}
+.title { font-size: 36px; }
+h1 { font-size: 30px; }
+h2 { font-size: 24px; }
+h3, h4 { font-size: 18px; }
+h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
+  color: #333;
+}
+
+ul.toc li {
+  list-style: none;
+  text-indent: -2.5em;
+  padding-left: 2.5em;
+  padding-bottom: 5px;
+  margin: 0;
+}
+ul.toc ul {
+  margin: 0;
+}
+/* xml2rfc nests ul directly inside ul which messes with the style badly */
+ul.toc, ul.toc>ul, ul.toc ul>ul {
+  margin: 0 0 0 1.5em;
+}
+
+table {
+  margin-left: 0em;
+  border-collapse: collapse;
+}
+th {
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+}
+tr:nth-child(2n+1) > td,
+tr:nth-child(2n+1) > th {
+  background-color: #f9f9f9;
+}
+td.reference {
+  max-width: 200px;
+  border-top: none;
+  padding-right: 1em;
+}
+.right {
+  text-align: right;
+}
+
+
+table.header {
+  width: 100%;
+}
+table.header td {
+  border: none;
+  background-color: transparent;
+  color: black;
+}
+.filename {
+  color: rgb(119, 119, 119);
+  font-size: 23px;
+  font-weight: normal;
+  height: auto;
+  line-height: 100%;
+}
+#rfc\.abstract+p {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 130%;
+}
+
+samp, tt, code, pre {
+  font: 11pt consolas, monospace;
+  font-size-adjust: none;
+}
+pre {
+  background-color: #eee;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+  padding: 5px;
+  margin: 5px;
+}
+.figure {
+  font-style: italic;
+  margin: 0 1.5em;
+}
+
+address {
+  margin: 10px 0 0;
+}
+.vcard {
+  font-style: normal;
+}
+.vcardline {
+  display: block;
+}
+.vcardline .fn {
+  font-weight: bold;
+}
+.vcardline .hidden {
+  display: none;
+}
+
+dl {
+  margin-left: 1em;
+}
+dl.dl-horizontal: {
+  margin-left: 0;
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.nohang > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .5em;
+}
+dl.compact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+ul.empty {
+  list-style-type: none;
+}
+ul.empty li {
+  margin-top: .5em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #2a6496;
+}
+a[href]:hover {
+  background-color: #eee;
+}
+
+ol, ul, li, p {
+  padding: 0;
+  margin: 0.5em 0 0.5em 2em;
+}
+li, p {
+  margin-left: 0;
+}
+address {
+  font-style: normal;
+}
+
+.github-fork-ribbon-wrapper {
+  display: none;
+}
+@media screen and (min-width: 800px) {
+  /* "Fork me on GitHub" CSS ribbon based on
+   * https://github.com/simonwhitaker/github-fork-ribbon-css
+   */
+  .github-fork-ribbon {
+    position: absolute;
+    padding: 2px 0;
+    background-color: #a00;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+    font: 700 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    pointer-events: auto;
+
+    top: 38px;
+    right: -45px;
+
+    transform: rotate(45deg);
+  }
+
+  .github-fork-ribbon a[href],
+  .github-fork-ribbon a[href]:hover {
+    color: #fff;
+    background-color: transparent;
+    text-decoration: none;
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+    text-align: center;
+
+    width: 190px;
+    line-height: 18px;
+
+    display: inline-block;
+    padding: 2px 0;
+
+    border: 1.5px dotted #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .github-fork-ribbon-wrapper {
+    display: block;
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    overflow: hidden;
+    top: 0; right: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .github-fork-ribbon-wrapper {
+    position: fixed;
+  }
+  /*]]>*/</style>
+
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology">
+<link href="#rfc.section.2" rel="Chapter" title="2 The Object-Security Option">
+<link href="#rfc.section.3" rel="Chapter" title="3 The Security Context">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Security Context Definition">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Derivation of Security Context Parameters">
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 Requirements on the Security Context Parameters">
+<link href="#rfc.section.4" rel="Chapter" title="4 Protected CoAP Message Fields">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 CoAP Payload">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 CoAP Header">
+<link href="#rfc.section.4.3" rel="Chapter" title="4.3 CoAP Options">
+<link href="#rfc.section.5" rel="Chapter" title="5 The COSE Object">
+<link href="#rfc.section.5.1" rel="Chapter" title="5.1 Plaintext">
+<link href="#rfc.section.5.2" rel="Chapter" title="5.2 Additional Authenticated Data">
+<link href="#rfc.section.6" rel="Chapter" title="6 Sequence Numbers, Replay, Message Binding, and Freshness">
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 AEAD Nonce Uniqueness">
+<link href="#rfc.section.6.2" rel="Chapter" title="6.2 Replay Protection">
+<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Sequence Number and Replay Window State">
+<link href="#rfc.section.6.4" rel="Chapter" title="6.4 Freshness">
+<link href="#rfc.section.6.5" rel="Chapter" title="6.5 Delay and Mismatch Attacks">
+<link href="#rfc.section.7" rel="Chapter" title="7 Processing">
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Protecting the Request">
+<link href="#rfc.section.7.2" rel="Chapter" title="7.2 Verifying the Request">
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Protecting the Response">
+<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Verifying the Response">
+<link href="#rfc.section.7.5" rel="Chapter" title="7.5 Nonce generation examples">
+<link href="#rfc.section.8" rel="Chapter" title="8 OSCOAP Compression">
+<link href="#rfc.section.8.1" rel="Chapter" title="8.1 Encoding of the Object-Security Option">
+<link href="#rfc.section.8.2" rel="Chapter" title="8.2 Compression Examples">
+<link href="#rfc.section.9" rel="Chapter" title="9 Web Linking">
+<link href="#rfc.section.10" rel="Chapter" title="10 HTTP-CoAP Mapping">
+<link href="#rfc.section.11" rel="Chapter" title="11 Security Considerations">
+<link href="#rfc.section.12" rel="Chapter" title="12 Privacy Considerations">
+<link href="#rfc.section.13" rel="Chapter" title="13 IANA Considerations">
+<link href="#rfc.section.13.1" rel="Chapter" title="13.1 CoAP Option Numbers Registry">
+<link href="#rfc.section.13.2" rel="Chapter" title="13.2 Header Field Registrations">
+<link href="#rfc.section.14" rel="Chapter" title="14 Acknowledgments">
+<link href="#rfc.references" rel="Chapter" title="15 References">
+<link href="#rfc.references.1" rel="Chapter" title="15.1 Normative References">
+<link href="#rfc.references.2" rel="Chapter" title="15.2 Informative References">
+<link href="#rfc.appendix.A" rel="Chapter" title="A Test Vectors">
+<link href="#rfc.appendix.B" rel="Chapter" title="B Examples">
+<link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Secure Access to Sensor">
+<link href="#rfc.appendix.B.2" rel="Chapter" title="B.2 Secure Subscribe to Sensor">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content="xml2rfc version 2.7.0 - http://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-object-security-latest" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-7-28" />
+  <meta name="dct.abstract" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
+  <meta name="description" content="This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document." />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">CoRE Working Group</td>
+<td class="right">G. Selander</td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">J. Mattsson</td>
+</tr>
+<tr>
+<td class="left">Intended status: Standards Track</td>
+<td class="right">F. Palombini</td>
+</tr>
+<tr>
+<td class="left">Expires: January 29, 2018</td>
+<td class="right">Ericsson AB</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">L. Seitz</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">SICS Swedish ICT</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">July 28, 2017</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">Object Security of CoAP (OSCOAP)<br />
+  <span class="filename">draft-ietf-core-object-security-latest</span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>This document defines Object Security of CoAP (OSCOAP), a method for application layer protection of the Constrained Application Protocol (CoAP), using the CBOR Object Signing and Encryption (COSE). OSCOAP provides end-to-end encryption, integrity and replay protection to CoAP payload, options, and header fields, as well as a secure message binding. OSCOAP is designed for constrained nodes and networks and can be used across intermediaries and over any layer. The use of OSCOAP is signaled with the CoAP option Object-Security, also defined in this document.</p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on January 29, 2018.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">Terminology</a>
+</li>
+</ul><li>2.   <a href="#rfc.section.2">The Object-Security Option</a>
+</li>
+<li>3.   <a href="#rfc.section.3">The Security Context</a>
+</li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">Security Context Definition</a>
+</li>
+<li>3.2.   <a href="#rfc.section.3.2">Derivation of Security Context Parameters</a>
+</li>
+<li>3.3.   <a href="#rfc.section.3.3">Requirements on the Security Context Parameters</a>
+</li>
+</ul><li>4.   <a href="#rfc.section.4">Protected CoAP Message Fields</a>
+</li>
+<ul><li>4.1.   <a href="#rfc.section.4.1">CoAP Payload</a>
+</li>
+<li>4.2.   <a href="#rfc.section.4.2">CoAP Header</a>
+</li>
+<li>4.3.   <a href="#rfc.section.4.3">CoAP Options</a>
+</li>
+</ul><li>5.   <a href="#rfc.section.5">The COSE Object</a>
+</li>
+<ul><li>5.1.   <a href="#rfc.section.5.1">Plaintext</a>
+</li>
+<li>5.2.   <a href="#rfc.section.5.2">Additional Authenticated Data</a>
+</li>
+</ul><li>6.   <a href="#rfc.section.6">Sequence Numbers, Replay, Message Binding, and Freshness</a>
+</li>
+<ul><li>6.1.   <a href="#rfc.section.6.1">AEAD Nonce Uniqueness</a>
+</li>
+<li>6.2.   <a href="#rfc.section.6.2">Replay Protection</a>
+</li>
+<li>6.3.   <a href="#rfc.section.6.3">Sequence Number and Replay Window State</a>
+</li>
+<li>6.4.   <a href="#rfc.section.6.4">Freshness</a>
+</li>
+<li>6.5.   <a href="#rfc.section.6.5">Delay and Mismatch Attacks</a>
+</li>
+</ul><li>7.   <a href="#rfc.section.7">Processing</a>
+</li>
+<ul><li>7.1.   <a href="#rfc.section.7.1">Protecting the Request</a>
+</li>
+<li>7.2.   <a href="#rfc.section.7.2">Verifying the Request</a>
+</li>
+<li>7.3.   <a href="#rfc.section.7.3">Protecting the Response</a>
+</li>
+<li>7.4.   <a href="#rfc.section.7.4">Verifying the Response</a>
+</li>
+<li>7.5.   <a href="#rfc.section.7.5">Nonce generation examples</a>
+</li>
+</ul><li>8.   <a href="#rfc.section.8">OSCOAP Compression</a>
+</li>
+<ul><li>8.1.   <a href="#rfc.section.8.1">Encoding of the Object-Security Option</a>
+</li>
+<li>8.2.   <a href="#rfc.section.8.2">Compression Examples</a>
+</li>
+</ul><li>9.   <a href="#rfc.section.9">Web Linking</a>
+</li>
+<li>10.   <a href="#rfc.section.10">HTTP-CoAP Mapping</a>
+</li>
+<li>11.   <a href="#rfc.section.11">Security Considerations</a>
+</li>
+<li>12.   <a href="#rfc.section.12">Privacy Considerations</a>
+</li>
+<li>13.   <a href="#rfc.section.13">IANA Considerations</a>
+</li>
+<ul><li>13.1.   <a href="#rfc.section.13.1">CoAP Option Numbers Registry</a>
+</li>
+<li>13.2.   <a href="#rfc.section.13.2">Header Field Registrations</a>
+</li>
+</ul><li>14.   <a href="#rfc.section.14">Acknowledgments</a>
+</li>
+<li>15.   <a href="#rfc.references">References</a>
+</li>
+<ul><li>15.1.   <a href="#rfc.references.1">Normative References</a>
+</li>
+<li>15.2.   <a href="#rfc.references.2">Informative References</a>
+</li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">Test Vectors</a>
+</li>
+<li>Appendix B.   <a href="#rfc.appendix.B">Examples</a>
+</li>
+<ul><li>B.1.   <a href="#rfc.appendix.B.1">Secure Access to Sensor</a>
+</li>
+<li>B.2.   <a href="#rfc.appendix.B.2">Secure Subscribe to Sensor</a>
+</li>
+</ul><li><a href="#rfc.authors">Authors' Addresses</a>
+</li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">The Constrained Application Protocol (CoAP) is a web application protocol, designed for constrained nodes and networks <a href="#RFC7228" class="xref">[RFC7228]</a>. CoAP specifies the use of proxies for scalability and efficiency. At the same time CoAP <a href="#RFC7252" class="xref">[RFC7252]</a> references DTLS <a href="#RFC6347" class="xref">[RFC6347]</a> for security. CoAP proxies require DTLS to be terminated at the proxy. The proxy therefore not only has access to the data required for performing the intended proxy functionality, but is also able to eavesdrop on, or manipulate any part of the CoAP payload and metadata, in transit between client and server. The proxy can also inject, delete, or reorder packages since they are no longer protected by DTLS.</p>
+<p id="rfc.section.1.p.2">This document defines the security protocol Object Security of CoAP (OSCOAP), protecting CoAP request and responses end-to-end across intermediary nodes such as CoAP forward proxies and HTTP-to-CoAP proxies <a href="#RFC8075" class="xref">[RFC8075]</a>. An analysis of end-to-end security for CoAP messages through some types of intermediary nodes is performed in <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a>. In addition to the core features defined in <a href="#RFC7252" class="xref">[RFC7252]</a>, OSCOAP supports Observe <a href="#RFC7641" class="xref">[RFC7641]</a> and Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
+<p id="rfc.section.1.p.3">OSCOAP is designed for constrained nodes and networks and provides an in-layer security protocol for CoAP which does not depend on underlying layers. OSCOAP can be used anywhere that CoAP can be used, including unreliable transport <a href="#RFC7228" class="xref">[RFC7228]</a>, reliable transport <a href="#I-D.ietf-core-coap-tcp-tls" class="xref">[I-D.ietf-core-coap-tcp-tls]</a>, and non-IP transport <a href="#I-D.bormann-6lo-coap-802-15-ie" class="xref">[I-D.bormann-6lo-coap-802-15-ie]</a>. An extension of OSCOAP may also be used to protect group communication for CoAP <a href="#I-D.tiloca-core-multicast-oscoap" class="xref">[I-D.tiloca-core-multicast-oscoap]</a>. The use of OSCOAP does not affect the URI scheme and OSCOAP can therefore be used with any URI scheme defined for CoAP. The application decides the conditions for which OSCOAP is required.</p>
+<p id="rfc.section.1.p.4">OSCOAP builds on CBOR Object Signing and Encryption (COSE) <a href="#RFC8152" class="xref">[RFC8152]</a>, providing end-to-end encryption, integrity, replay protection, and secure message binding. A compressed version of COSE is used, see <a href="#compression" class="xref">Section 8</a>. The use of OSCOAP is signaled with the CoAP option Object-Security, defined in <a href="#option" class="xref">Section 2</a>. OSCOAP protects as much information as possible, while still allowing proxy operations. OSCOAP provides protection of CoAP payload, most options, and certain header fields. The solution transforms a CoAP message into an &#8220;OSCOAP message&#8221; before sending, and vice versa after receiving. The OSCOAP message is a CoAP message related to the original CoAP message in the following way: the original CoAP message payload (if present), options not processed by a proxy, and the request/response method (CoAP code) are protected in a COSE object. The message fields of the original messages that are encrypted are not present in the OSCOAP message, and instead the Object-Security option and the compressed COSE object are added, see <a href="#fig-sketch" class="xref">Figure 1</a>.</p>
+<div id="rfc.figure.1"></div>
+<div id="fig-sketch"></div>
+<pre>
+Client                                            Server
+   |  OSCOAP request:                               |
+   |    GET example.com                             |
+   |    [Header, Token, Options: {...,              |
+   |     Object-Security: Compressed COSE object}]  |
+   +-----------------------------------------------&gt;|
+   |  OSCOAP response:                              |
+   |    2.05 (Content)                              |
+   |    [Header, Token, Options: {...,              |
+   |     Object-Security:-},                        |
+   |     Payload: Compressed COSE object]           |
+   |&lt;-----------------------------------------------+
+   |                                                |
+</pre>
+<p class="figure">Figure 1: Sketch of OSCOAP</p>
+<p id="rfc.section.1.p.5">OSCOAP may be used in very constrained settings, thanks to its small message size and the restricted code and memory requirements in addition to what is required by CoAP. OSCOAP can be combined with transport layer security such as DTLS or TLS, thereby enabling end-to-end security of e.g. CoAP payload and options, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. Examples of the use of OSCOAP are given in <a href="#examples" class="xref">Appendix B</a>.</p>
+<h1 id="rfc.section.1.1">
+<a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a>
+</h1>
+<p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119" class="xref">[RFC2119]</a>. These words may also appear in this document in lowercase, absent their normative meanings.</p>
+<p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in CoAP <a href="#RFC7252" class="xref">[RFC7252]</a>, Observe <a href="#RFC7641" class="xref">[RFC7641]</a>, Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a>, COSE <a href="#RFC8152" class="xref">[RFC8152]</a>, CBOR <a href="#RFC7049" class="xref">[RFC7049]</a>, CDDL <a href="#I-D.greevenbosch-appsawg-cbor-cddl" class="xref">[I-D.greevenbosch-appsawg-cbor-cddl]</a>, and constrained environments <a href="#RFC7228" class="xref">[RFC7228]</a>.</p>
+<p id="rfc.section.1.1.p.3">The terms Common/Sender/Recipient Context, Master Secret/Salt, Sender ID/Key, Recepient ID/Key and Context IV are defined in <a href="#context-definition" class="xref">Section 3.1</a>.</p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#option" id="option">The Object-Security Option</a>
+</h1>
+<p id="rfc.section.2.p.1">The Object-Security option (see <a href="#fig-option" class="xref">Figure 2</a>) indicates that OSCOAP is used to protect the CoAP request or response. The Object-Security option is critical, safe to forward, part of the cache key, and not repeatable.</p>
+<div id="rfc.figure.2"></div>
+<div id="fig-option"></div>
+<pre>
++-----+---+---+---+---+-----------------+-----------+-----------+
+| No. | C | U | N | R | Name            | Format    | Length    |
++-----+---+---+---+---+-----------------+-----------+-----------|
+| TBD | x |   |   |   | Object-Security | see below | see below |
++-----+---+---+---+---+-----------------+-----------+-----------+
+   C = Critical,  U = Unsafe,  N = NoCacheKey,  R = Repeatable   
+</pre>
+<p class="figure">Figure 2: The Object-Security Option</p>
+<p id="rfc.section.2.p.2">The option is either empty or contains a compressed COSE object (see <a href="#cose-object" class="xref">Section 5</a> and <a href="#compression" class="xref">Section 8</a>), and has no default value (except for certain CoAP codes, see below). The length of the Object-Security option is either zero or the sum of the length of the compressed COSE header, the lengths of the encrypted options and payload present in the original CoAP message, and the length of the authentication tag. Since the payload and most options are encrypted <a href="#protected-fields" class="xref">Section 4</a>, and the corresponding plain message fields of the original are not included in the OSCOAP message, the processing of these fields does not expand the total message size.</p>
+<p id="rfc.section.2.p.3">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP endpoint SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age" class="xref">Section 4.3.1.1</a>.</p>
+<p id="rfc.section.2.p.4">The placement of the compressed COSE object in the OSCOAP message depends on whether the CoAP code allows payload (<a href="#RFC7252" class="xref">[RFC7252]</a>, illustrated in <a href="#fig-sketch" class="xref">Figure 1</a>):</p>
+<p></p>
+
+<ul>
+<li>If the CoAP code allows payload, then the compressed COSE object is the payload of the OSCOAP message, and the Object-Security option has length zero. An endpoint receiving a CoAP message with payload, that also contains a non-empty Object-Security option SHALL treat it as malformed and reject it.</li>
+<li>If the CoAP code does not allow payload, then the compressed COSE object <a href="#compression" class="xref">Section 8</a> is the value of the Object-Security option and the length of the Object-Security option is equal to the size of the compressed COSE object. An endpoint receiving a CoAP message without payload, that also contains an empty Object-Security option SHALL treat it as malformed and reject it.</li>
+</ul>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#context" id="context">The Security Context</a>
+</h1>
+<p id="rfc.section.3.p.1">OSCOAP uses COSE with an Authenticated Encryption with Additional Data (AEAD) algorithm for encrypting CoAP message data between a CoAP client and a CoAP server. An implementation supporting this specification MAY only implement the client part or MAY only implement the server part.</p>
+<p id="rfc.section.3.p.2">This specification requires that client and server establish a security context to apply to the COSE objects protecting the CoAP messages. In this section, we define the security context and how it is derived in client and server based on a common shared master secret and a key derivation function (KDF).</p>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#context-definition" id="context-definition">Security Context Definition</a>
+</h1>
+<p id="rfc.section.3.1.p.1">The security context is the set of information elements necessary to carry out the cryptographic operations in OSCOAP. For each endpoint, the security context is composed of a &#8220;Common Context&#8221;, a &#8220;Sender Context&#8221;, and a &#8220;Recipient Context&#8221;.</p>
+<p id="rfc.section.3.1.p.2">The endpoints protect messages to send using the Sender Context and verify messages received using the Recipient Context, both contexts being derived from the Common Context and other data. Clients need to be able to retrieve the correct security context to use.</p>
+<p id="rfc.section.3.1.p.3">An endpoint uses its Sender ID (SID) to derive its Sender Context, and the other endpoint uses the same ID, now called Recipient ID (RID), to derive its Recipient Context. In communication between two endpoints, the Sender Context of one endpoint matches the Recipient Context of the other endpoint, and vice versa. Thus, the two security contexts identified by the same IDs in the two endpoints are not the same, but they are partly mirrored. Retrieval and use of the security context are shown in <a href="#fig-context" class="xref">Figure 3</a>.</p>
+<div id="rfc.figure.3"></div>
+<div id="fig-context"></div>
+<pre>
+               .------------.           .------------.
+               |  Common,   |           |  Common,   |
+               |  Sender,   |           |  Recipient,|
+               |  Recipient |           |  Sender    |
+               '------------'           '------------'
+                   Client                   Server
+                      |                       |
+Retrieve context for  | OSCOAP request:       |
+ target resource      | [Token = Token1,      |
+Protect request with  |  kid = SID, ...]      |
+  Sender Context      +----------------------&gt;| Retrieve context with
+                      |                       |  RID = kid
+                      |                       | Verify request with
+                      |                       |  Recipient Context
+                      | OSCOAP response:      | Protect response with
+                      | [Token = Token1, ...] |  Sender Context
+Retrieve context with |&lt;----------------------+
+ Token = Token1       |                       |
+Verify request with   |                       |
+ Recipient Context    |                       |
+</pre>
+<p class="figure">Figure 3: Retrieval and use of the Security Context</p>
+<p id="rfc.section.3.1.p.4">The Common Context contains the following parameters:</p>
+<p></p>
+
+<ul>
+<li>AEAD Algorithm (alg). The COSE AEAD algorithm to use for encryption. Its value is immutable once the security context is established.</li>
+<li>Key Derivation Function. The HMAC based HKDF used to derive Context IV, Sender Key, and Recipient Key.</li>
+<li>Master Secret. Variable length, uniformly random byte string containing the key used to derive traffic keys and Context IV. Its value is immutable once the security context is established.</li>
+<li>Master Salt (OPTIONAL). Variable length byte string containing the salt used to derive traffic keys and Context IV. Its value is immutable once the security context is established.</li>
+<li>Context IV. Byte string derived from Master Secret and Master Salt. Length is determined by the AEAD Algorithm. Its value is immutable once the security context is established.</li>
+</ul>
+<p id="rfc.section.3.1.p.6">The Sender Context contains the following parameters:</p>
+<p></p>
+
+<ul>
+<li>Sender ID. Variable length byte string identifying the Sender Context. Its value is immutable once the security context is established.</li>
+<li>Sender Key. Byte string containing the symmetric key to protect messages to send. Derived from Common Context and Sender ID. Length is determined by the AEAD Algorithm. Its value is immutable once the security context is established.</li>
+<li>Sequence Number. Non-negative integer used to protect requests and observe responses to send. Used as partial IV <a href="#RFC8152" class="xref">[RFC8152]</a> to generate unique nonces for the AEAD. Maximum value is determined by the AEAD Algorithm.</li>
+</ul>
+<p id="rfc.section.3.1.p.8">The Recipient Context contains the following parameters:</p>
+<p></p>
+
+<ul>
+<li>Recipient ID. Variable length byte string identifying the Recipient Context. Its value is immutable once the security context is established.</li>
+<li>Recipient Key. Byte string containing the symmetric key to verify messages received. Derived from Common Context and Recipient ID. Length is determined by the AEAD Algorithm. Its value is immutable once the security context is established.</li>
+<li>Replay Window (Server only). The replay window to verify requests received.</li>
+</ul>
+<p id="rfc.section.3.1.p.10">An endpoint may free up memory by not storing the Context IV, Sender Key, and Recipient Key, deriving them from the Common Context when needed. Alternatively, an endpoint may free up memory by not storing the Master Secret and Master Salt after the other parameters have been derived.</p>
+<p id="rfc.section.3.1.p.11">The endpoints MAY interchange the client and server roles while maintaining the same security context. When this happens, the former server still protects messages to send using its Sender Context, and verifies messages received using its Recipient Context. The same is also true for the former client. The endpoints MUST NOT change the Sender/Recipient ID when changing roles. In other words, changing the roles does not change the set of keys to be used.</p>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#context-derivation" id="context-derivation">Derivation of Security Context Parameters</a>
+</h1>
+<p id="rfc.section.3.2.p.1">The parameters in the security context are derived from a small set of input parameters. The following input parameters SHALL be pre-established:</p>
+<p></p>
+
+<ul>
+<li>Master Secret</li>
+<li>Sender ID</li>
+<li>Recipient ID</li>
+</ul>
+<p id="rfc.section.3.2.p.3">The following input parameters MAY be pre-established. In case any of these parameters is not pre-established, the default value indicated below is used:</p>
+<p></p>
+
+<ul>
+<li>AEAD Algorithm (alg)  <ul><li>Default is AES-CCM-64-64-128 (COSE abbreviation: 12)</li></ul>
+</li>
+<li>Master Salt  <ul><li>Default is the empty string</li></ul>
+</li>
+<li>Key Derivation Function (KDF)  <ul><li>Default is HKDF SHA-256</li></ul>
+</li>
+<li>Replay Window Type and Size  <ul><li>Default is DTLS-type replay protection with a window size of 32 (<a href="#RFC6347" class="xref">[RFC6347]</a>)</li></ul>
+</li>
+</ul>
+<p id="rfc.section.3.2.p.5">All input parameters need to be known to and agreed on by both endpoints, but the replay window may be different in the two endpoints. The replay window type and size is used by the client in the processing of the Request-Tag <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. How the input parameters are pre-established, is application specific. The ACE framework may be used to establish the necessary input parameters <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>.</p>
+<h1 id="rfc.section.3.2.1">
+<a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#derivation-of-context-iv-sender-key-and-recipient-key" id="derivation-of-context-iv-sender-key-and-recipient-key">Derivation of Context IV, Sender Key, and Recipient Key</a>
+</h1>
+<p id="rfc.section.3.2.1.p.1">The KDF MUST be one of the HMAC based HKDF <a href="#RFC5869" class="xref">[RFC5869]</a> algorithms defined in COSE. HKDF SHA-256 is mandatory to implement. The security context parameters Context IV, Sender Key, and Recipient Key SHALL be derived from the input parameters using the HKDF, which consists of the composition of the HKDF-Extract and HKDF-Expand steps (<a href="#RFC5869" class="xref">[RFC5869]</a>):</p>
+<pre>
+   output parameter = HKDF(salt, IKM, info, L) 
+</pre>
+<p id="rfc.section.3.2.1.p.2">where:</p>
+<p></p>
+
+<ul>
+<li>salt is the Master Salt as defined above</li>
+<li>IKM is the Master Secret is defined above</li>
+<li>info is a CBOR array consisting of:</li>
+</ul>
+<pre>
+   info = [
+       id : bstr / nil,
+       alg : int,
+       type : tstr,
+       L : int
+   ]
+</pre>
+<pre>
+   * id is the Sender ID or Recipient ID when deriving keys and nil when deriving the Context IV.
+   
+   * type is "Key" or "IV"
+</pre>
+<p></p>
+
+<ul><li>L is the size of the key/IV for the AEAD algorithm used, in octets.</li></ul>
+<p id="rfc.section.3.2.1.p.5">For example, if the algorithm AES-CCM-64-64-128 (see Section 10.2 in <a href="#RFC8152" class="xref">[RFC8152]</a>) is used, the value for L is 16 for keys and 7 for Context IV.</p>
+<h1 id="rfc.section.3.2.2">
+<a href="#rfc.section.3.2.2">3.2.2.</a> <a href="#initial-replay" id="initial-replay">Initial Sequence Numbers and Replay Window</a>
+</h1>
+<p id="rfc.section.3.2.2.p.1">The Sequence Number is initialized to 0. The supported types of replay protection and replay window length is application specific and depends on the lower layers. Default is DTLS-type replay protection with a window size of 32 initiated as described in Section 4.1.2.6 of <a href="#RFC6347" class="xref">[RFC6347]</a>.</p>
+<h1 id="rfc.section.3.3">
+<a href="#rfc.section.3.3">3.3.</a> <a href="#requirements-on-the-security-context-parameters" id="requirements-on-the-security-context-parameters">Requirements on the Security Context Parameters</a>
+</h1>
+<p id="rfc.section.3.3.p.1">As collisions may lead to the loss of both confidentiality and integrity, Sender ID SHALL be unique in the set of all security contexts using the same Master Secret and Master Salt. When a trusted third party assigns identifiers (e.g. using <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>) or by using a protocol that allows the parties to negotiate locally unique identifiers in each endpoint, the Sender IDs can be very short. Sender IDs can have any length between 0-255 bytes. Note that that the empty string is a valid Sender ID and that Sender IDs of different lengths can be used with the same Common Context. E.g. the SID with value 0x00 is different from the SID with the value 0x0000. If Sender ID uniqueness cannot be guaranteed, random Sender IDs MUST be used. Random Sender IDs MUST be long enough so that the probability of collisions is negligible.</p>
+<p id="rfc.section.3.3.p.2">To enable retrieval of the right Recipient Context, the Recipient ID SHOULD be unique in the sets of all Recipient Contexts used by an endpoint.</p>
+<p id="rfc.section.3.3.p.3">While the triple (Master Secret, Master Salt, Sender ID) MUST be unique, the same Master Salt MAY be used with several Master Secrets and the same Master Secret MAY be used with several Master Salts.</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#protected-fields" id="protected-fields">Protected CoAP Message Fields</a>
+</h1>
+<p id="rfc.section.4.p.1">OSCOAP transforms a CoAP message into an OSCOAP message, and vice versa. This section defines how the CoAP message fields are protected. Note that OSCOAP protects the CoAP Request/Response layer only, and not the Messaging layer (Section 2 of <a href="#RFC7252" class="xref">[RFC7252]</a>); this means that empty CON, ACK, and RST messages are not protected. All the messages mentioned in this document refer to non-empty CON, NON, and ACK messages.</p>
+<p id="rfc.section.4.p.2">OSCOAP protects as much of the original CoAP message as possible, while still allowing proxy operations <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> <a href="#RFC8075" class="xref">[RFC8075]</a>. Message fields may either be</p>
+<p></p>
+
+<ul>
+<li>Class E: encrypted and integrity protected,</li>
+<li>Class I: integrity protected only, or</li>
+<li>Class U: unprotected.</li>
+</ul>
+<p id="rfc.section.4.p.4">This section outlines how the message fields are transferred, a detailed description of the processing is provided in <a href="#processing" class="xref">Section 7</a>. Message fields of the original CoAP message are either transferred in the header/options part of the OSCOAP message, or in the plaintext of the COSE object. Depending on which, the location of the message field in the OSCOAP message is called &#8220;outer&#8221; or &#8220;inner&#8221;:</p>
+<p></p>
+
+<ul>
+<li>Inner message field: message field included in the plaintext of the COSE object of the OSCOAP message (see <a href="#plaintext" class="xref">Section 5.1</a>). The inner message fields are by definition encrypted and integrity protected by the COSE object (Class E).</li>
+<li>Outer message field: message field included in the header or options part of the OSCOAP message. The outer message fields are not encrypted and thus visible to an intermediary, but may be integrity protected by including the message field values in the Additional Authenticated Data (AAD) of the COSE object (see <a href="#AAD" class="xref">Section 5.2</a>). I.e. outer message fields may be Class I or Class U.</li>
+</ul>
+<p id="rfc.section.4.p.6">Note that, even though the message formats are slightly different, OSCOAP complies with CoAP over unreliable transport <a href="#RFC7252" class="xref">[RFC7252]</a> as well as CoAP over reliable transport <a href="#I-D.ietf-core-coap-tcp-tls" class="xref">[I-D.ietf-core-coap-tcp-tls]</a>.</p>
+<h1 id="rfc.section.4.1">
+<a href="#rfc.section.4.1">4.1.</a> <a href="#coap-payload" id="coap-payload">CoAP Payload</a>
+</h1>
+<p id="rfc.section.4.1.p.1">The CoAP Payload SHALL be encrypted and integrity protected (Class E), and thus is an inner message field.</p>
+<p id="rfc.section.4.1.p.2">The sending endpoint writes the payload of the original CoAP message into the plaintext of the COSE object.</p>
+<p id="rfc.section.4.1.p.3">The receiving endpoint verifies and decrypts the COSE object, and recreates the payload of the original CoAP message.</p>
+<h1 id="rfc.section.4.2">
+<a href="#rfc.section.4.2">4.2.</a> <a href="#coap-header" id="coap-header">CoAP Header</a>
+</h1>
+<p id="rfc.section.4.2.p.1">Many CoAP header fields are required to be read and changed by proxies and thus cannot in general be protected between the endpoints, e.g. CoAP message layer fields such as Message ID.</p>
+<p id="rfc.section.4.2.p.2">The CoAP header field Code MUST be sent in clear to support RESTful processing, but MUST be integrity protected (Class I) to prevent an intermediary from changing, e.g. from GET to DELETE. The other CoAP header fields SHALL neither be integrity protected nor encrypted (Class U). All CoAP header fields are thus outer message fields.</p>
+<p id="rfc.section.4.2.p.3">The sending endpoint SHALL copy the header fields from the original CoAP message to the header of the OSCOAP message. The receiving endpoint SHALL copy the header fields from the OSCOAP message to the header of the decrypted CoAP message. Both sender and receiver include the CoAP header field Code in the AAD of the COSE object (see <a href="#AAD" class="xref">Section 5.2</a>).</p>
+<h1 id="rfc.section.4.3">
+<a href="#rfc.section.4.3">4.3.</a> <a href="#coap-options" id="coap-options">CoAP Options</a>
+</h1>
+<p id="rfc.section.4.3.p.1">Most options are encrypted and integrity protected (Class E), and thus inner message fields. But to allow certain proxy operations, some options have outer values, i.e. are present as options in the OSCOAP message. Certain options may have both an inner value and a potentially different outer value, where the inner value is intended for the destination endpoint and the outer value is intended for a proxy.</p>
+<p id="rfc.section.4.3.p.2">A summary of how options are protected is shown in <a href="#fig-option-protection" class="xref">Figure 4</a>. Options denoted by &#8216;x&#8217; within each class are protected and processed in the same way, but certain options denoted by &#8216;*&#8217; require special processing.</p>
+<div id="rfc.figure.4"></div>
+<div id="fig-option-protection"></div>
+<pre>
++----+----------------+---+---+---+
+| No.| Name           | E | I | U |
++----+----------------+---+---+---+
+|  1 | If-Match       | x |   |   |
+|  3 | Uri-Host       |   |   | x |
+|  4 | ETag           | x |   |   |
+|  5 | If-None-Match  | x |   |   |
+|  6 | Observe        |   | * | * |
+|  7 | Uri-Port       |   |   | x |
+|  8 | Location-Path  | x |   |   |
+| 11 | Uri-Path       | x |   |   |
+| 12 | Content-Format | x |   |   |
+| 14 | Max-Age        | * |   |   |
+| 15 | Uri-Query      | x |   |   |
+| 17 | Accept         | x |   |   |
+| 20 | Location-Query | x |   |   |
+| 23 | Block2         | * |   |   |
+| 27 | Block1         | * |   |   |
+| 28 | Size2          | * |   |   |
+| 35 | Proxy-Uri      | * |   | * |
+| 39 | Proxy-Scheme   |   |   | x |
+| 60 | Size1          | * |   |   |
++----+----------------+---+---+---+
+
+ E = Encrypt and Integrity Protect
+ I = Integrity Protect only 
+ U = Unprotected
+ * = Special
+</pre>
+<p class="figure">Figure 4: Protection of CoAP Options</p>
+<p id="rfc.section.4.3.p.3">Unless specified otherwise, CoAP options not listed in <a href="#fig-option-protection" class="xref">Figure 4</a> SHALL be encrypted and integrity protected and processed as class E options.</p>
+<p id="rfc.section.4.3.p.4">Specifications of new CoAP options SHOULD define how they are processed with OSCOAP. New COAP options SHOULD be of class E and SHOULD NOT have outer values unless a forwarding proxy needs to read that option value. If a certain option has both inner and outer values, the two values SHOULD NOT be the same.</p>
+<h1 id="rfc.section.4.3.1">
+<a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#class-e" id="class-e">Class E Options</a>
+</h1>
+<p id="rfc.section.4.3.1.p.1">For options in class E (see <a href="#fig-option-protection" class="xref">Figure 4</a>) the option value in the original CoAP message, if present, SHALL be encrypted and integrity protected between the endpoints. Hence the actions resulting from the use of such options is analogous to communicating in a protected manner directly with the endpoint. For example, a client using an If-Match option will not be served by a proxy.</p>
+<p id="rfc.section.4.3.1.p.2">The sending endpoint SHALL write the class E option from the original CoAP message into the plaintext of the COSE object.</p>
+<p id="rfc.section.4.3.1.p.3">Except for the special options (* in <a href="#fig-option-protection" class="xref">Figure 4</a>), the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change, or remove the value of an outer option.</p>
+<p id="rfc.section.4.3.1.p.4">Except for the special options, the receiving endpoint SHALL discard any outer options of class E from the OSCOAP message and SHALL write the Class E options present in the plaintext of the COSE object into the decrypted CoAP message.</p>
+<h1 id="rfc.section.4.3.1.1">
+<a href="#rfc.section.4.3.1.1">4.3.1.1.</a> <a href="#max-age" id="max-age">Max-Age</a>
+</h1>
+<p id="rfc.section.4.3.1.1.p.1">An inner Max-Age option, like other class E options, is used as defined in <a href="#RFC7252" class="xref">[RFC7252]</a> taking into account that it is not accessible to proxies.</p>
+<p id="rfc.section.4.3.1.1.p.2">Since OSCOAP binds CoAP responses to requests, a cached response would not be possible to use for any other request. To avoid unnecessary caching, a server MAY add an outer Max-Age option with value zero to OSCOAP responses (see Section 5.6.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>). The outer Max-Age option is not integrity protected.</p>
+<h1 id="rfc.section.4.3.1.2">
+<a href="#rfc.section.4.3.1.2">4.3.1.2.</a> <a href="#block-options" id="block-options">The Block Options</a>
+</h1>
+<p id="rfc.section.4.3.1.2.p.1">Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a> is an optional feature. An implementation MAY comply with <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without implementing <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
+<p id="rfc.section.4.3.1.2.p.2">The Block options (Block1, Block2, Size1, and Size2) MAY be either only inner options, only outer options or both inner and outer options. The inner and outer options are processed independently.</p>
+<h1 id="rfc.section.4.3.1.2.1">
+<a href="#rfc.section.4.3.1.2.1">4.3.1.2.1.</a> <a href="#inner-block-options" id="inner-block-options">Inner Block Options</a>
+</h1>
+<p id="rfc.section.4.3.1.2.1.p.1">The inner Block options are used for endpoint-to-endpoint secure fragmentation of payload into blocks and protection of information about the fragmentation (block number, block size, last block). In this case, the sending CoAP endpoint fragments the CoAP message as defined in <a href="#RFC7959" class="xref">[RFC7959]</a> before the message is processed by OSCOAP. The receiving CoAP endpoint first processes the OSCOAP message before processing blockwise as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
+<p id="rfc.section.4.3.1.2.1.p.2">Applications using OSCOAP with inner Block options MUST specify a security policy defining a maximum unfragmented message size for inner Block options such that messages exceeding this size SHALL be fragmented by the sending endpoint.</p>
+<p id="rfc.section.4.3.1.2.1.p.3">For blockwise request operations (using Block1) the client MUST use and process the Request-Tag as defined in Section 3 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. In particular, the rules in section 3.3.1 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a> MUST be followed, which guarantee that a specific request body is assembled only from the corresponding request blocks.</p>
+<p id="rfc.section.4.3.1.2.1.p.4">For blockwise response operations (using Block2) the server MUST use and process the ETag as defined in Section 4 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>.</p>
+<h1 id="rfc.section.4.3.1.2.2">
+<a href="#rfc.section.4.3.1.2.2">4.3.1.2.2.</a> <a href="#outer-block-options" id="outer-block-options">Outer Block Options</a>
+</h1>
+<p id="rfc.section.4.3.1.2.2.p.1">A CoAP proxy may do block fragmentation on any CoAP message (including OSCOAP messages) as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>, and thereby decompose it into multiple blocks using outer Block options. The outer block options are thus neither encrypted nor integrity protected.</p>
+<p id="rfc.section.4.3.1.2.2.p.2">To allow multiple concurrent request operations to the same server (not only same resource), a CoAP proxy should use and process the Request-Tag as specified in section 3.3.2 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>; an OSCOAP server that supports outer Block options MUST support the Request-Tag option.</p>
+<p id="rfc.section.4.3.1.2.2.p.3">An endpoint receiving an OSCOAP message with an outer Block option SHALL first process this option according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, or the cumulated message size of the blocks exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the OSCOAP message continues as defined in this document.</p>
+<h1 id="rfc.section.4.3.2">
+<a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#class-i" id="class-i">Class I Options</a>
+</h1>
+<p id="rfc.section.4.3.2.p.1">A Class I option is an outer option and hence visible in the options part of the OSCOAP message. Unless otherwise specified, Class I options SHALL be integrity protected between the endpoints, see (<a href="#AAD" class="xref">Section 5.2</a>). The sending endpoint SHALL encode the Class I options in the OSCOAP message as described in <a href="#outer-options" class="xref">Section 4.3.4</a>.</p>
+<h1 id="rfc.section.4.3.3">
+<a href="#rfc.section.4.3.3">4.3.3.</a> <a href="#class-u" id="class-u">Class U Options</a>
+</h1>
+<p id="rfc.section.4.3.3.p.1">Options in Class U have outer values and are used to support proxy operations. Unless otherwise specified, the sending endpoint SHALL encode the Class U options in the options part of the OSCOAP message as described in <a href="#outer-options" class="xref">Section 4.3.4</a>.</p>
+<h1 id="rfc.section.4.3.3.1">
+<a href="#rfc.section.4.3.3.1">4.3.3.1.</a> <a href="#uri-host-uri-port-and-proxy-scheme" id="uri-host-uri-port-and-proxy-scheme">Uri-Host, Uri-Port, and Proxy-Scheme</a>
+</h1>
+<p id="rfc.section.4.3.3.1.p.1">The sending endpoint SHALL copy Uri-Host, Uri-Port, and Proxy-Scheme from the original CoAP message to the options part of the OSCOAP message. When Uri-Host, Uri-Port, or Proxy-Scheme options are present, Proxy-Uri is not used <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
+<h1 id="rfc.section.4.3.3.2">
+<a href="#rfc.section.4.3.3.2">4.3.3.2.</a> <a href="#proxy-uri" id="proxy-uri">Proxy-Uri</a>
+</h1>
+<p id="rfc.section.4.3.3.2.p.1">Proxy-Uri, when present, is split by OSCOAP into class U options and class E options, which are processed accordingly. When Proxy-Uri is used in the original CoAP message, Uri-* are not present <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
+<p id="rfc.section.4.3.3.2.p.2">The sending endpoint SHALL first decompose the Proxy-Uri value of the original CoAP message into the Proxy-Scheme, Uri-Host, Uri-Port, Uri-Path and Uri-Query options (if present) according to section 6.4 of <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
+<p id="rfc.section.4.3.3.2.p.3">Uri-Path and Uri-Query are class E options and MUST be protected and processed as if obtained from the original CoAP message, see <a href="#class-e" class="xref">Section 4.3.1</a>.</p>
+<p id="rfc.section.4.3.3.2.p.4">The value of the Proxy-Uri option of the OSCOAP message MUST be replaced with Proxy-Scheme, Uri-Host and Uri-Port options (if present) composed according to section 6.5 of <a href="#RFC7252" class="xref">[RFC7252]</a> and MUST be processed as a class U option, see <a href="#class-u" class="xref">Section 4.3.3</a>.</p>
+<p id="rfc.section.4.3.3.2.p.5">Note that replacing the Proxy-Uri value with the Proxy-Scheme and Uri-* options works by design for all CoAP URIs. OSCOAP-aware HTTP servers should not use the userinfo component of the HTTP URI (as defined in section 3.2.1. of <a href="#RFC3986" class="xref">[RFC3986]</a>), so that this type of replacement is possible in the presence of CoAP-to-HTTP proxies. In other documents specifying cross-protocol proxying behavior using different URI structures, it is expected that the authors will create Uri-* options that allow decomposing the Proxy-Uri, and specify in which OSCOAP class they are.</p>
+<p id="rfc.section.4.3.3.2.p.6">An example of how Proxy-Uri is processed is given here. Assume that the original CoAP message contains:</p>
+<p></p>
+
+<ul><li>Proxy-Uri = &#8220;coap://example.com/resource?q=1&#8221;</li></ul>
+<p id="rfc.section.4.3.3.2.p.8">During OSCOAP processing, Proxy-Uri is split into:</p>
+<p></p>
+
+<ul>
+<li>Proxy-Scheme = &#8220;coap&#8221;</li>
+<li>Uri-Host = &#8220;example.com&#8221;</li>
+<li>Uri-Port = &#8220;5683&#8221;</li>
+<li>Uri-Path = &#8220;resource&#8221;</li>
+<li>Uri-Query = &#8220;q=1&#8221;</li>
+</ul>
+<p id="rfc.section.4.3.3.2.p.10">Uri-Path and Uri-Query follow the processing defined in <a href="#class-e" class="xref">Section 4.3.1</a>, and are thus encrypted and transported in the COSE object. The remaining options are composed into the Proxy-Uri included in the options part of the OSCOAP message, which has value:</p>
+<p></p>
+
+<ul><li>Proxy-Uri = &#8220;coap://example.com&#8221;</li></ul>
+<h1 id="rfc.section.4.3.3.3">
+<a href="#rfc.section.4.3.3.3">4.3.3.3.</a> <a href="#observe" id="observe">Observe</a>
+</h1>
+<p id="rfc.section.4.3.3.3.p.1">Observe <a href="#RFC7641" class="xref">[RFC7641]</a> is an optional feature. An implementation MAY support <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without supporting <a href="#RFC7641" class="xref">[RFC7641]</a>. The Observe option as used here targets the requirements on forwarding of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> (Section 2.2.1.2).</p>
+<p id="rfc.section.4.3.3.3.p.2">In order for a proxy to support forwarding of Observe messages, there must be an Observe option present in options part of the OSCOAP message (<a href="#RFC7641" class="xref">[RFC7641]</a>), so Observe must have an outer value.</p>
+<p id="rfc.section.4.3.3.3.p.3">To secure the order of the notifications, the client SHALL verify that the Partial IV of a received notification is greater than any previously received Partial IV bound to the Observe request. If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with and empty ACK.</p>
+<p id="rfc.section.4.3.3.3.p.4">The Observe option in the CoAP request may be legitimately removed by a proxy. If the Observe option is removed from a CoAP request by a proxy, then the server can still verify the request (as a non-Observe request), and produce a non-Observe response. If the OSCOAP client receives a response to an Observe request without an outer Observe value, then it MUST verify the response as a non-Observe response. (The reverse case is covered in the verification of the response <a href="#processing" class="xref">Section 7</a>.)</p>
+<h1 id="rfc.section.4.3.4">
+<a href="#rfc.section.4.3.4">4.3.4.</a> <a href="#outer-options" id="outer-options">Outer Options in the OSCOAP Message</a>
+</h1>
+<p id="rfc.section.4.3.4.p.1">All options with outer values present in the OSCOAP message, including the Object-Security option, SHALL be encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included outer option value.</p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#cose-object" id="cose-object">The COSE Object</a>
+</h1>
+<p id="rfc.section.5.p.1">This section defines how to use COSE <a href="#RFC8152" class="xref">[RFC8152]</a> to wrap and protect data in the original CoAP message. OSCOAP uses the untagged COSE_Encrypt0 structure with an Authenticated Encryption with Additional Data (AEAD) algorithm. The key lengths, IV length, and maximum sequence number are algorithm dependent.</p>
+<p id="rfc.section.5.p.2">The AEAD algorithm AES-CCM-64-64-128 defined in Section 10.2 of <a href="#RFC8152" class="xref">[RFC8152]</a> is mandatory to implement. For AES-CCM-64-64-128 the length of Sender Key and Recipient Key is 128 bits, the length of of nonce and Context IV is 7 bytes. The maximum Sequence Number is specified in <a href="#sec-considerations" class="xref">Section 11</a>.</p>
+<p id="rfc.section.5.p.3">The nonce is constructed as described in Section 3.1 of <a href="#RFC8152" class="xref">[RFC8152]</a>, i.e. by padding the partial IV (Sequence Number in network byte order) with zeroes and XORing it with the Context IV, with the following addition: The most significant bit in the first byte of the Context IV SHALL be flipped for responses, in case there is a single response (not Observe). In this way, the partial IV can be reused for the corresponding responses, which reduces the size of the response. For detailed processing instructions, see <a href="#processing" class="xref">Section 7</a>.</p>
+<p id="rfc.section.5.p.4">We denote by Plaintext the data that is encrypted and integrity protected, and by Additional Authenticated Data (AAD) the data that is integrity protected only.</p>
+<p id="rfc.section.5.p.5">The COSE Object SHALL be a COSE_Encrypt0 object with fields defined as follows</p>
+<p></p>
+
+<ul>
+<li>The &#8220;protected&#8221; field is empty.</li>
+<li>The &#8220;unprotected&#8221; field includes:  <ul>
+<li>The &#8220;Partial IV&#8221; parameter. The value is set to the Sequence Number. The Partial IV SHALL be of minimum length needed to encode the sequence number. This parameter SHALL be present in requests. In case of Observe (<a href="#observe" class="xref">Section 4.3.3.3</a>) the Partial IV SHALL be present in responses, and otherwise the Partial IV SHALL NOT be present in responses.</li>
+<li>The &#8220;kid&#8221; parameter. The value is set to the Sender ID (see <a href="#context" class="xref">Section 3</a>). This parameter SHALL be present in requests and SHALL NOT be present in responses.</li>
+</ul>
+</li>
+<li>The &#8220;ciphertext&#8221; field is computed from the Plaintext (see <a href="#plaintext" class="xref">Section 5.1</a>) and the Additional Authenticated Data (AAD) (see <a href="#AAD" class="xref">Section 5.2</a>) following Section 5.2 of <a href="#RFC8152" class="xref">[RFC8152]</a>.</li>
+</ul>
+<p id="rfc.section.5.p.7">The encryption process is described in Section 5.3 of <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
+<h1 id="rfc.section.5.1">
+<a href="#rfc.section.5.1">5.1.</a> <a href="#plaintext" id="plaintext">Plaintext</a>
+</h1>
+<p id="rfc.section.5.1.p.1">The Plaintext is formatted as a CoAP message without Header (see <a href="#fig-plaintext" class="xref">Figure 5</a>) consisting of:</p>
+<p></p>
+
+<ul>
+<li>all Class E option values <a href="#class-e" class="xref">Section 4.3.1</a> present in the original CoAP message (see <a href="#coap-options" class="xref">Section 4.3</a>). The options are encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included Class E option; and</li>
+<li>the Payload of original CoAP message, if present, and in that case prefixed by the one-byte Payload Marker (0xFF).</li>
+</ul>
+<div id="rfc.figure.5"></div>
+<div id="fig-plaintext"></div>
+<pre>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|    Class E options (if any) ...                             
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|1 1 1 1 1 1 1 1|    Payload (if any) ...                        
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ (only if there 
+   is payload)
+</pre>
+<p class="figure">Figure 5: Plaintext</p>
+<h1 id="rfc.section.5.2">
+<a href="#rfc.section.5.2">5.2.</a> <a href="#AAD" id="AAD">Additional Authenticated Data</a>
+</h1>
+<p id="rfc.section.5.2.p.1">The external_aad SHALL be a CBOR array as defined below:</p>
+<pre>
+external_aad = [
+   version : uint,
+   code : uint,
+   options : bstr,
+   alg : int,
+   request_kid : bstr,
+   request_piv : bstr
+]
+</pre>
+<p id="rfc.section.5.2.p.2">where:</p>
+<p></p>
+
+<ul>
+<li>version: contains the OSCOAP version number. Implementations of this specification MUST set this field to 1. Other values are reserved for future versions.</li>
+<li>code: contains is the CoAP Code of the original CoAP message, as defined in Section 3 of <a href="#RFC7252" class="xref">[RFC7252]</a>.</li>
+<li>options: contains the Class I options <a href="#class-i" class="xref">Section 4.3.2</a>&#160;present in the original CoAP message encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included class I option</li>
+<li>alg: contains the AEAD Algorithm from the security context used for the exchange (see <a href="#context-definition" class="xref">Section 3.1</a>).</li>
+<li>request_kid: contains the value of the &#8216;kid&#8217; in the COSE object of the request (see Section 5).</li>
+<li>request_piv: contains the value of the &#8216;Partial IV&#8217; in the COSE object of the request (see Section 5).</li>
+</ul>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#sequence-numbers" id="sequence-numbers">Sequence Numbers, Replay, Message Binding, and Freshness</a>
+</h1>
+<p id="rfc.section.6.p.1">Sequence numbers and replay window are initialized as defined in <a href="#initial-replay" class="xref">Section 3.2.2</a>.</p>
+<h1 id="rfc.section.6.1">
+<a href="#rfc.section.6.1">6.1.</a> <a href="#nonce-uniqueness" id="nonce-uniqueness">AEAD Nonce Uniqueness</a>
+</h1>
+<p id="rfc.section.6.1.p.1">An AEAD nonce MUST NOT be used more than once per AEAD key. In order to assure unique nonces, each Sender Context contains a Sequence Number used to protect requests, and - in case of Observe - responses. The maximum sequence number is algorithm dependent, see <a href="#sec-considerations" class="xref">Section 11</a>. If the Sequence Number exceeds the maximum sequence number, the endpoint MUST NOT process any more messages with the given Sender Context. The endpoint SHOULD acquire a new security context (and consequently inform the other endpoint) before this happens. The latter is out of scope of this document.</p>
+<h1 id="rfc.section.6.2">
+<a href="#rfc.section.6.2">6.2.</a> <a href="#replay-protection" id="replay-protection">Replay Protection</a>
+</h1>
+<p id="rfc.section.6.2.p.1">In order to protect from replay of requests, the server&#8217;s Recipient Context contains a Replay Window. A server SHALL verify that a Partial IV received in the COSE object has not been received before in the Recipient Context. If this verification fails and the message received is a CON message, the server SHALL respond with a 5.03 Service Unavailable error message with the option Max-Age set to 0. The diagnostic payload MAY contain the &#8220;Replay protection failed&#8221; string.</p>
+<p id="rfc.section.6.2.p.2">The size and type of the Replay Window depends on the use case and lower protocol layers. In case of reliable and ordered transport from endpoint to endpoint, the server MAY just store the last received Partial IV and require that newly received Partial IVs equals the last received Partial IV + 1.</p>
+<p id="rfc.section.6.2.p.3">Reponses are protected against replay as they are cryptographically bound to the request. In the case of Observe, only strictly increasing Partial IVs are accepted. If this verification fails and the message received is a CON message, the client SHALL respond with an empty ACK and stop processing the response.</p>
+<h1 id="rfc.section.6.3">
+<a href="#rfc.section.6.3">6.3.</a> <a href="#replay-state" id="replay-state">Sequence Number and Replay Window State</a>
+</h1>
+<p id="rfc.section.6.3.p.1">To prevent reuse of the Nonce/Sequence Number with the same key, or from accepting replayed messages, a node needs to handle the situation of suddenly losing sequence number and replay window state in RAM, e.g. as a result of a reboot.</p>
+<p id="rfc.section.6.3.p.2">After boot, a node MAY reject to use existing security contexts from before it booted and MAY establish a new security context with each party it communicates, e.g. using ACE <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>. However, establishing a fresh security context may have a non-negligible cost in terms of e.g. power consumption.</p>
+<p id="rfc.section.6.3.p.3">If a stored security context is to be used after reboot, then the node MUST NOT reuse a previous Sequence Number and MUST NOT accept previously accepted messages.</p>
+<h1 id="rfc.section.6.3.1">
+<a href="#rfc.section.6.3.1">6.3.1.</a> <a href="#the-basic-case" id="the-basic-case">The Basic Case</a>
+</h1>
+<p id="rfc.section.6.3.1.p.1">To prevent reuse of Sequence Number, the node MAY perform the following procedure during normal operations:</p>
+<p></p>
+
+<ul><li>Before sending a message, the client stores in persistent memory a sequence number associated to the stored security context higher than any sequence number which has been or are being sent using this security context. After boot, the client does not use any lower sequence number in a request than what was persistently stored with that security context.  <ul><li>Storing to persistent memory can be costly. Instead of storing a sequence number for each request, the client may store Seq + K to persistent memory every K requests, where Seq is the current sequence number and K &gt; 1. This is a trade-off between the number of storage operations and efficient use of sequence numbers.</li></ul>
+</li></ul>
+<p id="rfc.section.6.3.1.p.3">To prevent accepting replay of previously received messages, the node MAY perform the following procedure:</p>
+<p></p>
+
+<ul><li>After boot, before verifying a message using a security context stored before boot, the server synchronizes the replay window so that no old messages are being accepted. The server uses the Repeat option <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a> for synchronizing the replay window: For each stored security context, the first time after boot the server receives an OSCOAP request, it generates a pseudo-random nonce and responds with the Repeat option set to the nonce as described in <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. If the server receives a repeated OSCOAP request containing the Repeat option and the same nonce, and if the server can verify the request, then the sequence number obtained in the repeated message is set as the lower limit of the replay window.</li></ul>
+<h1 id="rfc.section.6.3.2">
+<a href="#rfc.section.6.3.2">6.3.2.</a> <a href="#the-observe-case" id="the-observe-case">The Observe Case</a>
+</h1>
+<p id="rfc.section.6.3.2.p.1">To prevent reuse of Sequence Number in case of Observe, the node MAY perform the following procedure during normal operations:</p>
+<p></p>
+
+<ul><li>Before sending a notification, the server stores in persistent memory a sequence number associated to the stored security context higher than any sequence number for which a notification has been or are being sent using this security context. After boot, the server does not use any lower sequence number in an Observe response than what was persistently stored with that security context.  <ul><li>Storing to persistent memory can be costly. Instead of storing a sequence number for each notification, the server may store Seq + K to persistent memory every K requests, where Seq is the current sequence number and K &gt; 1. This is a trade-off between the number of storage operations and efficient use of sequence numbers.</li></ul>
+</li></ul>
+<p id="rfc.section.6.3.2.p.3">Note that a client MAY continue an ongoing observation after reboot using a stored security context. With Observe, the client can only verify the order of the notifications, as they may be delayed. If the client wants to synchronize with a server resource it MAY restart an observation.</p>
+<h1 id="rfc.section.6.4">
+<a href="#rfc.section.6.4">6.4.</a> <a href="#freshness" id="freshness">Freshness</a>
+</h1>
+<p id="rfc.section.6.4.p.1">For responses without Observe, OSCOAP provides absolute freshness. For requests, and responses with Observe, OSCOAP provides relative freshness in the sense that the sequence numbers allow a recipient to determine the relative order of messages.</p>
+<p id="rfc.section.6.4.p.2">For applications having stronger demands on freshness (e.g. control of actuators), OSCOAP needs to be augmented with mechanisms providing absolute freshness <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>.</p>
+<h1 id="rfc.section.6.5">
+<a href="#rfc.section.6.5">6.5.</a> <a href="#delay-and-mismatch-attacks" id="delay-and-mismatch-attacks">Delay and Mismatch Attacks</a>
+</h1>
+<p id="rfc.section.6.5.p.1">In order to prevent response delay and mismatch attacks <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a> from on-path attackers and compromised proxies, OSCOAP binds responses to the request by including the request&#8217;s ID (Sender ID or Recipient ID) and sequence number in the AAD of the response. The server therefore needs to store the request&#8217;s ID (Sender ID or Recipient ID) and sequence number until all responses have been sent.</p>
+<h1 id="rfc.section.7">
+<a href="#rfc.section.7">7.</a> <a href="#processing" id="processing">Processing</a>
+</h1>
+<p id="rfc.section.7.p.1">This section describes the OSCOAP message processing. An illustration of the nonce generation used in the processing is given in <a href="#nonce-generation" class="xref">Section 7.5</a>.</p>
+<h1 id="rfc.section.7.1">
+<a href="#rfc.section.7.1">7.1.</a> <a href="#protecting-the-request" id="protecting-the-request">Protecting the Request</a>
+</h1>
+<p id="rfc.section.7.1.p.1">Given a CoAP request, the client SHALL perform the following steps to create an OSCOAP request:</p>
+<p></p>
+
+<ol>
+<li>Retrieve the Sender Context associated with the target resource.</li>
+<li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
+<li>Compose the AEAD nonce by XORing the Context IV with the partial IV (Sequence Number in network byte order).</li>
+<li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
+<li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.3.4</a>.</li>
+<li>Store the association Token - Security Context. The client SHALL be able to find the Recipient Context from the Token in the response.</li>
+<li>Increment the Sequence Number by one.</li>
+</ol>
+<h1 id="rfc.section.7.2">
+<a href="#rfc.section.7.2">7.2.</a> <a href="#verifying-the-request" id="verifying-the-request">Verifying the Request</a>
+</h1>
+<p id="rfc.section.7.2.p.1">A server receiving a request containing the Object-Security option SHALL perform the following steps:</p>
+<p></p>
+
+<ol>
+<li>Process outer Block options according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the request have been received, see <a href="#block-options" class="xref">Section 4.3.1.2</a>.</li>
+<li>Decompress the COSE Object (<a href="#compression" class="xref">Section 8</a>) and retrieve the Recipient Context associated with the Recipient ID in the &#8216;kid&#8217; parameter. If the request is a CON message, and:  <ul>
+<li>either the decompression or the COSE message fails to decode, the server SHALL respond with a 4.02 Bad Option error message. The diagnostic payload SHOULD contain the string &#8220;Failed to decode COSE&#8221;.</li>
+<li>the server fails to retrieve a Recipient Context with Recipient ID corresponding to the &#8216;kid&#8217; parameter received, the server SHALL respond with a 4.01 Unauthorized error message. The diagnostic payload MAY contain the string &#8220;Security context not found&#8221;.</li>
+</ul>
+</li>
+</ol>
+<p id="rfc.section.7.2.p.3">If the request is a NON message and either the decompression or the COSE message fails to decode, or the server fails to retrieve a Recipient Context with Recipient ID corresponding to the &#8216;kid&#8217; parameter received, then the server SHALL stop processing the request.</p>
+<p></p>
+
+<ol>
+<li>Verify the Sequence Number in the &#8216;Partial IV&#8217; parameter, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
+<li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
+<li>Compose the AEAD nonce by XORing the Context IV with the padded &#8216;Partial IV&#8217; parameter, received in the COSE Object.</li>
+<li>Decrypt the COSE object using the Recipient Key.  <ul>
+<li>If decryption fails, the server MUST stop processing the request and, if the request is a CON message, the server MUST respond with a 4.00 Bad Request error message. The diagnostic payload MAY contain the &#8220;Decryption failed&#8221; string.</li>
+<li>If decryption succeeds, update the Recipient Replay Window, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
+</ul>
+</li>
+<li>Add decrypted options and payload to the decrypted request, processing the E options as described in (<a href="#protected-fields" class="xref">Section 4</a>). The Object-Security option is removed.</li>
+<li>The decrypted CoAP request is processed according to <a href="#RFC7252" class="xref">[RFC7252]</a>
+</li>
+</ol>
+<h1 id="rfc.section.7.3">
+<a href="#rfc.section.7.3">7.3.</a> <a href="#protecting-the-response" id="protecting-the-response">Protecting the Response</a>
+</h1>
+<p id="rfc.section.7.3.p.1">Given a CoAP response, the server SHALL perform the following steps to create an OSCOAP response:</p>
+<p></p>
+
+<ol>
+<li>Retrieve the Sender Context in the Security Context used to verify the request.</li>
+<li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
+<li>Compose the AEAD nonce  <ul>
+<li>If Observe is not used, compose the AEAD nonce by XORing the Context IV (with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
+<li>If Observe is used, compose the AEAD nonce by XORing the Context IV with the Partial IV of the response (Sequence Number in network byte order).</li>
+</ul>
+</li>
+<li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
+<li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.3.4</a>.</li>
+<li>If Observe is used, increment the Sequence Number by one.</li>
+</ol>
+<h1 id="rfc.section.7.4">
+<a href="#rfc.section.7.4">7.4.</a> <a href="#verifying-the-response" id="verifying-the-response">Verifying the Response</a>
+</h1>
+<p id="rfc.section.7.4.p.1">A client receiving a response containing the Object-Security option SHALL perform the following steps:</p>
+<p></p>
+
+<ol>
+<li>Process outer Block options according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, see <a href="#block-options" class="xref">Section 4.3.1.2</a>.</li>
+<li>Retrieve the Recipient Context associated with the Token. Decompress the COSE Object (<a href="#compression" class="xref">Section 8</a>). If the response is a CON message and either the decompression or the COSE message fails to decode, then the client SHALL send an empty ACK back and stop processing the response.  If the response is a NON message and any of the previous conditions appear, then the client SHALL simply stop processing the response.</li>
+</ol>
+<p></p>
+
+<ol>
+<li>For Observe notifications, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers" class="xref">Section 6</a>. If the client receives a notification for which no Observe request was sent, the client SHALL stop processing the response and, in the case of CON send an empty ACK back.</li>
+<li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
+<li>Compose the AEAD nonce  <ul>
+<li>If the Observe option is not present in the response, compose the AEAD nonce by XORing the Context IV (with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
+<li>If the Observe option is present in the response, compose the AEAD nonce by XORing the Context IV with the padded Partial IV parameter from the response.</li>
+</ul>
+</li>
+<li>Decrypt the COSE object using the Recipient Key.  <ul>
+<li>If decryption fails, the client MUST stop processing the response and, if the response is a CON message, the client MUST respond with an empty ACK back.</li>
+<li>If decryption succeeds and Observe is used, update the Recipient Replay Window, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
+</ul>
+</li>
+<li>Add decrypted options or payload to the decrypted response overwriting any outer E options (see <a href="#protected-fields" class="xref">Section 4</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the sequence number.</li></ul>
+</li>
+<li>The decrypted CoAP response is processed according to <a href="#RFC7252" class="xref">[RFC7252]</a>
+</li>
+</ol>
+<h1 id="rfc.section.7.5">
+<a href="#rfc.section.7.5">7.5.</a> <a href="#nonce-generation" id="nonce-generation">Nonce generation examples</a>
+</h1>
+<p id="rfc.section.7.5.p.1">This section illustrates the nonce generation in the different processing steps. Assume that:</p>
+<p></p>
+
+<ul>
+<li>Endpoint A has the following security context parameters: Sender Key=K1, Partial IV=PIV1 and Recipient Key=K2, Partial IV=PIV2.</li>
+<li>Endpoint B has the following security context parameters: Sender Key=K2, Partial IV=PIV2 and Recipient Key=K1, Partial IV=PIV1.</li>
+</ul>
+<p id="rfc.section.7.5.p.3">The examples below illustrate the key and nonce used with the given parameters above.</p>
+<p id="rfc.section.7.5.p.4">Example 1. Endpoint A as client and endpoint B as server.</p>
+<p></p>
+
+<ul>
+<li>Example 1a. Ordinary request/response.  <ul>
+<li>Endpoint A sends a request, which is verified by Endpoint B: key=K1, nonce=Context IV XOR PIV1.</li>
+<li>Endpoint B sends a response, which is verified by Endpoint A: key=K2, nonce=BF(Context IV) XOR PIV1, where BF(.) means that the most significant bit in the first byte is flipped.</li>
+</ul>
+</li>
+<li>Example 1b. Observe.  <ul>
+<li>Endpoint A sends a request, which is verified by Endpoint B: key=K1, nonce= Context IV XOR PIV1.</li>
+<li>Endpoint B sends a notification, which is verified by Endpoint A: key=K2, nonce= Context IV XOR PIV2.</li>
+</ul>
+</li>
+</ul>
+<p id="rfc.section.7.5.p.6">Example 2. Endpoint B as client and endpoint A as server.</p>
+<p></p>
+
+<ul>
+<li>Example 2a. Ordinary request/response.  <ul>
+<li>Endpoint B sends a request, which is verified by Endpoint A: key=K2, nonce= Context IV XOR PIV2.</li>
+<li>Endpoint A sends a response, which is verified by Endpoint B: key=K1, nonce=BF(Context IV) XOR PIV2, where BF(.) means that the most significant bit in the first byte is flipped.</li>
+</ul>
+</li>
+<li>Example 2b. Observe.  <ul>
+<li>Endpoint B sends a request, which is verified by Endpoint A: key=K2, nonce= Context IV XOR PIV2.</li>
+<li>Endpoint A sends a notification, which is verified by Endpoint B: key=K1, nonce= Context IV XOR PIV1.</li>
+</ul>
+</li>
+</ul>
+<p id="rfc.section.7.5.p.8">Note that endpoint A always uses key K1 for encrypting and K2 for verification, and conversely for endpoint B.</p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> <a href="#compression" id="compression">OSCOAP Compression</a>
+</h1>
+<p id="rfc.section.8.p.1">The Concise Binary Object Representation (CBOR) <a href="#RFC7049" class="xref">[RFC7049]</a> combines very small message sizes with extensibility. The CBOR Object Signing and Encryption (COSE) <a href="#RFC8152" class="xref">[RFC8152]</a> uses CBOR to create compact encoding of signed and encrypted data. COSE is however constructed to support a large number of different stateless use cases, and is not fully optimized for use as a stateful security protocol, leading to a larger than necessary message expansion. In this section, we define a simple stateless compression mechanism for OSCOAP, which significantly reduces the per-packet overhead.</p>
+<h1 id="rfc.section.8.1">
+<a href="#rfc.section.8.1">8.1.</a> <a href="#encoding-of-the-object-security-option" id="encoding-of-the-object-security-option">Encoding of the Object-Security Option</a>
+</h1>
+<p id="rfc.section.8.1.p.1">The value of the Object-Security option SHALL be encoded as follows:</p>
+<p></p>
+
+<ul>
+<li>The first byte encodes a set of flags and the length of the Partial IV parameter.  <ul>
+<li>The three least significant bits encode the Partial IV size n. If their value is 0, the Partial IV is not present in the compressed message.</li>
+<li>The fourth least significant bit k is set to 1 if the kid is present in the compressed message.</li>
+<li>The fifth-eighth least significant bits (= most significant half-byte) are reserved and SHALL be set to zero when not in use.</li>
+</ul>
+</li>
+<li>The following n bytes encode the value of the Partial IV, if the Partial IV is present (n &gt; 0).</li>
+<li>The following 1 byte encodes the kid size m, if the kid is present (k = 1).</li>
+<li>The following m bytes encode the value of the kid, if the kid is present (k = 1).</li>
+<li>The remaining bytes encode the ciphertext.</li>
+</ul>
+<pre>
+ 7 6 5 4 3 2 1 0   
++-+-+-+-+-+-+-+-+  k: kid flag bit
+|0 0 0 0|k|  n  |  n: Partial IV size (3 bits)
++-+-+-+-+-+-+-+-+
+</pre>
+<p id="rfc.section.8.1.p.3">The presence of Partial IV and kid in requests and responses is specified in <a href="#cose-object" class="xref">Section 5</a>, and summarized in <a href="#fig-byte-flag" class="xref">Figure 6</a>.</p>
+<div id="rfc.figure.6"></div>
+<div id="fig-byte-flag"></div>
+<pre>
++--------------------------+-----+-----+
+|                          |  k  |  n  |
++--------------------------+-----+-----+
+| Request                  |  1  | &gt; 0 |
+| Response without Observe |  0  |   0 |
+| Response with Observe    |  0  | &gt; 0 |
++--------------------------+-----+-----+
+</pre>
+<p class="figure">Figure 6: Flag byte for OSCOAP compression</p>
+<h1 id="rfc.section.8.2">
+<a href="#rfc.section.8.2">8.2.</a> <a href="#compression-examples" id="compression-examples">Compression Examples</a>
+</h1>
+<p id="rfc.section.8.2.p.1">This section provides examples of COSE Objects before and after OSCOAP compression.</p>
+<h1 id="rfc.section.8.2.1">
+<a href="#rfc.section.8.2.1">8.2.1.</a> <a href="#example-request" id="example-request">Example: Request</a>
+</h1>
+<p id="rfc.section.8.2.1.p.1">Before compression:</p>
+<pre>
+[
+h'',
+{ 4:h'25', 6:h'05' },
+h'aea0155667924dff8a24e4cb35b9'
+]
+
+0x83 40 a2 04 41 25 06 41 05 4e ae a0 15 56 67 92
+4d ff 8a 24 e4 cb 35 b9 (24 bytes)
+</pre>
+<p id="rfc.section.8.2.1.p.2">After compression:</p>
+<p id="rfc.section.8.2.1.p.3">First byte: 0b00001001 = 0x09</p>
+<pre>
+0x09 05 01 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
+35 b9 (18 bytes)
+</pre>
+<h1 id="rfc.section.8.2.2">
+<a href="#rfc.section.8.2.2">8.2.2.</a> <a href="#example-response-without-observe" id="example-response-without-observe">Example: Response (without Observe)</a>
+</h1>
+<p id="rfc.section.8.2.2.p.1">Before compression:</p>
+<pre>
+[
+h'',
+{},
+h'aea0155667924dff8a24e4cb35b9'
+]
+
+0x83 40 a0 4e ae a0 15 56 67 92 4d ff 8a 24 e4 cb
+35 b9 (18 bytes)
+</pre>
+<p id="rfc.section.8.2.2.p.2">After compression:</p>
+<p id="rfc.section.8.2.2.p.3">First byte: 0b00000000 = 0x00</p>
+<pre>
+0x00 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
+(15 bytes)
+</pre>
+<h1 id="rfc.section.8.2.3">
+<a href="#rfc.section.8.2.3">8.2.3.</a> <a href="#example-response-with-observe" id="example-response-with-observe">Example: Response (with Observe)</a>
+</h1>
+<p id="rfc.section.8.2.3.p.1">Before compression:</p>
+<pre>
+[
+h'',
+{ 6:h'07' },
+h'aea0155667924dff8a24e4cb35b9'
+]
+
+0x83 40 a1 06 41 07 4e ae a0 15 56 67 92 4d ff
+8a 24 e4 cb 35 b9 (21 bytes)
+</pre>
+<p id="rfc.section.8.2.3.p.2">After compression:</p>
+<p id="rfc.section.8.2.3.p.3">First byte: 0b00000001 = 0x01</p>
+<pre>
+0x01 07 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
+(16 bytes)
+</pre>
+<h1 id="rfc.section.9">
+<a href="#rfc.section.9">9.</a> <a href="#web-linking" id="web-linking">Web Linking</a>
+</h1>
+<p id="rfc.section.9.p.1">The use of OSCOAP MAY be indicated by a target attribute &#8220;osc&#8221; in a web link <a href="#RFC5988" class="xref">[RFC5988]</a> to a CoAP resource. This attribute is a hint indicating that the destination of that link is to be accessed using OSCOAP. Note that this is simply a hint, it does not include any security context material or any other information required to run OSCOAP.</p>
+<p id="rfc.section.9.p.2">A value MUST NOT be given for the &#8220;osc&#8221; attribute; any present value MUST be ignored by parsers. The &#8220;osc&#8221; attribute MUST NOT appear more than once in a given link-value; occurrences after the first MUST be ignored by parsers.</p>
+<h1 id="rfc.section.10">
+<a href="#rfc.section.10">10.</a> <a href="#http-coap-mapping" id="http-coap-mapping">HTTP-CoAP Mapping</a>
+</h1>
+<p id="rfc.section.10.p.1">As requested in Section 1 of <a href="#RFC8075" class="xref">[RFC8075]</a>, this section describes the HTTP mapping for the OSCOAP protocol extension of CoAP.</p>
+<p id="rfc.section.10.p.2">The presence and content of the Object-Security option, both in requests and responses, is expressed in a HTTP header field named Object-Security in the mapped request or response. The value of the field is the value of the CoAP Object-Security option in base64url encoding without padding (see <a href="#RFC7515" class="xref">[RFC7515]</a> Appendix C for implementation notes for this encoding).</p>
+<p id="rfc.section.10.p.3">In addition, whenever the Object-Security field is present, the protected message&#8217;s code is expressed in a HTTP header field named CoAP-Code in dotted code number notation with leading zero. When converting an HTTP request or response to CoAP, the code in the CoAP-Code field gets used in the CoAP message, and the response code mapping rules (<a href="#RFC8075" class="xref">[RFC8075]</a> Section 7) are not applied.</p>
+<p id="rfc.section.10.p.4">Invalid base64url data, the absence of the CoAP-Code field or a CoAP-Code field value that cannot be expressed as a CoAP code byte constitute an error, and MUST result in a 4.02 Bad Option or 400 Bad Request, depending on the protocol used in the request. If any mapper receives an Object-Security header, it MUST verify that the code classes match to the extent of being a request (CoAP code class 0 mapped to an HTTP request) or a response (CoAP code classes 1-5 mapped to a HTTP response) code.</p>
+<p id="rfc.section.10.p.5">Example:</p>
+<pre>
+[HTTP request -- Before object security processing]
+
+  GET /hc/coap://device.local/orders HTTP/1.1
+  Host: proxy.local
+
+[HTTP request -- HTTP Client to Proxy]
+
+  GET /hc/coap://device.local/ HTTP/1.1
+  Host: proxy.local
+  CoAP-Code: 0.01
+  Object-Security: CQcBE2H3D9KXsQ
+
+[CoAP request -- Proxy to CoAP Server]
+
+  GET /
+  Uri-Host: device.local
+  Object-Security: 09 07 01 13 61 f7 0f d2 97 b1 [binary]
+
+[CoAP response -- CoAP Sever to Proxy]
+
+  2.05 Content
+  Object-Security: [empty]
+  Payload: 00 31 d1 fc f6 70 fb 0c 1d d5 ... [binary]
+
+[HTTP response -- Proxy to HTTP Client]
+
+  HTTP/1.1 200 OK
+  Object-Security: [empty]
+  CoAP-Code: 2.05
+  Body: 00 31 d1 fc f6 70 fb 0c 1d d5 ... [binary]
+
+[HTTP response -- After object security processing]
+
+  HTTP/1.1 200 OK
+  Body: Exterminate! Exterminate!
+</pre>
+<h1 id="rfc.section.11">
+<a href="#rfc.section.11">11.</a> <a href="#sec-considerations" id="sec-considerations">Security Considerations</a>
+</h1>
+<p id="rfc.section.11.p.1">In scenarios with intermediary nodes such as proxies or brokers, transport layer security such as DTLS only protects data hop-by-hop. As a consequence, the intermediary nodes can read and modify information. The trust model where all intermediate nodes are considered trustworthy is problematic, not only from a privacy perspective, but also from a security perspective, as the intermediaries are free to delete resources on sensors and falsify commands to actuators (such as &#8220;unlock door&#8221;, &#8220;start fire alarm&#8221;, &#8220;raise bridge&#8221;). Even in the rare cases, where all the owners of the intermediary nodes are fully trusted, attacks and data breaches make such an architecture brittle.</p>
+<p id="rfc.section.11.p.2">DTLS protects hop-by-hop the entire CoAP message, including header, options, and payload. OSCOAP protects end-to-end the payload, and all information in the options and header, that is not required for forwarding (see <a href="#protected-fields" class="xref">Section 4</a>). DTLS and OSCOAP can be combined, thereby enabling end-to-end security of CoAP payload, in combination with hop-by-hop protection of the entire CoAP message, during transport between end-point and intermediary node. The CoAP message layer, however, cannot be protected end-to-end through intermediary devices since the parameters Type and Message ID, as well as Token and Token Length may be changed by a proxy.</p>
+<p id="rfc.section.11.p.3">The use of COSE to protect CoAP messages as specified in this document requires an established security context. The method to establish the security context described in <a href="#context-derivation" class="xref">Section 3.2</a> is based on a common shared secret material in client and server, which may be obtained e.g. by using the ACE framework <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>. An OSCOAP profile of ACE is described in <a href="#I-D.seitz-ace-oscoap-profile" class="xref">[I-D.seitz-ace-oscoap-profile]</a>.</p>
+<p id="rfc.section.11.p.4">The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is selected for broad applicability in terms of message size (2^64 blocks) and maximum number of messages (2^56). Compatibility with CCM* is achieved by using the algorithm AES-CCM-16-64-128 <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
+<p id="rfc.section.11.p.5">Most AEAD algorithms require a unique nonce for each message, for which the sequence numbers in the COSE message field &#8220;Partial IV&#8221; is used. If the recipient accepts any sequence number larger than the one previously received, then the problem of sequence number synchronization is avoided. With reliable transport, it may be defined that only messages with sequence number which are equal to previous sequence number + 1 are accepted. The alternatives to sequence numbers have their issues: very constrained devices may not be able to support accurate time, or to generate and store large numbers of random nonces. The requirement to change key at counter wrap is a complication, but it also forces the user of this specification to think about implementing key renewal.</p>
+<p id="rfc.section.11.p.6">The maximum sequence number to guarantee nonce uniqueness (<a href="#nonce-uniqueness" class="xref">Section 6.1</a>) is dependent on the AEAD algorithm. The maximum sequence number SHALL be 2^(min(nonce length in bits, 56) - 1) - 1, or any algorithm specific lower limit. The &#8220;-1&#8221; in the exponent stems from the same partial IV and flipped bit of IV (<a href="#cose-object" class="xref">Section 5</a>) is used in request and response. The compression mechanism (<a href="#compression" class="xref">Section 8</a>) assumes that the partial IV is 56 bits or less (which is the reason for min(,) in the exponent).</p>
+<p id="rfc.section.11.p.7">The inner block options enable the sender to split large messages into OSCOAP-protected blocks such that the receiving node can verify blocks before having received the complete message. The outer block options allow for arbitrary proxy fragmentation operations that cannot be verified by the endpoints, but can by policy be restricted in size since the encrypted options allow for secure fragmentation of very large messages. A maximum message size (above which the sending endpoint fragments the message and the receiving endpoint discards the message, if complying to the policy) may be obtained as part of normal resource discovery.</p>
+<p id="rfc.section.11.p.8">Applications need to use a padding scheme if the content of a message can be determined solely from the length of the payload. As an example, the strings &#8220;YES&#8221; and &#8220;NO&#8221; even if encrypted can be distinguished from each other as there is no padding supplied by the current set of encryption algorithms. Some information can be determined even from looking at boundary conditions. An example of this would be returning an integer between 0 and 100 where lengths of 1, 2 and 3 will provide information about where in the range things are. Three different methods to deal with this are: 1) ensure that all messages are the same length. For example, using 0 and 1 instead of &#8216;yes&#8217; and &#8216;no&#8217;. 2) Use a character which is not part of the responses to pad to a fixed length. For example, pad with a space to three characters. 3) Use the PKCS #7 style padding scheme where m bytes are appended each having the value of m. For example, appending a 0 to &#8220;YES&#8221; and two 1&#8217;s to &#8220;NO&#8221;. This style of padding means that all values need to be padded.</p>
+<h1 id="rfc.section.12">
+<a href="#rfc.section.12">12.</a> <a href="#privacy-considerations" id="privacy-considerations">Privacy Considerations</a>
+</h1>
+<p id="rfc.section.12.p.1">Privacy threats executed through intermediate nodes are considerably reduced by means of OSCOAP. End-to-end integrity protection and encryption of CoAP payload and all options that are not used for forwarding, provide mitigation against attacks on sensor and actuator communication, which may have a direct impact on the personal sphere.</p>
+<p id="rfc.section.12.p.2">The unprotected options (<a href="#fig-option-protection" class="xref">Figure 4</a>) may reveal privacy sensitive information. In particular Uri-Host SHOULD NOT contain privacy sensitive information.</p>
+<p id="rfc.section.12.p.3">CoAP headers sent in plaintext allow for example matching of CON and ACK (CoAP Message Identifier), matching of request and responses (Token) and traffic analysis.</p>
+<p id="rfc.section.12.p.4">Using the mechanisms described in <a href="#replay-state" class="xref">Section 6.3</a> reveals when a device goes through a reboot. This can be mitigated by the device storing the precise state of sender sequence number and recipient replay window on a clean shutdown.</p>
+<h1 id="rfc.section.13">
+<a href="#rfc.section.13">13.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
+</h1>
+<p id="rfc.section.13.p.1">Note to RFC Editor: Please replace all occurrences of &#8220;[[this document]]&#8221; with the RFC number of this specification.</p>
+<h1 id="rfc.section.13.1">
+<a href="#rfc.section.13.1">13.1.</a> <a href="#coap-option-numbers-registry" id="coap-option-numbers-registry">CoAP Option Numbers Registry</a>
+</h1>
+<p id="rfc.section.13.1.p.1">The Object-Security option is added to the CoAP Option Numbers registry:</p>
+<pre>
++--------+-----------------+-------------------+
+| Number | Name            | Reference         |
++--------+-----------------+-------------------+
+|  TBD   | Object-Security | [[this document]] |
++--------+-----------------+-------------------+
+</pre>
+<h1 id="rfc.section.13.2">
+<a href="#rfc.section.13.2">13.2.</a> <a href="#header-field-registrations" id="header-field-registrations">Header Field Registrations</a>
+</h1>
+<p id="rfc.section.13.2.p.1">The HTTP header field CoAP-Code field is added to the Message Headers registry:</p>
+<pre>
++-------------------+----------+----------+-------------------+
+| Header Field Name | Protocol | Status   | Reference         |
++-------------------+----------+----------+-------------------+
+| CoAP-Code         | http     | standard | [[this document]] |
++-------------------+----------+----------+-------------------+
+</pre>
+<h1 id="rfc.section.14">
+<a href="#rfc.section.14">14.</a> <a href="#acknowledgments" id="acknowledgments">Acknowledgments</a>
+</h1>
+<p id="rfc.section.14.p.1">The following individuals provided input to this document: Christian Ams&#252;ss, Tobias Andersson, Carsten Bormann, Joakim Brorsson, Thomas Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Dave Thaler, Marco Tiloca, and Mali&#353;a Vu&#269;ini&#263;.</p>
+<p id="rfc.section.14.p.2">Ludwig Seitz and G&#246;ran Selander worked on this document as part of the CelticPlus project CyberWI, with funding from Vinnova.</p>
+<h1 id="rfc.references">
+<a href="#rfc.references">15.</a> References</h1>
+<h1 id="rfc.references.1">
+<a href="#rfc.references.1">15.1.</a> Normative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="I-D.amsuess-core-repeat-request-tag">[I-D.amsuess-core-repeat-request-tag]</b></td>
+<td class="top">
+<a>Amsuess, C.</a>, <a>Mattsson, J.</a> and <a>G. Selander</a>, "<a href="http://tools.ietf.org/html/draft-amsuess-core-repeat-request-tag-00">Repeat And Request-Tag</a>", Internet-Draft draft-amsuess-core-repeat-request-tag-00, July 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2119">[RFC2119]</b></td>
+<td class="top">
+<a>Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5988">[RFC5988]</b></td>
+<td class="top">
+<a>Nottingham, M.</a>, "<a href="http://tools.ietf.org/html/rfc5988">Web Linking</a>", RFC 5988, DOI 10.17487/RFC5988, October 2010.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6347">[RFC6347]</b></td>
+<td class="top">
+<a>Rescorla, E.</a> and <a>N. Modadugu</a>, "<a href="http://tools.ietf.org/html/rfc6347">Datagram Transport Layer Security Version 1.2</a>", RFC 6347, DOI 10.17487/RFC6347, January 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7049">[RFC7049]</b></td>
+<td class="top">
+<a>Bormann, C.</a> and <a>P. Hoffman</a>, "<a href="http://tools.ietf.org/html/rfc7049">Concise Binary Object Representation (CBOR)</a>", RFC 7049, DOI 10.17487/RFC7049, October 2013.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7252">[RFC7252]</b></td>
+<td class="top">
+<a>Shelby, Z.</a>, <a>Hartke, K.</a> and <a>C. Bormann</a>, "<a href="http://tools.ietf.org/html/rfc7252">The Constrained Application Protocol (CoAP)</a>", RFC 7252, DOI 10.17487/RFC7252, June 2014.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7641">[RFC7641]</b></td>
+<td class="top">
+<a>Hartke, K.</a>, "<a href="http://tools.ietf.org/html/rfc7641">Observing Resources in the Constrained Application Protocol (CoAP)</a>", RFC 7641, DOI 10.17487/RFC7641, September 2015.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7959">[RFC7959]</b></td>
+<td class="top">
+<a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="http://tools.ietf.org/html/rfc7959">Block-Wise Transfers in the Constrained Application Protocol (CoAP)</a>", RFC 7959, DOI 10.17487/RFC7959, August 2016.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8152">[RFC8152]</b></td>
+<td class="top">
+<a>Schaad, J.</a>, "<a href="http://tools.ietf.org/html/rfc8152">CBOR Object Signing and Encryption (COSE)</a>", RFC 8152, DOI 10.17487/RFC8152, July 2017.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.references.2">
+<a href="#rfc.references.2">15.2.</a> Informative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="I-D.bormann-6lo-coap-802-15-ie">[I-D.bormann-6lo-coap-802-15-ie]</b></td>
+<td class="top">
+<a>Bormann, C.</a>, "<a href="http://tools.ietf.org/html/draft-bormann-6lo-coap-802-15-ie-00">Constrained Application Protocol (CoAP) over IEEE 802.15.4 Information Element for IETF</a>", Internet-Draft draft-bormann-6lo-coap-802-15-ie-00, April 2016.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.greevenbosch-appsawg-cbor-cddl">[I-D.greevenbosch-appsawg-cbor-cddl]</b></td>
+<td class="top">
+<a>Birkholz, H.</a>, <a>Vigano, C.</a> and <a>C. Bormann</a>, "<a href="http://tools.ietf.org/html/draft-greevenbosch-appsawg-cbor-cddl-11">Concise data definition language (CDDL): a notational convention to express CBOR data structures</a>", Internet-Draft draft-greevenbosch-appsawg-cbor-cddl-11, July 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.hartke-core-e2e-security-reqs">[I-D.hartke-core-e2e-security-reqs]</b></td>
+<td class="top">
+<a>Selander, G.</a>, <a>Palombini, F.</a> and <a>K. Hartke</a>, "<a href="http://tools.ietf.org/html/draft-hartke-core-e2e-security-reqs-02">Requirements for CoAP End-To-End Security</a>", Internet-Draft draft-hartke-core-e2e-security-reqs-02, January 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</b></td>
+<td class="top">
+<a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="http://tools.ietf.org/html/draft-ietf-ace-oauth-authz-06">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-06, March 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-core-coap-tcp-tls">[I-D.ietf-core-coap-tcp-tls]</b></td>
+<td class="top">
+<a>Bormann, C.</a>, <a>Lemay, S.</a>, <a>Tschofenig, H.</a>, <a>Hartke, K.</a>, <a>Silverajan, B.</a> and <a>B. Raymor</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-coap-tcp-tls-09">CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets</a>", Internet-Draft draft-ietf-core-coap-tcp-tls-09, May 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.mattsson-core-coap-actuators">[I-D.mattsson-core-coap-actuators]</b></td>
+<td class="top">
+<a>Mattsson, J.</a>, <a>Fornehed, J.</a>, <a>Selander, G.</a> and <a>F. Palombini</a>, "<a href="http://tools.ietf.org/html/draft-mattsson-core-coap-actuators-02">Controlling Actuators with CoAP</a>", Internet-Draft draft-mattsson-core-coap-actuators-02, November 2016.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.seitz-ace-oscoap-profile">[I-D.seitz-ace-oscoap-profile]</b></td>
+<td class="top">
+<a>Seitz, L.</a>, <a>Palombini, F.</a> and <a>M. Gunnarsson</a>, "<a href="http://tools.ietf.org/html/draft-seitz-ace-oscoap-profile-04">OSCOAP profile of the Authentication and Authorization for Constrained Environments Framework</a>", Internet-Draft draft-seitz-ace-oscoap-profile-04, July 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.tiloca-core-multicast-oscoap">[I-D.tiloca-core-multicast-oscoap]</b></td>
+<td class="top">
+<a>Tiloca, M.</a>, <a>Selander, G.</a> and <a>F. Palombini</a>, "<a href="http://tools.ietf.org/html/draft-tiloca-core-multicast-oscoap-03">Secure group communication for CoAP</a>", Internet-Draft draft-tiloca-core-multicast-oscoap-03, July 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3986">[RFC3986]</b></td>
+<td class="top">
+<a>Berners-Lee, T.</a>, <a>Fielding, R.</a> and <a>L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>", STD 66, RFC 3986, DOI 10.17487/RFC3986, January 2005.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5869">[RFC5869]</b></td>
+<td class="top">
+<a>Krawczyk, H.</a> and <a>P. Eronen</a>, "<a href="http://tools.ietf.org/html/rfc5869">HMAC-based Extract-and-Expand Key Derivation Function (HKDF)</a>", RFC 5869, DOI 10.17487/RFC5869, May 2010.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7228">[RFC7228]</b></td>
+<td class="top">
+<a>Bormann, C.</a>, <a>Ersue, M.</a> and <a>A. Keranen</a>, "<a href="http://tools.ietf.org/html/rfc7228">Terminology for Constrained-Node Networks</a>", RFC 7228, DOI 10.17487/RFC7228, May 2014.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7515">[RFC7515]</b></td>
+<td class="top">
+<a>Jones, M.</a>, <a>Bradley, J.</a> and <a>N. Sakimura</a>, "<a href="http://tools.ietf.org/html/rfc7515">JSON Web Signature (JWS)</a>", RFC 7515, DOI 10.17487/RFC7515, May 2015.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8075">[RFC8075]</b></td>
+<td class="top">
+<a>Castellani, A.</a>, <a>Loreto, S.</a>, <a>Rahman, A.</a>, <a>Fossati, T.</a> and <a>E. Dijk</a>, "<a href="http://tools.ietf.org/html/rfc8075">Guidelines for Mapping Implementations: HTTP to the Constrained Application Protocol (CoAP)</a>", RFC 8075, DOI 10.17487/RFC8075, February 2017.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.appendix.A">
+<a href="#rfc.appendix.A">Appendix A.</a> <a href="#test-vectors" id="test-vectors">Test Vectors</a>
+</h1>
+<p id="rfc.section.A.p.1">TODO: This section needs to be updated.</p>
+<h1 id="rfc.appendix.B">
+<a href="#rfc.appendix.B">Appendix B.</a> <a href="#examples" id="examples">Examples</a>
+</h1>
+<p id="rfc.section.B.p.1">This section gives examples of OSCOAP. The message exchanges are made, based on the assumption that there is a security context established between client and server. For simplicity, these examples only indicate the content of the messages without going into detail of the COSE message format.</p>
+<h1 id="rfc.appendix.B.1">
+<a href="#rfc.appendix.B.1">B.1.</a> <a href="#secure-access-to-sensor" id="secure-access-to-sensor">Secure Access to Sensor</a>
+</h1>
+<p id="rfc.section.B.1.p.1">This example targets the scenario in Section 3.1 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting the alarm status from a server.</p>
+<div id="rfc.figure.7"></div>
+<div id="fig-alarm"></div>
+<pre>
+Client  Proxy  Server
+   |      |      |
+   +-----&gt;|      |            Code: 0.01 (GET)
+   | GET  |      |           Token: 0x8c
+   |      |      | Object-Security: [kid:5f, Partial IV:42,
+   |      |      |                   {Uri-Path:"alarm_status"}]
+   |      |      |         Payload: -
+   |      |      |
+   |      +-----&gt;|            Code: 0.01 (GET)
+   |      | GET  |           Token: 0x7b
+   |      |      | Object-Security: [kid:5f, Partial IV:42,
+   |      |      |                   {Uri-Path:"alarm_status"}]
+   |      |      |         Payload: -
+   |      |      |
+   |      |&lt;-----+            Code: 2.05 (Content)
+   |      | 2.05 |           Token: 0x7b
+   |      |      | Object-Security: -
+   |      |      |         Payload: [{"OFF"}]
+   |      |      |
+   |&lt;-----+      |            Code: 2.05 (Content)
+   | 2.05 |      |           Token: 0x8c
+   |      |      | Object-Security: -
+   |      |      |         Payload: [{"OFF"}]
+   |      |      |
+</pre>
+<p class="figure">Figure 7: Secure Access to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
+<p id="rfc.section.B.1.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
+<p id="rfc.section.B.1.p.3">The COSE header of the request contains an identifier (5f), indicating which security context was used to protect the message and a Partial IV (42). The option Uri-Path (&#8220;alarm_status&#8221;) and payload (&#8220;OFF&#8221;) are encrypted.</p>
+<p id="rfc.section.B.1.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the response is bound to the request.</p>
+<h1 id="rfc.appendix.B.2">
+<a href="#rfc.appendix.B.2">B.2.</a> <a href="#secure-subscribe-to-sensor" id="secure-subscribe-to-sensor">Secure Subscribe to Sensor</a>
+</h1>
+<p id="rfc.section.B.2.p.1">This example targets the scenario in Section 3.2 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting subscription to a blood sugar measurement resource (GET /glucose), first receiving the value 220 mg/dl and then a second value 180 mg/dl.</p>
+<div id="rfc.figure.8"></div>
+<div id="fig-blood-sugar"></div>
+<pre>
+Client  Proxy  Server
+   |      |      |
+   +-----&gt;|      |            Code: 0.01 (GET)
+   | GET  |      |           Token: 0x83
+   |      |      |         Observe: 0
+   |      |      | Object-Security: [kid:ca, Partial IV:15,
+   |      |      |                   {Uri-Path:"glucose"}]
+   |      |      |         Payload: -
+   |      |      |
+   |      +-----&gt;|            Code: 0.01 (GET)
+   |      | GET  |           Token: 0xbe
+   |      |      |         Observe: 0
+   |      |      | Object-Security: [kid:ca, Partial IV:15,
+   |      |      |                   {Uri-Path:"glucose"}]
+   |      |      |         Payload: -
+   |      |      |
+   |      |&lt;-----+            Code: 2.05 (Content)
+   |      | 2.05 |           Token: 0xbe
+   |      |      |         Observe: 7
+   |      |      | Object-Security: -
+   |      |      |         Payload: [Partial IV:32,
+   |      |      |                   {Content-Format:0, "220"}]
+   |      |      |
+   |&lt;-----+      |            Code: 2.05 (Content)
+   | 2.05 |      |           Token: 0x83
+   |      |      |         Observe: 7
+   |      |      | Object-Security: -
+   |      |      |         Payload: [Partial IV:32,
+   |      |      |                   {Content-Format:0, "220"}]
+  ...    ...    ...
+   |      |      |
+   |      |&lt;-----+            Code: 2.05 (Content)
+   |      | 2.05 |           Token: 0xbe
+   |      |      |         Observe: 8
+   |      |      | Object-Security: -
+   |      |      |         Payload: [Partial IV:36,
+   |      |      |                   {Content-Format:0, "180"}]
+   |      |      |
+   |&lt;-----+      |            Code: 2.05 (Content)
+   | 2.05 |      |           Token: 0x83
+   |      |      |         Observe: 8
+   |      |      | Object-Security: -
+   |      |      |         Payload: [Partial IV:36,
+   |      |      |                   {Content-Format:0, "180"}]
+   |      |      |
+</pre>
+<p class="figure">Figure 8: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
+<p id="rfc.section.B.2.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
+<p id="rfc.section.B.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and 36). The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted. The Observe option is not protected.</p>
+<p id="rfc.section.B.2.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any Partial IV previously received in a response bound to the request.</p>
+<h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">G&#246;ran Selander</span> 
+	  <span class="n hidden">
+		<span class="family-name">Selander</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Ericsson AB</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:goran.selander@ericsson.com">goran.selander@ericsson.com</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">John Mattsson</span> 
+	  <span class="n hidden">
+		<span class="family-name">Mattsson</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Ericsson AB</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:john.mattsson@ericsson.com">john.mattsson@ericsson.com</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Francesca Palombini</span> 
+	  <span class="n hidden">
+		<span class="family-name">Palombini</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Ericsson AB</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:francesca.palombini@ericsson.com">francesca.palombini@ericsson.com</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Ludwig Seitz</span> 
+	  <span class="n hidden">
+		<span class="family-name">Seitz</span>
+	  </span>
+	</span>
+	<span class="org vcardline">SICS Swedish ICT</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:ludwig@sics.se">ludwig@sics.se</a></span>
+
+  </address>
+</div>
+
+  <div class="github-fork-ribbon-wrapper"><div class="github-fork-ribbon"><a href="https://github.com/core-wg/oscoap">Fork me on GitHub</a></div></div>
+</body>
+</html>
