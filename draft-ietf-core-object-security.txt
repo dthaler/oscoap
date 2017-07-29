@@ -82,6 +82,7 @@ Table of Contents
    5.  The COSE Object . . . . . . . . . . . . . . . . . . . . . . .  18
      5.1.  Plaintext . . . . . . . . . . . . . . . . . . . . . . . .  19
      5.2.  Additional Authenticated Data . . . . . . . . . . . . . .  20
+     5.3.  Nonce . . . . . . . . . . . . . . . . . . . . . . . . . .  20
    6.  Sequence Numbers, Replay, Message Binding, and Freshness  . .  21
      6.1.  AEAD Nonce Uniqueness . . . . . . . . . . . . . . . . . .  21
      6.2.  Replay Protection . . . . . . . . . . . . . . . . . . . .  21
@@ -105,7 +106,6 @@ Table of Contents
      13.1.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  36
      13.2.  Header Field Registrations . . . . . . . . . . . . . . .  36
    14. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  36
-   15. References  . . . . . . . . . . . . . . . . . . . . . . . . .  36
 
 
 
@@ -114,6 +114,7 @@ Selander, et al.        Expires January 30, 2018                [Page 2]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+   15. References  . . . . . . . . . . . . . . . . . . . . . . . . .  36
      15.1.  Normative References . . . . . . . . . . . . . . . . . .  36
      15.2.  Informative References . . . . . . . . . . . . . . . . .  37
    Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  39
@@ -161,7 +162,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    secure message binding.  A compressed version of COSE is used, see
    Section 8.  The use of OSCOAP is signaled with the CoAP option
    Object-Security, defined in Section 2.  OSCOAP protects as much
-   information as possible, while still allowing proxy operations.
 
 
 
@@ -170,6 +170,7 @@ Selander, et al.        Expires January 30, 2018                [Page 3]
 Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
+   information as possible, while still allowing proxy operations.
    OSCOAP provides protection of CoAP payload, most options, and certain
    header fields.  The solution transforms a CoAP message into an
    "OSCOAP message" before sending, and vice versa after receiving.  The
@@ -217,7 +218,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    Readers are expected to be familiar with the terms and concepts
    described in CoAP [RFC7252], Observe [RFC7641], Blockwise [RFC7959],
    COSE [RFC8152], CBOR [RFC7049], CDDL
-
 
 
 
@@ -994,25 +994,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    nonce, Sender IV, and Recipient IV is 7 bytes.  The maximum Sequence
    Number is specified in Section 11.
 
-   The nonce is constructed as described in Section 3.1 of [RFC8152],
-   i.e. by padding the partial IV (Sequence Number in network byte
-   order) with zeroes and XORing it with the Context IV (Sender IV or
-   Recipient IV), with the following addition: The most significant bit
-   in the first byte of the Context IV SHALL be flipped for responses,
-   in case there is a single response (not Observe).  In this way, the
-   partial IV can be reused for the corresponding responses, which
-
-
-
-
-Selander, et al.        Expires January 30, 2018               [Page 18]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
-   reduces the size of the response.  For detailed processing
-   instructions, see Section 7.
-
    We denote by Plaintext the data that is encrypted and integrity
    protected, and by Additional Authenticated Data (AAD) the data that
    is integrity protected only.
@@ -1021,6 +1002,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    as follows
 
    o  The "protected" field is empty.
+
+
+
+Selander, et al.        Expires January 30, 2018               [Page 18]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
 
    o  The "unprotected" field includes:
 
@@ -1054,18 +1042,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    o  the Payload of original CoAP message, if present, and in that case
       prefixed by the one-byte Payload Marker (0xFF).
 
-
-
-
-
-
-
-
-Selander, et al.        Expires January 30, 2018               [Page 19]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1077,6 +1053,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
         is payload)
 
                             Figure 5: Plaintext
+
+
+
+
+
+
+
+
+Selander, et al.        Expires January 30, 2018               [Page 19]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
 
 5.2.  Additional Authenticated Data
 
@@ -1113,6 +1101,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    o  request_piv: contains the value of the 'Partial IV' in the COSE
       object of the request (see Section 5).
+
+5.3.  Nonce
+
+   The nonce is constructed as described in Section 3.1 of [RFC8152],
+   i.e. by padding the partial IV (Sequence Number in network byte
+   order) with zeroes and XORing it with the Context IV (Sender IV or
+   Recipient IV), with the following addition: The most significant bit
+   in the first byte of the Context IV SHALL be flipped for responses,
+   in case there is a single response (not Observe).  In this way, the
+   partial IV can be reused for the corresponding responses, which
+   reduces the size of the response.  For detailed processing
+   instructions, see Section 7.
 
 
 
