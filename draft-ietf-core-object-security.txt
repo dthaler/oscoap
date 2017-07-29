@@ -80,9 +80,9 @@ Table of Contents
      4.2.  CoAP Header . . . . . . . . . . . . . . . . . . . . . . .  12
      4.3.  CoAP Options  . . . . . . . . . . . . . . . . . . . . . .  13
    5.  The COSE Object . . . . . . . . . . . . . . . . . . . . . . .  18
-     5.1.  Plaintext . . . . . . . . . . . . . . . . . . . . . . . .  19
-     5.2.  Additional Authenticated Data . . . . . . . . . . . . . .  20
-     5.3.  Nonce . . . . . . . . . . . . . . . . . . . . . . . . . .  20
+     5.1.  Nonce . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+     5.2.  Plaintext . . . . . . . . . . . . . . . . . . . . . . . .  19
+     5.3.  Additional Authenticated Data . . . . . . . . . . . . . .  20
    6.  Sequence Numbers, Replay, Message Binding, and Freshness  . .  21
      6.1.  AEAD Nonce Uniqueness . . . . . . . . . . . . . . . . . .  21
      6.2.  Replay Protection . . . . . . . . . . . . . . . . . . . .  21
@@ -623,7 +623,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    field in the OSCOAP message is called "outer" or "inner":
 
    o  Inner message field: message field included in the plaintext of
-      the COSE object of the OSCOAP message (see Section 5.1).  The
+      the COSE object of the OSCOAP message (see Section 5.2).  The
       inner message fields are by definition encrypted and integrity
       protected by the COSE object (Class E).
 
@@ -632,7 +632,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
       not encrypted and thus visible to an intermediary, but may be
       integrity protected by including the message field values in the
       Additional Authenticated Data (AAD) of the COSE object (see
-      Section 5.2).  I.e. outer message fields may be Class I or Class
+      Section 5.3).  I.e. outer message fields may be Class I or Class
       U.
 
    Note that, even though the message formats are slightly different,
@@ -675,7 +675,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
 
    include the CoAP header field Code in the AAD of the COSE object (see
-   Section 5.2).
+   Section 5.3).
 
 4.3.  CoAP Options
 
@@ -858,7 +858,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    A Class I option is an outer option and hence visible in the options
    part of the OSCOAP message.  Unless otherwise specified, Class I
    options SHALL be integrity protected between the endpoints, see
-   (Section 5.2).  The sending endpoint SHALL encode the Class I options
+   (Section 5.3).  The sending endpoint SHALL encode the Class I options
    in the OSCOAP message as described in Section 4.3.4.
 
 4.3.3.  Class U Options
@@ -985,8 +985,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
    This section defines how to use COSE [RFC8152] to wrap and protect
    data in the original CoAP message.  OSCOAP uses the untagged
    COSE_Encrypt0 structure with an Authenticated Encryption with
-   Additional Data (AEAD) algorithm.  The key lengths, IV lengths, and
-   maximum sequence number are algorithm dependent.
+   Additional Data (AEAD) algorithm.  The key lengths, IV lengths, nonce
+   lenght, and maximum sequence number are algorithm dependent.
 
    The AEAD algorithm AES-CCM-64-64-128 defined in Section 10.2 of
    [RFC8152] is mandatory to implement.  For AES-CCM-64-64-128 the
@@ -1023,13 +1023,26 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
          Section 3).  This parameter SHALL be present in requests and
          SHALL NOT be present in responses.
 
-   o  The "ciphertext" field is computed from the Plaintext (see
-      Section 5.1) and the Additional Authenticated Data (AAD) (see
-      Section 5.2) following Section 5.2 of [RFC8152].
+   o  The "ciphertext" field is computed from the secret key (Sender Key
+      or Reciepient Key), Nonce (see Section 5.1), Plaintext (see
+      Section 5.2), and the Additional Authenticated Data (AAD) (see
+      Section 5.3) following Section 5.2 of [RFC8152].
 
    The encryption process is described in Section 5.3 of [RFC8152].
 
-5.1.  Plaintext
+5.1.  Nonce
+
+   The nonce is constructed as described in Section 3.1 of [RFC8152],
+   i.e. by padding the partial IV (Sequence Number in network byte
+   order) with zeroes and XORing it with the Context IV (Sender IV or
+   Recipient IV), with the following addition: The most significant bit
+   in the first byte of the Context IV SHALL be flipped for responses,
+   in case there is a single response (not Observe).  In this way, the
+   partial IV can be reused for the corresponding responses, which
+   reduces the size of the response.  For detailed processing
+   instructions, see Section 7.
+
+5.2.  Plaintext
 
    The Plaintext is formatted as a CoAP message without Header (see
    Figure 5) consisting of:
@@ -1041,6 +1054,17 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    o  the Payload of original CoAP message, if present, and in that case
       prefixed by the one-byte Payload Marker (0xFF).
+
+
+
+
+
+
+
+Selander, et al.        Expires January 30, 2018               [Page 19]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
+
 
       0                   1                   2                   3
       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1054,19 +1078,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
                             Figure 5: Plaintext
 
-
-
-
-
-
-
-
-Selander, et al.        Expires January 30, 2018               [Page 19]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
-
-
-5.2.  Additional Authenticated Data
+5.3.  Additional Authenticated Data
 
    The external_aad SHALL be a CBOR array as defined below:
 
@@ -1101,18 +1113,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)           July 2017
 
    o  request_piv: contains the value of the 'Partial IV' in the COSE
       object of the request (see Section 5).
-
-5.3.  Nonce
-
-   The nonce is constructed as described in Section 3.1 of [RFC8152],
-   i.e. by padding the partial IV (Sequence Number in network byte
-   order) with zeroes and XORing it with the Context IV (Sender IV or
-   Recipient IV), with the following addition: The most significant bit
-   in the first byte of the Context IV SHALL be flipped for responses,
-   in case there is a single response (not Observe).  In this way, the
-   partial IV can be reused for the corresponding responses, which
-   reduces the size of the response.  For detailed processing
-   instructions, see Section 7.
 
 
 
