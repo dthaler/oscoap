@@ -283,9 +283,9 @@ address {
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Derivation of Security Context Parameters">
 <link href="#rfc.section.3.3" rel="Chapter" title="3.3 Requirements on the Security Context Parameters">
 <link href="#rfc.section.4" rel="Chapter" title="4 Protected CoAP Message Fields">
-<link href="#rfc.section.4.1" rel="Chapter" title="4.1 CoAP Payload">
-<link href="#rfc.section.4.2" rel="Chapter" title="4.2 CoAP Header">
-<link href="#rfc.section.4.3" rel="Chapter" title="4.3 CoAP Options">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 CoAP Header">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 CoAP Options">
+<link href="#rfc.section.4.3" rel="Chapter" title="4.3 CoAP Payload">
 <link href="#rfc.section.5" rel="Chapter" title="5 The COSE Object">
 <link href="#rfc.section.5.1" rel="Chapter" title="5.1 Nonce">
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Plaintext">
@@ -407,11 +407,11 @@ address {
 </li>
 </ul><li>4.   <a href="#rfc.section.4">Protected CoAP Message Fields</a>
 </li>
-<ul><li>4.1.   <a href="#rfc.section.4.1">CoAP Payload</a>
+<ul><li>4.1.   <a href="#rfc.section.4.1">CoAP Header</a>
 </li>
-<li>4.2.   <a href="#rfc.section.4.2">CoAP Header</a>
+<li>4.2.   <a href="#rfc.section.4.2">CoAP Options</a>
 </li>
-<li>4.3.   <a href="#rfc.section.4.3">CoAP Options</a>
+<li>4.3.   <a href="#rfc.section.4.3">CoAP Payload</a>
 </li>
 </ul><li>5.   <a href="#rfc.section.5">The COSE Object</a>
 </li>
@@ -535,7 +535,7 @@ Client                                            Server
 </pre>
 <p class="figure">Figure 2: The Object-Security Option</p>
 <p id="rfc.section.2.p.2">The option is either empty or contains a compressed COSE object (see <a href="#cose-object" class="xref">Section 5</a> and <a href="#compression" class="xref">Section 8</a>), and has no default value (except for certain CoAP codes, see below). The length of the Object-Security option is either zero or the sum of the length of the compressed COSE header, the lengths of the encrypted options and payload present in the original CoAP message, and the length of the authentication tag. Since the payload and most options are encrypted <a href="#protected-fields" class="xref">Section 4</a>, and the corresponding plain message fields of the original are not included in the OSCOAP message, the processing of these fields does not expand the total message size.</p>
-<p id="rfc.section.2.p.3">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP endpoint SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age" class="xref">Section 4.3.1.1</a>.</p>
+<p id="rfc.section.2.p.3">A successful response to a request with the Object-Security option SHALL contain the Object-Security option. A CoAP endpoint SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request. The Object-Security option is included in the cache key for backward compatibility with proxies not recognizing the Object-Security option. The effect is that messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age" class="xref">Section 4.2.1.1</a>.</p>
 <p id="rfc.section.2.p.4">The placement of the compressed COSE object in the OSCOAP message depends on whether the CoAP code allows payload (<a href="#RFC7252" class="xref">[RFC7252]</a>, illustrated in <a href="#fig-sketch" class="xref">Figure 1</a>):</p>
 <p></p>
 
@@ -697,22 +697,16 @@ Verify request with   |                       |
 </ul>
 <p id="rfc.section.4.p.6">Note that, even though the message formats are slightly different, OSCOAP complies with CoAP over unreliable transport <a href="#RFC7252" class="xref">[RFC7252]</a> as well as CoAP over reliable transport <a href="#I-D.ietf-core-coap-tcp-tls" class="xref">[I-D.ietf-core-coap-tcp-tls]</a>.</p>
 <h1 id="rfc.section.4.1">
-<a href="#rfc.section.4.1">4.1.</a> <a href="#coap-payload" id="coap-payload">CoAP Payload</a>
+<a href="#rfc.section.4.1">4.1.</a> <a href="#coap-header" id="coap-header">CoAP Header</a>
 </h1>
-<p id="rfc.section.4.1.p.1">The CoAP Payload SHALL be encrypted and integrity protected (Class E), and thus is an inner message field.</p>
-<p id="rfc.section.4.1.p.2">The sending endpoint writes the payload of the original CoAP message into the plaintext of the COSE object.</p>
-<p id="rfc.section.4.1.p.3">The receiving endpoint verifies and decrypts the COSE object, and recreates the payload of the original CoAP message.</p>
+<p id="rfc.section.4.1.p.1">Many CoAP header fields are required to be read and changed by proxies and thus cannot in general be protected between the endpoints, e.g. CoAP message layer fields such as Message ID.</p>
+<p id="rfc.section.4.1.p.2">The CoAP header field Code MUST be sent in clear to support RESTful processing, but MUST be integrity protected (Class I) to prevent an intermediary from changing, e.g. from GET to DELETE. The other CoAP header fields SHALL neither be integrity protected nor encrypted (Class U). All CoAP header fields are thus outer message fields.</p>
+<p id="rfc.section.4.1.p.3">The sending endpoint SHALL copy the header fields from the original CoAP message to the header of the OSCOAP message. The receiving endpoint SHALL copy the header fields from the OSCOAP message to the header of the decrypted CoAP message. Both sender and receiver include the CoAP header field Code in the AAD of the COSE object (see <a href="#AAD" class="xref">Section 5.3</a>).</p>
 <h1 id="rfc.section.4.2">
-<a href="#rfc.section.4.2">4.2.</a> <a href="#coap-header" id="coap-header">CoAP Header</a>
+<a href="#rfc.section.4.2">4.2.</a> <a href="#coap-options" id="coap-options">CoAP Options</a>
 </h1>
-<p id="rfc.section.4.2.p.1">Many CoAP header fields are required to be read and changed by proxies and thus cannot in general be protected between the endpoints, e.g. CoAP message layer fields such as Message ID.</p>
-<p id="rfc.section.4.2.p.2">The CoAP header field Code MUST be sent in clear to support RESTful processing, but MUST be integrity protected (Class I) to prevent an intermediary from changing, e.g. from GET to DELETE. The other CoAP header fields SHALL neither be integrity protected nor encrypted (Class U). All CoAP header fields are thus outer message fields.</p>
-<p id="rfc.section.4.2.p.3">The sending endpoint SHALL copy the header fields from the original CoAP message to the header of the OSCOAP message. The receiving endpoint SHALL copy the header fields from the OSCOAP message to the header of the decrypted CoAP message. Both sender and receiver include the CoAP header field Code in the AAD of the COSE object (see <a href="#AAD" class="xref">Section 5.3</a>).</p>
-<h1 id="rfc.section.4.3">
-<a href="#rfc.section.4.3">4.3.</a> <a href="#coap-options" id="coap-options">CoAP Options</a>
-</h1>
-<p id="rfc.section.4.3.p.1">Most options are encrypted and integrity protected (Class E), and thus inner message fields. But to allow certain proxy operations, some options have outer values, i.e. are present as options in the OSCOAP message. Certain options may have both an inner value and a potentially different outer value, where the inner value is intended for the destination endpoint and the outer value is intended for a proxy.</p>
-<p id="rfc.section.4.3.p.2">A summary of how options are protected is shown in <a href="#fig-option-protection" class="xref">Figure 4</a>. Options denoted by &#8216;x&#8217; within each class are protected and processed in the same way, but certain options denoted by &#8216;*&#8217; require special processing.</p>
+<p id="rfc.section.4.2.p.1">Most options are encrypted and integrity protected (Class E), and thus inner message fields. But to allow certain proxy operations, some options have outer values, i.e. are present as options in the OSCOAP message. Certain options may have both an inner value and a potentially different outer value, where the inner value is intended for the destination endpoint and the outer value is intended for a proxy.</p>
+<p id="rfc.section.4.2.p.2">A summary of how options are protected is shown in <a href="#fig-option-protection" class="xref">Figure 4</a>. Options denoted by &#8216;x&#8217; within each class are protected and processed in the same way, but certain options denoted by &#8216;*&#8217; require special processing.</p>
 <div id="rfc.figure.4"></div>
 <div id="fig-option-protection"></div>
 <pre>
@@ -746,63 +740,63 @@ Verify request with   |                       |
  * = Special
 </pre>
 <p class="figure">Figure 4: Protection of CoAP Options</p>
-<p id="rfc.section.4.3.p.3">Unless specified otherwise, CoAP options not listed in <a href="#fig-option-protection" class="xref">Figure 4</a> SHALL be encrypted and integrity protected and processed as class E options.</p>
-<p id="rfc.section.4.3.p.4">Specifications of new CoAP options SHOULD define how they are processed with OSCOAP. New COAP options SHOULD be of class E and SHOULD NOT have outer values unless a forwarding proxy needs to read that option value. If a certain option has both inner and outer values, the two values SHOULD NOT be the same.</p>
-<h1 id="rfc.section.4.3.1">
-<a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#class-e" id="class-e">Class E Options</a>
+<p id="rfc.section.4.2.p.3">Unless specified otherwise, CoAP options not listed in <a href="#fig-option-protection" class="xref">Figure 4</a> SHALL be encrypted and integrity protected and processed as class E options.</p>
+<p id="rfc.section.4.2.p.4">Specifications of new CoAP options SHOULD define how they are processed with OSCOAP. New COAP options SHOULD be of class E and SHOULD NOT have outer values unless a forwarding proxy needs to read that option value. If a certain option has both inner and outer values, the two values SHOULD NOT be the same.</p>
+<h1 id="rfc.section.4.2.1">
+<a href="#rfc.section.4.2.1">4.2.1.</a> <a href="#class-e" id="class-e">Class E Options</a>
 </h1>
-<p id="rfc.section.4.3.1.p.1">For options in class E (see <a href="#fig-option-protection" class="xref">Figure 4</a>) the option value in the original CoAP message, if present, SHALL be encrypted and integrity protected between the endpoints. Hence the actions resulting from the use of such options is analogous to communicating in a protected manner directly with the endpoint. For example, a client using an If-Match option will not be served by a proxy.</p>
-<p id="rfc.section.4.3.1.p.2">The sending endpoint SHALL write the class E option from the original CoAP message into the plaintext of the COSE object.</p>
-<p id="rfc.section.4.3.1.p.3">Except for the special options (* in <a href="#fig-option-protection" class="xref">Figure 4</a>), the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change, or remove the value of an outer option.</p>
-<p id="rfc.section.4.3.1.p.4">Except for the special options, the receiving endpoint SHALL discard any outer options of class E from the OSCOAP message and SHALL write the Class E options present in the plaintext of the COSE object into the decrypted CoAP message.</p>
-<h1 id="rfc.section.4.3.1.1">
-<a href="#rfc.section.4.3.1.1">4.3.1.1.</a> <a href="#max-age" id="max-age">Max-Age</a>
+<p id="rfc.section.4.2.1.p.1">For options in class E (see <a href="#fig-option-protection" class="xref">Figure 4</a>) the option value in the original CoAP message, if present, SHALL be encrypted and integrity protected between the endpoints. Hence the actions resulting from the use of such options is analogous to communicating in a protected manner directly with the endpoint. For example, a client using an If-Match option will not be served by a proxy.</p>
+<p id="rfc.section.4.2.1.p.2">The sending endpoint SHALL write the class E option from the original CoAP message into the plaintext of the COSE object.</p>
+<p id="rfc.section.4.2.1.p.3">Except for the special options (* in <a href="#fig-option-protection" class="xref">Figure 4</a>), the sending endpoint SHALL NOT use the outer options of class E. However, note that an intermediary may, legitimately or not, add, change, or remove the value of an outer option.</p>
+<p id="rfc.section.4.2.1.p.4">Except for the special options, the receiving endpoint SHALL discard any outer options of class E from the OSCOAP message and SHALL write the Class E options present in the plaintext of the COSE object into the decrypted CoAP message.</p>
+<h1 id="rfc.section.4.2.1.1">
+<a href="#rfc.section.4.2.1.1">4.2.1.1.</a> <a href="#max-age" id="max-age">Max-Age</a>
 </h1>
-<p id="rfc.section.4.3.1.1.p.1">An inner Max-Age option, like other class E options, is used as defined in <a href="#RFC7252" class="xref">[RFC7252]</a> taking into account that it is not accessible to proxies.</p>
-<p id="rfc.section.4.3.1.1.p.2">Since OSCOAP binds CoAP responses to requests, a cached response would not be possible to use for any other request. To avoid unnecessary caching, a server MAY add an outer Max-Age option with value zero to OSCOAP responses (see Section 5.6.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>). The outer Max-Age option is not integrity protected.</p>
-<h1 id="rfc.section.4.3.1.2">
-<a href="#rfc.section.4.3.1.2">4.3.1.2.</a> <a href="#block-options" id="block-options">The Block Options</a>
+<p id="rfc.section.4.2.1.1.p.1">An inner Max-Age option, like other class E options, is used as defined in <a href="#RFC7252" class="xref">[RFC7252]</a> taking into account that it is not accessible to proxies.</p>
+<p id="rfc.section.4.2.1.1.p.2">Since OSCOAP binds CoAP responses to requests, a cached response would not be possible to use for any other request. To avoid unnecessary caching, a server MAY add an outer Max-Age option with value zero to OSCOAP responses (see Section 5.6.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>). The outer Max-Age option is not integrity protected.</p>
+<h1 id="rfc.section.4.2.1.2">
+<a href="#rfc.section.4.2.1.2">4.2.1.2.</a> <a href="#block-options" id="block-options">The Block Options</a>
 </h1>
-<p id="rfc.section.4.3.1.2.p.1">Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a> is an optional feature. An implementation MAY comply with <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without implementing <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
-<p id="rfc.section.4.3.1.2.p.2">The Block options (Block1, Block2, Size1, and Size2) MAY be either only inner options, only outer options or both inner and outer options. The inner and outer options are processed independently.</p>
-<h1 id="rfc.section.4.3.1.2.1">
-<a href="#rfc.section.4.3.1.2.1">4.3.1.2.1.</a> <a href="#inner-block-options" id="inner-block-options">Inner Block Options</a>
+<p id="rfc.section.4.2.1.2.p.1">Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a> is an optional feature. An implementation MAY comply with <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without implementing <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
+<p id="rfc.section.4.2.1.2.p.2">The Block options (Block1, Block2, Size1, and Size2) MAY be either only inner options, only outer options or both inner and outer options. The inner and outer options are processed independently.</p>
+<h1 id="rfc.section.4.2.1.2.1">
+<a href="#rfc.section.4.2.1.2.1">4.2.1.2.1.</a> <a href="#inner-block-options" id="inner-block-options">Inner Block Options</a>
 </h1>
-<p id="rfc.section.4.3.1.2.1.p.1">The inner Block options are used for endpoint-to-endpoint secure fragmentation of payload into blocks and protection of information about the fragmentation (block number, block size, last block). In this case, the sending CoAP endpoint fragments the CoAP message as defined in <a href="#RFC7959" class="xref">[RFC7959]</a> before the message is processed by OSCOAP. The receiving CoAP endpoint first processes the OSCOAP message before processing blockwise as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
-<p id="rfc.section.4.3.1.2.1.p.2">Applications using OSCOAP with inner Block options MUST specify a security policy defining a maximum unfragmented message size for inner Block options such that messages exceeding this size SHALL be fragmented by the sending endpoint.</p>
-<p id="rfc.section.4.3.1.2.1.p.3">For blockwise request operations (using Block1) the client MUST use and process the Request-Tag as defined in Section 3 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. In particular, the rules in section 3.3.1 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a> MUST be followed, which guarantee that a specific request body is assembled only from the corresponding request blocks.</p>
-<p id="rfc.section.4.3.1.2.1.p.4">For blockwise response operations (using Block2) the server MUST use and process the ETag as defined in Section 4 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>.</p>
-<h1 id="rfc.section.4.3.1.2.2">
-<a href="#rfc.section.4.3.1.2.2">4.3.1.2.2.</a> <a href="#outer-block-options" id="outer-block-options">Outer Block Options</a>
+<p id="rfc.section.4.2.1.2.1.p.1">The inner Block options are used for endpoint-to-endpoint secure fragmentation of payload into blocks and protection of information about the fragmentation (block number, block size, last block). In this case, the sending CoAP endpoint fragments the CoAP message as defined in <a href="#RFC7959" class="xref">[RFC7959]</a> before the message is processed by OSCOAP. The receiving CoAP endpoint first processes the OSCOAP message before processing blockwise as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
+<p id="rfc.section.4.2.1.2.1.p.2">Applications using OSCOAP with inner Block options MUST specify a security policy defining a maximum unfragmented message size for inner Block options such that messages exceeding this size SHALL be fragmented by the sending endpoint.</p>
+<p id="rfc.section.4.2.1.2.1.p.3">For blockwise request operations (using Block1) the client MUST use and process the Request-Tag as defined in Section 3 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. In particular, the rules in section 3.3.1 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a> MUST be followed, which guarantee that a specific request body is assembled only from the corresponding request blocks.</p>
+<p id="rfc.section.4.2.1.2.1.p.4">For blockwise response operations (using Block2) the server MUST use and process the ETag as defined in Section 4 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>.</p>
+<h1 id="rfc.section.4.2.1.2.2">
+<a href="#rfc.section.4.2.1.2.2">4.2.1.2.2.</a> <a href="#outer-block-options" id="outer-block-options">Outer Block Options</a>
 </h1>
-<p id="rfc.section.4.3.1.2.2.p.1">A CoAP proxy may do block fragmentation on any CoAP message (including OSCOAP messages) as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>, and thereby decompose it into multiple blocks using outer Block options. The outer block options are thus neither encrypted nor integrity protected.</p>
-<p id="rfc.section.4.3.1.2.2.p.2">To allow multiple concurrent request operations to the same server (not only same resource), a CoAP proxy should use and process the Request-Tag as specified in section 3.3.2 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>; an OSCOAP server that supports outer Block options MUST support the Request-Tag option.</p>
-<p id="rfc.section.4.3.1.2.2.p.3">An endpoint receiving an OSCOAP message with an outer Block option SHALL first process this option according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, or the cumulated message size of the blocks exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the OSCOAP message continues as defined in this document.</p>
-<h1 id="rfc.section.4.3.2">
-<a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#class-i" id="class-i">Class I Options</a>
+<p id="rfc.section.4.2.1.2.2.p.1">A CoAP proxy may do block fragmentation on any CoAP message (including OSCOAP messages) as defined in <a href="#RFC7959" class="xref">[RFC7959]</a>, and thereby decompose it into multiple blocks using outer Block options. The outer block options are thus neither encrypted nor integrity protected.</p>
+<p id="rfc.section.4.2.1.2.2.p.2">To allow multiple concurrent request operations to the same server (not only same resource), a CoAP proxy should use and process the Request-Tag as specified in section 3.3.2 of <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>; an OSCOAP server that supports outer Block options MUST support the Request-Tag option.</p>
+<p id="rfc.section.4.2.1.2.2.p.3">An endpoint receiving an OSCOAP message with an outer Block option SHALL first process this option according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, or the cumulated message size of the blocks exceeds the maximum unfragmented message size. In the latter case the message SHALL be discarded. In the former case, the processing of the OSCOAP message continues as defined in this document.</p>
+<h1 id="rfc.section.4.2.2">
+<a href="#rfc.section.4.2.2">4.2.2.</a> <a href="#class-i" id="class-i">Class I Options</a>
 </h1>
-<p id="rfc.section.4.3.2.p.1">A Class I option is an outer option and hence visible in the options part of the OSCOAP message. Unless otherwise specified, Class I options SHALL be integrity protected between the endpoints, see (<a href="#AAD" class="xref">Section 5.3</a>). The sending endpoint SHALL encode the Class I options in the OSCOAP message as described in <a href="#outer-options" class="xref">Section 4.3.4</a>.</p>
-<h1 id="rfc.section.4.3.3">
-<a href="#rfc.section.4.3.3">4.3.3.</a> <a href="#class-u" id="class-u">Class U Options</a>
+<p id="rfc.section.4.2.2.p.1">A Class I option is an outer option and hence visible in the options part of the OSCOAP message. Unless otherwise specified, Class I options SHALL be integrity protected between the endpoints, see (<a href="#AAD" class="xref">Section 5.3</a>). The sending endpoint SHALL encode the Class I options in the OSCOAP message as described in <a href="#outer-options" class="xref">Section 4.2.4</a>.</p>
+<h1 id="rfc.section.4.2.3">
+<a href="#rfc.section.4.2.3">4.2.3.</a> <a href="#class-u" id="class-u">Class U Options</a>
 </h1>
-<p id="rfc.section.4.3.3.p.1">Options in Class U have outer values and are used to support proxy operations. Unless otherwise specified, the sending endpoint SHALL encode the Class U options in the options part of the OSCOAP message as described in <a href="#outer-options" class="xref">Section 4.3.4</a>.</p>
-<h1 id="rfc.section.4.3.3.1">
-<a href="#rfc.section.4.3.3.1">4.3.3.1.</a> <a href="#uri-host-uri-port-and-proxy-scheme" id="uri-host-uri-port-and-proxy-scheme">Uri-Host, Uri-Port, and Proxy-Scheme</a>
+<p id="rfc.section.4.2.3.p.1">Options in Class U have outer values and are used to support proxy operations. Unless otherwise specified, the sending endpoint SHALL encode the Class U options in the options part of the OSCOAP message as described in <a href="#outer-options" class="xref">Section 4.2.4</a>.</p>
+<h1 id="rfc.section.4.2.3.1">
+<a href="#rfc.section.4.2.3.1">4.2.3.1.</a> <a href="#uri-host-uri-port-and-proxy-scheme" id="uri-host-uri-port-and-proxy-scheme">Uri-Host, Uri-Port, and Proxy-Scheme</a>
 </h1>
-<p id="rfc.section.4.3.3.1.p.1">The sending endpoint SHALL copy Uri-Host, Uri-Port, and Proxy-Scheme from the original CoAP message to the options part of the OSCOAP message. When Uri-Host, Uri-Port, or Proxy-Scheme options are present, Proxy-Uri is not used <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
-<h1 id="rfc.section.4.3.3.2">
-<a href="#rfc.section.4.3.3.2">4.3.3.2.</a> <a href="#proxy-uri" id="proxy-uri">Proxy-Uri</a>
+<p id="rfc.section.4.2.3.1.p.1">The sending endpoint SHALL copy Uri-Host, Uri-Port, and Proxy-Scheme from the original CoAP message to the options part of the OSCOAP message. When Uri-Host, Uri-Port, or Proxy-Scheme options are present, Proxy-Uri is not used <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
+<h1 id="rfc.section.4.2.3.2">
+<a href="#rfc.section.4.2.3.2">4.2.3.2.</a> <a href="#proxy-uri" id="proxy-uri">Proxy-Uri</a>
 </h1>
-<p id="rfc.section.4.3.3.2.p.1">Proxy-Uri, when present, is split by OSCOAP into class U options and class E options, which are processed accordingly. When Proxy-Uri is used in the original CoAP message, Uri-* are not present <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
-<p id="rfc.section.4.3.3.2.p.2">The sending endpoint SHALL first decompose the Proxy-Uri value of the original CoAP message into the Proxy-Scheme, Uri-Host, Uri-Port, Uri-Path and Uri-Query options (if present) according to section 6.4 of <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
-<p id="rfc.section.4.3.3.2.p.3">Uri-Path and Uri-Query are class E options and MUST be protected and processed as if obtained from the original CoAP message, see <a href="#class-e" class="xref">Section 4.3.1</a>.</p>
-<p id="rfc.section.4.3.3.2.p.4">The value of the Proxy-Uri option of the OSCOAP message MUST be replaced with Proxy-Scheme, Uri-Host and Uri-Port options (if present) composed according to section 6.5 of <a href="#RFC7252" class="xref">[RFC7252]</a> and MUST be processed as a class U option, see <a href="#class-u" class="xref">Section 4.3.3</a>.</p>
-<p id="rfc.section.4.3.3.2.p.5">Note that replacing the Proxy-Uri value with the Proxy-Scheme and Uri-* options works by design for all CoAP URIs. OSCOAP-aware HTTP servers should not use the userinfo component of the HTTP URI (as defined in section 3.2.1. of <a href="#RFC3986" class="xref">[RFC3986]</a>), so that this type of replacement is possible in the presence of CoAP-to-HTTP proxies. In other documents specifying cross-protocol proxying behavior using different URI structures, it is expected that the authors will create Uri-* options that allow decomposing the Proxy-Uri, and specify in which OSCOAP class they are.</p>
-<p id="rfc.section.4.3.3.2.p.6">An example of how Proxy-Uri is processed is given here. Assume that the original CoAP message contains:</p>
+<p id="rfc.section.4.2.3.2.p.1">Proxy-Uri, when present, is split by OSCOAP into class U options and class E options, which are processed accordingly. When Proxy-Uri is used in the original CoAP message, Uri-* are not present <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
+<p id="rfc.section.4.2.3.2.p.2">The sending endpoint SHALL first decompose the Proxy-Uri value of the original CoAP message into the Proxy-Scheme, Uri-Host, Uri-Port, Uri-Path and Uri-Query options (if present) according to section 6.4 of <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
+<p id="rfc.section.4.2.3.2.p.3">Uri-Path and Uri-Query are class E options and MUST be protected and processed as if obtained from the original CoAP message, see <a href="#class-e" class="xref">Section 4.2.1</a>.</p>
+<p id="rfc.section.4.2.3.2.p.4">The value of the Proxy-Uri option of the OSCOAP message MUST be replaced with Proxy-Scheme, Uri-Host and Uri-Port options (if present) composed according to section 6.5 of <a href="#RFC7252" class="xref">[RFC7252]</a> and MUST be processed as a class U option, see <a href="#class-u" class="xref">Section 4.2.3</a>.</p>
+<p id="rfc.section.4.2.3.2.p.5">Note that replacing the Proxy-Uri value with the Proxy-Scheme and Uri-* options works by design for all CoAP URIs. OSCOAP-aware HTTP servers should not use the userinfo component of the HTTP URI (as defined in section 3.2.1. of <a href="#RFC3986" class="xref">[RFC3986]</a>), so that this type of replacement is possible in the presence of CoAP-to-HTTP proxies. In other documents specifying cross-protocol proxying behavior using different URI structures, it is expected that the authors will create Uri-* options that allow decomposing the Proxy-Uri, and specify in which OSCOAP class they are.</p>
+<p id="rfc.section.4.2.3.2.p.6">An example of how Proxy-Uri is processed is given here. Assume that the original CoAP message contains:</p>
 <p></p>
 
 <ul><li>Proxy-Uri = &#8220;coap://example.com/resource?q=1&#8221;</li></ul>
-<p id="rfc.section.4.3.3.2.p.8">During OSCOAP processing, Proxy-Uri is split into:</p>
+<p id="rfc.section.4.2.3.2.p.8">During OSCOAP processing, Proxy-Uri is split into:</p>
 <p></p>
 
 <ul>
@@ -812,21 +806,27 @@ Verify request with   |                       |
 <li>Uri-Path = &#8220;resource&#8221;</li>
 <li>Uri-Query = &#8220;q=1&#8221;</li>
 </ul>
-<p id="rfc.section.4.3.3.2.p.10">Uri-Path and Uri-Query follow the processing defined in <a href="#class-e" class="xref">Section 4.3.1</a>, and are thus encrypted and transported in the COSE object. The remaining options are composed into the Proxy-Uri included in the options part of the OSCOAP message, which has value:</p>
+<p id="rfc.section.4.2.3.2.p.10">Uri-Path and Uri-Query follow the processing defined in <a href="#class-e" class="xref">Section 4.2.1</a>, and are thus encrypted and transported in the COSE object. The remaining options are composed into the Proxy-Uri included in the options part of the OSCOAP message, which has value:</p>
 <p></p>
 
 <ul><li>Proxy-Uri = &#8220;coap://example.com&#8221;</li></ul>
-<h1 id="rfc.section.4.3.3.3">
-<a href="#rfc.section.4.3.3.3">4.3.3.3.</a> <a href="#observe" id="observe">Observe</a>
+<h1 id="rfc.section.4.2.3.3">
+<a href="#rfc.section.4.2.3.3">4.2.3.3.</a> <a href="#observe" id="observe">Observe</a>
 </h1>
-<p id="rfc.section.4.3.3.3.p.1">Observe <a href="#RFC7641" class="xref">[RFC7641]</a> is an optional feature. An implementation MAY support <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without supporting <a href="#RFC7641" class="xref">[RFC7641]</a>. The Observe option as used here targets the requirements on forwarding of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> (Section 2.2.1.2).</p>
-<p id="rfc.section.4.3.3.3.p.2">In order for a proxy to support forwarding of Observe messages, there must be an Observe option present in options part of the OSCOAP message (<a href="#RFC7641" class="xref">[RFC7641]</a>), so Observe must have an outer value.</p>
-<p id="rfc.section.4.3.3.3.p.3">To secure the order of the notifications, the client SHALL verify that the Partial IV of a received notification is greater than any previously received Partial IV bound to the Observe request. If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with and empty ACK.</p>
-<p id="rfc.section.4.3.3.3.p.4">The Observe option in the CoAP request may be legitimately removed by a proxy. If the Observe option is removed from a CoAP request by a proxy, then the server can still verify the request (as a non-Observe request), and produce a non-Observe response. If the OSCOAP client receives a response to an Observe request without an outer Observe value, then it MUST verify the response as a non-Observe response. (The reverse case is covered in the verification of the response <a href="#processing" class="xref">Section 7</a>.)</p>
-<h1 id="rfc.section.4.3.4">
-<a href="#rfc.section.4.3.4">4.3.4.</a> <a href="#outer-options" id="outer-options">Outer Options in the OSCOAP Message</a>
+<p id="rfc.section.4.2.3.3.p.1">Observe <a href="#RFC7641" class="xref">[RFC7641]</a> is an optional feature. An implementation MAY support <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without supporting <a href="#RFC7641" class="xref">[RFC7641]</a>. The Observe option as used here targets the requirements on forwarding of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> (Section 2.2.1.2).</p>
+<p id="rfc.section.4.2.3.3.p.2">In order for a proxy to support forwarding of Observe messages, there must be an Observe option present in options part of the OSCOAP message (<a href="#RFC7641" class="xref">[RFC7641]</a>), so Observe must have an outer value.</p>
+<p id="rfc.section.4.2.3.3.p.3">To secure the order of the notifications, the client SHALL verify that the Partial IV of a received notification is greater than any previously received Partial IV bound to the Observe request. If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with and empty ACK.</p>
+<p id="rfc.section.4.2.3.3.p.4">The Observe option in the CoAP request may be legitimately removed by a proxy. If the Observe option is removed from a CoAP request by a proxy, then the server can still verify the request (as a non-Observe request), and produce a non-Observe response. If the OSCOAP client receives a response to an Observe request without an outer Observe value, then it MUST verify the response as a non-Observe response. (The reverse case is covered in the verification of the response <a href="#processing" class="xref">Section 7</a>.)</p>
+<h1 id="rfc.section.4.2.4">
+<a href="#rfc.section.4.2.4">4.2.4.</a> <a href="#outer-options" id="outer-options">Outer Options in the OSCOAP Message</a>
 </h1>
-<p id="rfc.section.4.3.4.p.1">All options with outer values present in the OSCOAP message, including the Object-Security option, SHALL be encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included outer option value.</p>
+<p id="rfc.section.4.2.4.p.1">All options with outer values present in the OSCOAP message, including the Object-Security option, SHALL be encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included outer option value.</p>
+<h1 id="rfc.section.4.3">
+<a href="#rfc.section.4.3">4.3.</a> <a href="#coap-payload" id="coap-payload">CoAP Payload</a>
+</h1>
+<p id="rfc.section.4.3.p.1">The CoAP Payload SHALL be encrypted and integrity protected (Class E), and thus is an inner message field.</p>
+<p id="rfc.section.4.3.p.2">The sending endpoint writes the payload of the original CoAP message into the plaintext of the COSE object.</p>
+<p id="rfc.section.4.3.p.3">The receiving endpoint verifies and decrypts the COSE object, and recreates the payload of the original CoAP message.</p>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#cose-object" id="cose-object">The COSE Object</a>
 </h1>
@@ -839,7 +839,7 @@ Verify request with   |                       |
 <ul>
 <li>The &#8220;protected&#8221; field is empty.</li>
 <li>The &#8220;unprotected&#8221; field includes:  <ul>
-<li>The &#8220;Partial IV&#8221; parameter. The value is set to the Sequence Number. The Partial IV SHALL be of minimum length needed to encode the sequence number. This parameter SHALL be present in requests. In case of Observe (<a href="#observe" class="xref">Section 4.3.3.3</a>) the Partial IV SHALL be present in responses, and otherwise the Partial IV SHALL NOT be present in responses.</li>
+<li>The &#8220;Partial IV&#8221; parameter. The value is set to the Sequence Number. The Partial IV SHALL be of minimum length needed to encode the sequence number. This parameter SHALL be present in requests. In case of Observe (<a href="#observe" class="xref">Section 4.2.3.3</a>) the Partial IV SHALL be present in responses, and otherwise the Partial IV SHALL NOT be present in responses.</li>
 <li>The &#8220;kid&#8221; parameter. The value is set to the Sender ID (see <a href="#context" class="xref">Section 3</a>). This parameter SHALL be present in requests and SHALL NOT be present in responses.</li>
 </ul>
 </li>
@@ -857,7 +857,7 @@ Verify request with   |                       |
 <p></p>
 
 <ul>
-<li>all Class E option values <a href="#class-e" class="xref">Section 4.3.1</a> present in the original CoAP message (see <a href="#coap-options" class="xref">Section 4.3</a>). The options are encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included Class E option; and</li>
+<li>all Class E option values <a href="#class-e" class="xref">Section 4.2.1</a> present in the original CoAP message (see <a href="#coap-options" class="xref">Section 4.2</a>). The options are encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included Class E option; and</li>
 <li>the Payload of original CoAP message, if present, and in that case prefixed by the one-byte Payload Marker (0xFF).</li>
 </ul>
 <div id="rfc.figure.5"></div>
@@ -894,7 +894,7 @@ external_aad = [
 <ul>
 <li>version: contains the OSCOAP version number. Implementations of this specification MUST set this field to 1. Other values are reserved for future versions.</li>
 <li>code: contains is the CoAP Code of the original CoAP message, as defined in Section 3 of <a href="#RFC7252" class="xref">[RFC7252]</a>.</li>
-<li>options: contains the Class I options <a href="#class-i" class="xref">Section 4.3.2</a>&#160;present in the original CoAP message encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included class I option.</li>
+<li>options: contains the Class I options <a href="#class-i" class="xref">Section 4.2.2</a>&#160;present in the original CoAP message encoded as described in Section 3.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>, where the delta is the difference to the previously included class I option.</li>
 <li>alg: contains the AEAD Algorithm from the security context used for the exchange (see <a href="#context-definition" class="xref">Section 3.1</a>).</li>
 <li>request_kid: contains the value of the &#8216;kid&#8217; in the COSE object of the request (see Section 5).</li>
 <li>request_piv: contains the value of the &#8216;Partial IV&#8217; in the COSE object of the request (see Section 5).</li>
@@ -964,7 +964,7 @@ external_aad = [
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compose the AEAD nonce by XORing the Context IV (Sender IV) with the partial IV (Sequence Number in network byte order).</li>
 <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
-<li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.3.4</a>.</li>
+<li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.2.4</a>.</li>
 <li>Store the association Token - Security Context. The client SHALL be able to find the Recipient Context from the Token in the response.</li>
 <li>Increment the Sequence Number by one.</li>
 </ol>
@@ -975,7 +975,7 @@ external_aad = [
 <p></p>
 
 <ol>
-<li>Process outer Block options according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the request have been received, see <a href="#block-options" class="xref">Section 4.3.1.2</a>.</li>
+<li>Process outer Block options according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the request have been received, see <a href="#block-options" class="xref">Section 4.2.1.2</a>.</li>
 <li>Decompress the COSE Object (<a href="#compression" class="xref">Section 8</a>) and retrieve the Recipient Context associated with the Recipient ID in the &#8216;kid&#8217; parameter. If the request is a CON message, and:  <ul>
 <li>either the decompression or the COSE message fails to decode, the server SHALL respond with a 4.02 Bad Option error message. The diagnostic payload SHOULD contain the string &#8220;Failed to decode COSE&#8221;.</li>
 <li>the server fails to retrieve a Recipient Context with Recipient ID corresponding to the &#8216;kid&#8217; parameter received, the server SHALL respond with a 4.01 Unauthorized error message. The diagnostic payload MAY contain the string &#8220;Security context not found&#8221;.</li>
@@ -1013,7 +1013,7 @@ external_aad = [
 </ul>
 </li>
 <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
-<li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.3.4</a>.</li>
+<li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.2.4</a>.</li>
 <li>If Observe is used, increment the Sequence Number by one.</li>
 </ol>
 <h1 id="rfc.section.7.4">
@@ -1023,7 +1023,7 @@ external_aad = [
 <p></p>
 
 <ol>
-<li>Process outer Block options according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, see <a href="#block-options" class="xref">Section 4.3.1.2</a>.</li>
+<li>Process outer Block options according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, see <a href="#block-options" class="xref">Section 4.2.1.2</a>.</li>
 <li>Retrieve the Recipient Context associated with the Token. Decompress the COSE Object (<a href="#compression" class="xref">Section 8</a>). If the response is a CON message and either the decompression or the COSE message fails to decode, then the client SHALL send an empty ACK back and stop processing the response.  If the response is a NON message and any of the previous conditions appear, then the client SHALL simply stop processing the response.</li>
 </ol>
 <p></p>
