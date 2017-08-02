@@ -1022,11 +1022,7 @@ external_aad = [
 
 <ol>
 <li>Process outer Block options according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, see <a href="#block-options" class="xref">Section 4.2.1.2</a>.</li>
-<li>Retrieve the Recipient Context associated with the Token. Decompress the COSE Object (<a href="#compression" class="xref">Section 8</a>). If the response is a CON message and either the decompression or the COSE message fails to decode, then the client SHALL send an empty ACK back and stop processing the response.  If the response is a NON message and any of the previous conditions appear, then the client SHALL simply stop processing the response.</li>
-</ol>
-<p></p>
-
-<ol>
+<li>Retrieve the Recipient Context associated with the Token. Decompress the COSE Object (<a href="#compression" class="xref">Section 8</a>). If the response is a CON message and either the decompression or the COSE message fails to decode, then the client SHALL send an empty ACK back and stop processing the response. If the response is a NON message and any of the previous conditions appear, then the client SHALL simply stop processing the response.</li>
 <li>For Observe notifications, verify the Sequence Number in the &#8216;Partial IV&#8217; parameter as described in <a href="#sequence-numbers" class="xref">Section 6</a>. If the client receives a notification for which no Observe request was sent, the client SHALL stop processing the response and, in the case of CON send an empty ACK back.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compose the AEAD nonce  <ul>

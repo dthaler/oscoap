@@ -1440,16 +1440,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
        any of the previous conditions appear, then the client SHALL
        simply stop processing the response.
 
-   1.  For Observe notifications, verify the Sequence Number in the
+   3.  For Observe notifications, verify the Sequence Number in the
        'Partial IV' parameter as described in Section 6.  If the client
        receives a notification for which no Observe request was sent,
        the client SHALL stop processing the response and, in the case of
        CON send an empty ACK back.
 
-   2.  Compose the Additional Authenticated Data, as described in
+   4.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
-   3.  Compose the AEAD nonce
+   5.  Compose the AEAD nonce
 
 
 
@@ -1467,7 +1467,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
           AEAD nonce by XORing the Context IV (Recipient IV) with the
           padded Partial IV parameter from the response.
 
-   4.  Decrypt the COSE object using the Recipient Key.
+   6.  Decrypt the COSE object using the Recipient Key.
 
        *  If decryption fails, the client MUST stop processing the
           response and, if the response is a CON message, the client
@@ -1476,14 +1476,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
        *  If decryption succeeds and Observe is used, update the
           Recipient Replay Window, as described in Section 6.
 
-   5.  Add decrypted options or payload to the decrypted response
+   7.  Add decrypted options or payload to the decrypted response
        overwriting any outer E options (see Section 4).  The Object-
        Security option is removed.
 
        *  If Observe is used, replace the Observe value with the 3 least
           significant bytes in the sequence number.
 
-   6.  The decrypted CoAP response is processed according to [RFC7252]
+   8.  The decrypted CoAP response is processed according to [RFC7252]
 
 7.5.  Nonce generation examples
 
