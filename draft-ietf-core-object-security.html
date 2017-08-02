@@ -291,11 +291,11 @@ address {
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Plaintext">
 <link href="#rfc.section.5.3" rel="Chapter" title="5.3 Additional Authenticated Data">
 <link href="#rfc.section.6" rel="Chapter" title="6 Sequence Numbers, Replay, Message Binding, and Freshness">
-<link href="#rfc.section.6.1" rel="Chapter" title="6.1 AEAD Nonce Uniqueness">
-<link href="#rfc.section.6.2" rel="Chapter" title="6.2 Replay Protection">
-<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Sequence Number and Replay Window State">
-<link href="#rfc.section.6.4" rel="Chapter" title="6.4 Freshness">
-<link href="#rfc.section.6.5" rel="Chapter" title="6.5 Delay and Mismatch Attacks">
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Message Binding">
+<link href="#rfc.section.6.2" rel="Chapter" title="6.2 AEAD Nonce Uniqueness">
+<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Freshness">
+<link href="#rfc.section.6.4" rel="Chapter" title="6.4 Replay Protection">
+<link href="#rfc.section.6.5" rel="Chapter" title="6.5 Sequence Number and Replay Window State">
 <link href="#rfc.section.7" rel="Chapter" title="7 Processing">
 <link href="#rfc.section.7.1" rel="Chapter" title="7.1 Protecting the Request">
 <link href="#rfc.section.7.2" rel="Chapter" title="7.2 Verifying the Request">
@@ -423,15 +423,15 @@ address {
 </li>
 </ul><li>6.   <a href="#rfc.section.6">Sequence Numbers, Replay, Message Binding, and Freshness</a>
 </li>
-<ul><li>6.1.   <a href="#rfc.section.6.1">AEAD Nonce Uniqueness</a>
+<ul><li>6.1.   <a href="#rfc.section.6.1">Message Binding</a>
 </li>
-<li>6.2.   <a href="#rfc.section.6.2">Replay Protection</a>
+<li>6.2.   <a href="#rfc.section.6.2">AEAD Nonce Uniqueness</a>
 </li>
-<li>6.3.   <a href="#rfc.section.6.3">Sequence Number and Replay Window State</a>
+<li>6.3.   <a href="#rfc.section.6.3">Freshness</a>
 </li>
-<li>6.4.   <a href="#rfc.section.6.4">Freshness</a>
+<li>6.4.   <a href="#rfc.section.6.4">Replay Protection</a>
 </li>
-<li>6.5.   <a href="#rfc.section.6.5">Delay and Mismatch Attacks</a>
+<li>6.5.   <a href="#rfc.section.6.5">Sequence Number and Replay Window State</a>
 </li>
 </ul><li>7.   <a href="#rfc.section.7">Processing</a>
 </li>
@@ -903,52 +903,52 @@ external_aad = [
 <a href="#rfc.section.6">6.</a> <a href="#sequence-numbers" id="sequence-numbers">Sequence Numbers, Replay, Message Binding, and Freshness</a>
 </h1>
 <h1 id="rfc.section.6.1">
-<a href="#rfc.section.6.1">6.1.</a> <a href="#nonce-uniqueness" id="nonce-uniqueness">AEAD Nonce Uniqueness</a>
+<a href="#rfc.section.6.1">6.1.</a> <a href="#message-binding" id="message-binding">Message Binding</a>
 </h1>
-<p id="rfc.section.6.1.p.1">An AEAD nonce MUST NOT be used more than once per AEAD key. In order to assure unique nonces, each Sender Context contains a Sequence Number used to protect requests, and - in case of Observe - responses. If messages are processed concurrently, the operation of reading and increasing the sequence number MUST be atomic.</p>
-<p id="rfc.section.6.1.p.2">The maximum sequence number is algorithm dependent, see <a href="#sec-considerations" class="xref">Section 11</a>. If the Sequence Number exceeds the maximum sequence number, the endpoint MUST NOT process any more messages with the given Sender Context. The endpoint SHOULD acquire a new security context (and consequently inform the other endpoint) before this happens. The latter is out of scope of this document.</p>
+<p id="rfc.section.6.1.p.1">In order to prevent response delay and mismatch attacks <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a> from on-path attackers and compromised proxies, OSCOAP binds responses to the request by including the request&#8217;s ID (Sender ID or Recipient ID) and sequence number in the AAD of the response. The server therefore needs to store the request&#8217;s ID (Sender ID or Recipient ID) and sequence number until all responses have been sent.</p>
 <h1 id="rfc.section.6.2">
-<a href="#rfc.section.6.2">6.2.</a> <a href="#replay-protection" id="replay-protection">Replay Protection</a>
+<a href="#rfc.section.6.2">6.2.</a> <a href="#nonce-uniqueness" id="nonce-uniqueness">AEAD Nonce Uniqueness</a>
 </h1>
-<p id="rfc.section.6.2.p.1">In order to protect from replay of requests, the server&#8217;s Recipient Context contains a Replay Window. A server SHALL verify that a Partial IV received in the COSE object has not been received before in the Recipient Context. If this verification fails and the message received is a CON message, the server SHALL respond with a 5.03 Service Unavailable error message with the option Max-Age set to 0. The diagnostic payload MAY contain the &#8220;Replay protection failed&#8221; string. The size and type of the Replay Window depends on the use case and lower protocol layers. In case of reliable and ordered transport from endpoint to endpoint, the server MAY just store the last received Partial IV and require that newly received Partial IVs equals the last received Partial IV + 1.</p>
-<p id="rfc.section.6.2.p.2">Reponses are protected against replay as they are cryptographically bound to the request. In the case of Observe, the client&#8217;s Recipient Context contains the last received Partial IV for each active Observe registration and the client SHALL verify that the Partial IV of a received notification is greater than any previously received Partial IV bound to the Observe request. If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with an empty ACK. The client MAY ignore the outer Observe value.</p>
-<p id="rfc.section.6.2.p.3">If messages are processed concurrently, the partial IV needs to be validated a second time after decryption and before updating the replay protection. The operation of validating the partial IV and updating the replay protection MUST be atomic.</p>
+<p id="rfc.section.6.2.p.1">An AEAD nonce MUST NOT be used more than once per AEAD key. In order to assure unique nonces, each Sender Context contains a Sequence Number used to protect requests, and - in case of Observe - responses. If messages are processed concurrently, the operation of reading and increasing the sequence number MUST be atomic.</p>
+<p id="rfc.section.6.2.p.2">The maximum sequence number is algorithm dependent, see <a href="#sec-considerations" class="xref">Section 11</a>. If the Sequence Number exceeds the maximum sequence number, the endpoint MUST NOT process any more messages with the given Sender Context. The endpoint SHOULD acquire a new security context (and consequently inform the other endpoint) before this happens. The latter is out of scope of this document.</p>
 <h1 id="rfc.section.6.3">
-<a href="#rfc.section.6.3">6.3.</a> <a href="#replay-state" id="replay-state">Sequence Number and Replay Window State</a>
+<a href="#rfc.section.6.3">6.3.</a> <a href="#freshness" id="freshness">Freshness</a>
 </h1>
-<p id="rfc.section.6.3.p.1">To prevent reuse of the Nonce with the same key, or from accepting replayed messages, a node needs to handle the situation of suddenly losing sequence number and replay window state in RAM, e.g. as a result of a reboot.</p>
-<p id="rfc.section.6.3.p.2">After boot, a node MAY reject to use existing security contexts from before it booted and MAY establish a new security context with each party it communicates, e.g. using ACE <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>. However, establishing a fresh security context may have a non-negligible cost in terms of e.g. power consumption.</p>
-<p id="rfc.section.6.3.p.3">If a stored security context is to be used after reboot, then the node MUST NOT reuse a previous Sequence Number and MUST NOT accept previously accepted messages.</p>
-<h1 id="rfc.section.6.3.1">
-<a href="#rfc.section.6.3.1">6.3.1.</a> <a href="#the-basic-case" id="the-basic-case">The Basic Case</a>
+<p id="rfc.section.6.3.p.1">For responses without Observe, OSCOAP provides absolute freshness. For requests, and responses with Observe, OSCOAP provides relative freshness in the sense that the sequence numbers allow a recipient to determine the relative order of messages.</p>
+<p id="rfc.section.6.3.p.2">For applications having stronger demands on freshness (e.g. control of actuators), OSCOAP needs to be augmented with mechanisms providing absolute freshness <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>.</p>
+<h1 id="rfc.section.6.4">
+<a href="#rfc.section.6.4">6.4.</a> <a href="#replay-protection" id="replay-protection">Replay Protection</a>
 </h1>
-<p id="rfc.section.6.3.1.p.1">To prevent reuse of Sequence Number, the node MAY perform the following procedure during normal operations:</p>
+<p id="rfc.section.6.4.p.1">In order to protect from replay of requests, the server&#8217;s Recipient Context contains a Replay Window. A server SHALL verify that a Partial IV received in the COSE object has not been received before in the Recipient Context. If this verification fails and the message received is a CON message, the server SHALL respond with a 5.03 Service Unavailable error message with the option Max-Age set to 0. The diagnostic payload MAY contain the &#8220;Replay protection failed&#8221; string. The size and type of the Replay Window depends on the use case and lower protocol layers. In case of reliable and ordered transport from endpoint to endpoint, the server MAY just store the last received Partial IV and require that newly received Partial IVs equals the last received Partial IV + 1.</p>
+<p id="rfc.section.6.4.p.2">Reponses are protected against replay as they are cryptographically bound to the request. In the case of Observe, the client&#8217;s Recipient Context contains the last received Partial IV for each active Observe registration and the client SHALL verify that the Partial IV of a received notification is greater than any previously received Partial IV bound to the Observe request. If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with an empty ACK. The client MAY ignore the outer Observe value.</p>
+<p id="rfc.section.6.4.p.3">If messages are processed concurrently, the partial IV needs to be validated a second time after decryption and before updating the replay protection. The operation of validating the partial IV and updating the replay protection MUST be atomic.</p>
+<h1 id="rfc.section.6.5">
+<a href="#rfc.section.6.5">6.5.</a> <a href="#replay-state" id="replay-state">Sequence Number and Replay Window State</a>
+</h1>
+<p id="rfc.section.6.5.p.1">To prevent reuse of the Nonce with the same key, or from accepting replayed messages, a node needs to handle the situation of suddenly losing sequence number and replay window state in RAM, e.g. as a result of a reboot.</p>
+<p id="rfc.section.6.5.p.2">After boot, a node MAY reject to use existing security contexts from before it booted and MAY establish a new security context with each party it communicates, e.g. using ACE <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>. However, establishing a fresh security context may have a non-negligible cost in terms of e.g. power consumption.</p>
+<p id="rfc.section.6.5.p.3">If a stored security context is to be used after reboot, then the node MUST NOT reuse a previous Sequence Number and MUST NOT accept previously accepted messages.</p>
+<h1 id="rfc.section.6.5.1">
+<a href="#rfc.section.6.5.1">6.5.1.</a> <a href="#the-basic-case" id="the-basic-case">The Basic Case</a>
+</h1>
+<p id="rfc.section.6.5.1.p.1">To prevent reuse of Sequence Number, the node MAY perform the following procedure during normal operations:</p>
 <p></p>
 
 <ul><li>Before sending a message, the client stores in persistent memory a sequence number associated to the stored security context higher than any sequence number which has been or are being sent using this security context. After boot, the client does not use any lower sequence number in a request than what was persistently stored with that security context.  <ul><li>Storing to persistent memory can be costly. Instead of storing a sequence number for each request, the client may store Seq + K to persistent memory every K requests, where Seq is the current sequence number and K &gt; 1. This is a trade-off between the number of storage operations and efficient use of sequence numbers.</li></ul>
 </li></ul>
-<p id="rfc.section.6.3.1.p.3">To prevent accepting replay of previously received messages, the node MAY perform the following procedure:</p>
+<p id="rfc.section.6.5.1.p.3">To prevent accepting replay of previously received messages, the node MAY perform the following procedure:</p>
 <p></p>
 
 <ul><li>After boot, before verifying a message using a security context stored before boot, the server synchronizes the replay window so that no old messages are being accepted. The server uses the Repeat option <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a> for synchronizing the replay window: For each stored security context, the first time after boot the server receives an OSCOAP request, it generates a pseudo-random nonce and responds with the Repeat option set to the nonce as described in <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. If the server receives a repeated OSCOAP request containing the Repeat option and the same nonce, and if the server can verify the request, then the sequence number obtained in the repeated message is set as the lower limit of the replay window.</li></ul>
-<h1 id="rfc.section.6.3.2">
-<a href="#rfc.section.6.3.2">6.3.2.</a> <a href="#the-observe-case" id="the-observe-case">The Observe Case</a>
+<h1 id="rfc.section.6.5.2">
+<a href="#rfc.section.6.5.2">6.5.2.</a> <a href="#the-observe-case" id="the-observe-case">The Observe Case</a>
 </h1>
-<p id="rfc.section.6.3.2.p.1">To prevent reuse of Sequence Number in case of Observe, the node MAY perform the following procedure during normal operations:</p>
+<p id="rfc.section.6.5.2.p.1">To prevent reuse of Sequence Number in case of Observe, the node MAY perform the following procedure during normal operations:</p>
 <p></p>
 
 <ul><li>Before sending a notification, the server stores in persistent memory a sequence number associated to the stored security context higher than any sequence number for which a notification has been or are being sent using this security context. After boot, the server does not use any lower sequence number in an Observe response than what was persistently stored with that security context.  <ul><li>Storing to persistent memory can be costly. Instead of storing a sequence number for each notification, the server may store Seq + K to persistent memory every K requests, where Seq is the current sequence number and K &gt; 1. This is a trade-off between the number of storage operations and efficient use of sequence numbers.</li></ul>
 </li></ul>
-<p id="rfc.section.6.3.2.p.3">Note that a client MAY continue an ongoing observation after reboot using a stored security context. With Observe, the client can only verify the order of the notifications, as they may be delayed. If the client wants to synchronize with a server resource it MAY restart an observation.</p>
-<h1 id="rfc.section.6.4">
-<a href="#rfc.section.6.4">6.4.</a> <a href="#freshness" id="freshness">Freshness</a>
-</h1>
-<p id="rfc.section.6.4.p.1">For responses without Observe, OSCOAP provides absolute freshness. For requests, and responses with Observe, OSCOAP provides relative freshness in the sense that the sequence numbers allow a recipient to determine the relative order of messages.</p>
-<p id="rfc.section.6.4.p.2">For applications having stronger demands on freshness (e.g. control of actuators), OSCOAP needs to be augmented with mechanisms providing absolute freshness <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>.</p>
-<h1 id="rfc.section.6.5">
-<a href="#rfc.section.6.5">6.5.</a> <a href="#delay-and-mismatch-attacks" id="delay-and-mismatch-attacks">Delay and Mismatch Attacks</a>
-</h1>
-<p id="rfc.section.6.5.p.1">In order to prevent response delay and mismatch attacks <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a> from on-path attackers and compromised proxies, OSCOAP binds responses to the request by including the request&#8217;s ID (Sender ID or Recipient ID) and sequence number in the AAD of the response. The server therefore needs to store the request&#8217;s ID (Sender ID or Recipient ID) and sequence number until all responses have been sent.</p>
+<p id="rfc.section.6.5.2.p.3">Note that a client MAY continue an ongoing observation after reboot using a stored security context. With Observe, the client can only verify the order of the notifications, as they may be delayed. If the client wants to synchronize with a server resource it MAY restart an observation.</p>
 <h1 id="rfc.section.7">
 <a href="#rfc.section.7">7.</a> <a href="#processing" id="processing">Processing</a>
 </h1>
@@ -1245,7 +1245,7 @@ h'aea0155667924dff8a24e4cb35b9'
 <p id="rfc.section.11.p.3">The use of COSE to protect CoAP messages as specified in this document requires an established security context. The method to establish the security context described in <a href="#context-derivation" class="xref">Section 3.2</a> is based on a common shared secret material in client and server, which may be obtained e.g. by using the ACE framework <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>. An OSCOAP profile of ACE is described in <a href="#I-D.seitz-ace-oscoap-profile" class="xref">[I-D.seitz-ace-oscoap-profile]</a>.</p>
 <p id="rfc.section.11.p.4">The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is selected for broad applicability in terms of message size (2^64 blocks) and maximum number of messages (2^56). Compatibility with CCM* is achieved by using the algorithm AES-CCM-16-64-128 <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
 <p id="rfc.section.11.p.5">Most AEAD algorithms require a unique nonce for each message, for which the sequence numbers in the COSE message field &#8220;Partial IV&#8221; is used. If the recipient accepts any sequence number larger than the one previously received, then the problem of sequence number synchronization is avoided. With reliable transport, it may be defined that only messages with sequence number which are equal to previous sequence number + 1 are accepted. The alternatives to sequence numbers have their issues: very constrained devices may not be able to support accurate time, or to generate and store large numbers of random nonces. The requirement to change key at counter wrap is a complication, but it also forces the user of this specification to think about implementing key renewal.</p>
-<p id="rfc.section.11.p.6">The maximum sequence number to guarantee nonce uniqueness (<a href="#nonce-uniqueness" class="xref">Section 6.1</a>) is dependent on the AEAD algorithm. The maximum sequence number SHALL be 2^(min(nonce length in bits, 56) - 1) - 1, or any algorithm specific lower limit. The &#8220;-1&#8221; in the exponent stems from the same partial IV and flipped bit of IV (<a href="#cose-object" class="xref">Section 5</a>) is used in request and response. The compression mechanism (<a href="#compression" class="xref">Section 8</a>) assumes that the partial IV is 56 bits or less (which is the reason for min(,) in the exponent).</p>
+<p id="rfc.section.11.p.6">The maximum sequence number to guarantee nonce uniqueness (<a href="#nonce-uniqueness" class="xref">Section 6.2</a>) is dependent on the AEAD algorithm. The maximum sequence number SHALL be 2^(min(nonce length in bits, 56) - 1) - 1, or any algorithm specific lower limit. The &#8220;-1&#8221; in the exponent stems from the same partial IV and flipped bit of IV (<a href="#cose-object" class="xref">Section 5</a>) is used in request and response. The compression mechanism (<a href="#compression" class="xref">Section 8</a>) assumes that the partial IV is 56 bits or less (which is the reason for min(,) in the exponent).</p>
 <p id="rfc.section.11.p.7">The inner block options enable the sender to split large messages into OSCOAP-protected blocks such that the receiving node can verify blocks before having received the complete message. The outer block options allow for arbitrary proxy fragmentation operations that cannot be verified by the endpoints, but can by policy be restricted in size since the encrypted options allow for secure fragmentation of very large messages. A maximum message size (above which the sending endpoint fragments the message and the receiving endpoint discards the message, if complying to the policy) may be obtained as part of normal resource discovery.</p>
 <p id="rfc.section.11.p.8">Applications need to use a padding scheme if the content of a message can be determined solely from the length of the payload. As an example, the strings &#8220;YES&#8221; and &#8220;NO&#8221; even if encrypted can be distinguished from each other as there is no padding supplied by the current set of encryption algorithms. Some information can be determined even from looking at boundary conditions. An example of this would be returning an integer between 0 and 100 where lengths of 1, 2 and 3 will provide information about where in the range things are. Three different methods to deal with this are: 1) ensure that all messages are the same length. For example, using 0 and 1 instead of &#8216;yes&#8217; and &#8216;no&#8217;. 2) Use a character which is not part of the responses to pad to a fixed length. For example, pad with a space to three characters. 3) Use the PKCS #7 style padding scheme where m bytes are appended each having the value of m. For example, appending a 0 to &#8220;YES&#8221; and two 1&#8217;s to &#8220;NO&#8221;. This style of padding means that all values need to be padded.</p>
 <h1 id="rfc.section.12">
@@ -1254,7 +1254,7 @@ h'aea0155667924dff8a24e4cb35b9'
 <p id="rfc.section.12.p.1">Privacy threats executed through intermediate nodes are considerably reduced by means of OSCOAP. End-to-end integrity protection and encryption of CoAP payload and all options that are not used for proxy operations, provide mitigation against attacks on sensor and actuator communication, which may have a direct impact on the personal sphere.</p>
 <p id="rfc.section.12.p.2">The unprotected options (<a href="#fig-option-protection" class="xref">Figure 4</a>) may reveal privacy sensitive information. In particular Uri-Host SHOULD NOT contain privacy sensitive information.</p>
 <p id="rfc.section.12.p.3">CoAP headers sent in plaintext allow for example matching of CON and ACK (CoAP Message Identifier), matching of request and responses (Token) and traffic analysis.</p>
-<p id="rfc.section.12.p.4">Using the mechanisms described in <a href="#replay-state" class="xref">Section 6.3</a> reveals when a device goes through a reboot. This can be mitigated by the device storing the precise state of sender sequence number and recipient replay window on a clean shutdown.</p>
+<p id="rfc.section.12.p.4">Using the mechanisms described in <a href="#replay-state" class="xref">Section 6.5</a> reveals when a device goes through a reboot. This can be mitigated by the device storing the precise state of sender sequence number and recipient replay window on a clean shutdown.</p>
 <h1 id="rfc.section.13">
 <a href="#rfc.section.13">13.</a> <a href="#iana-considerations" id="iana-considerations">IANA Considerations</a>
 </h1>

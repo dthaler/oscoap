@@ -84,11 +84,11 @@ Table of Contents
      5.2.  Plaintext . . . . . . . . . . . . . . . . . . . . . . . .  19
      5.3.  Additional Authenticated Data . . . . . . . . . . . . . .  20
    6.  Sequence Numbers, Replay, Message Binding, and Freshness  . .  21
-     6.1.  AEAD Nonce Uniqueness . . . . . . . . . . . . . . . . . .  21
-     6.2.  Replay Protection . . . . . . . . . . . . . . . . . . . .  21
-     6.3.  Sequence Number and Replay Window State . . . . . . . . .  22
-     6.4.  Freshness . . . . . . . . . . . . . . . . . . . . . . . .  23
-     6.5.  Delay and Mismatch Attacks  . . . . . . . . . . . . . . .  23
+     6.1.  Message Binding . . . . . . . . . . . . . . . . . . . . .  21
+     6.2.  AEAD Nonce Uniqueness . . . . . . . . . . . . . . . . . .  21
+     6.3.  Freshness . . . . . . . . . . . . . . . . . . . . . . . .  21
+     6.4.  Replay Protection . . . . . . . . . . . . . . . . . . . .  21
+     6.5.  Sequence Number and Replay Window State . . . . . . . . .  22
    7.  Processing  . . . . . . . . . . . . . . . . . . . . . . . . .  24
      7.1.  Protecting the Request  . . . . . . . . . . . . . . . . .  24
      7.2.  Verifying the Request . . . . . . . . . . . . . . . . . .  24
@@ -1124,7 +1124,17 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 6.  Sequence Numbers, Replay, Message Binding, and Freshness
 
-6.1.  AEAD Nonce Uniqueness
+6.1.  Message Binding
+
+   In order to prevent response delay and mismatch attacks
+   [I-D.mattsson-core-coap-actuators] from on-path attackers and
+   compromised proxies, OSCOAP binds responses to the request by
+   including the request's ID (Sender ID or Recipient ID) and sequence
+   number in the AAD of the response.  The server therefore needs to
+   store the request's ID (Sender ID or Recipient ID) and sequence
+   number until all responses have been sent.
+
+6.2.  AEAD Nonce Uniqueness
 
    An AEAD nonce MUST NOT be used more than once per AEAD key.  In order
    to assure unique nonces, each Sender Context contains a Sequence
@@ -1139,7 +1149,18 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    consequently inform the other endpoint) before this happens.  The
    latter is out of scope of this document.
 
-6.2.  Replay Protection
+6.3.  Freshness
+
+   For responses without Observe, OSCOAP provides absolute freshness.
+   For requests, and responses with Observe, OSCOAP provides relative
+   freshness in the sense that the sequence numbers allow a recipient to
+   determine the relative order of messages.
+
+   For applications having stronger demands on freshness (e.g. control
+   of actuators), OSCOAP needs to be augmented with mechanisms providing
+   absolute freshness [I-D.amsuess-core-repeat-request-tag].
+
+6.4.  Replay Protection
 
    In order to protect from replay of requests, the server's Recipient
    Context contains a Replay Window.  A server SHALL verify that a
@@ -1149,6 +1170,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    Service Unavailable error message with the option Max-Age set to 0.
    The diagnostic payload MAY contain the "Replay protection failed"
    string.  The size and type of the Replay Window depends on the use
+
+
+
+Selander, et al.        Expires February 3, 2018               [Page 21]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
+
+
    case and lower protocol layers.  In case of reliable and ordered
    transport from endpoint to endpoint, the server MAY just store the
    last received Partial IV and require that newly received Partial IVs
@@ -1169,16 +1198,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    replay protection.  The operation of validating the partial IV and
    updating the replay protection MUST be atomic.
 
-
-
-
-
-Selander, et al.        Expires February 3, 2018               [Page 21]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
-
-
-6.3.  Sequence Number and Replay Window State
+6.5.  Sequence Number and Replay Window State
 
    To prevent reuse of the Nonce with the same key, or from accepting
    replayed messages, a node needs to handle the situation of suddenly
@@ -1195,7 +1215,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    node MUST NOT reuse a previous Sequence Number and MUST NOT accept
    previously accepted messages.
 
-6.3.1.  The Basic Case
+6.5.1.  The Basic Case
 
    To prevent reuse of Sequence Number, the node MAY perform the
    following procedure during normal operations:
@@ -1206,6 +1226,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
       this security context.  After boot, the client does not use any
       lower sequence number in a request than what was persistently
       stored with that security context.
+
+
+
+Selander, et al.        Expires February 3, 2018               [Page 22]
+
+Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
+
 
       *  Storing to persistent memory can be costly.  Instead of storing
          a sequence number for each request, the client may store Seq +
@@ -1226,20 +1253,12 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
       it generates a pseudo-random nonce and responds with the Repeat
       option set to the nonce as described in
       [I-D.amsuess-core-repeat-request-tag].  If the server receives a
-
-
-
-Selander, et al.        Expires February 3, 2018               [Page 22]
-
-Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
-
-
       repeated OSCOAP request containing the Repeat option and the same
       nonce, and if the server can verify the request, then the sequence
       number obtained in the repeated message is set as the lower limit
       of the replay window.
 
-6.3.2.  The Observe Case
+6.5.2.  The Observe Case
 
    To prevent reuse of Sequence Number in case of Observe, the node MAY
    perform the following procedure during normal operations:
@@ -1262,26 +1281,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    Note that a client MAY continue an ongoing observation after reboot
    using a stored security context.  With Observe, the client can only
    verify the order of the notifications, as they may be delayed.  If
-   the client wants to synchronize with a server resource it MAY restart
-   an observation.
 
-6.4.  Freshness
-
-   For responses without Observe, OSCOAP provides absolute freshness.
-   For requests, and responses with Observe, OSCOAP provides relative
-   freshness in the sense that the sequence numbers allow a recipient to
-   determine the relative order of messages.
-
-   For applications having stronger demands on freshness (e.g. control
-   of actuators), OSCOAP needs to be augmented with mechanisms providing
-   absolute freshness [I-D.amsuess-core-repeat-request-tag].
-
-6.5.  Delay and Mismatch Attacks
-
-   In order to prevent response delay and mismatch attacks
-   [I-D.mattsson-core-coap-actuators] from on-path attackers and
-   compromised proxies, OSCOAP binds responses to the request by
-   including the request's ID (Sender ID or Recipient ID) and sequence
 
 
 
@@ -1290,9 +1290,8 @@ Selander, et al.        Expires February 3, 2018               [Page 23]
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 
-   number in the AAD of the response.  The server therefore needs to
-   store the request's ID (Sender ID or Recipient ID) and sequence
-   number until all responses have been sent.
+   the client wants to synchronize with a server resource it MAY restart
+   an observation.
 
 7.  Processing
 
@@ -1338,6 +1337,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
        *  either the decompression or the COSE message fails to decode,
           the server SHALL respond with a 4.02 Bad Option error message.
+
 
 
 
@@ -1891,7 +1891,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    specification to think about implementing key renewal.
 
    The maximum sequence number to guarantee nonce uniqueness
-   (Section 6.1) is dependent on the AEAD algorithm.  The maximum
+   (Section 6.2) is dependent on the AEAD algorithm.  The maximum
    sequence number SHALL be 2^(min(nonce length in bits, 56) - 1) - 1,
    or any algorithm specific lower limit.  The "-1" in the exponent
    stems from the same partial IV and flipped bit of IV (Section 5) is
@@ -1951,7 +1951,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    ACK (CoAP Message Identifier), matching of request and responses
    (Token) and traffic analysis.
 
-   Using the mechanisms described in Section 6.3 reveals when a device
+   Using the mechanisms described in Section 6.5 reveals when a device
    goes through a reboot.  This can be mitigated by the device storing
 
 
