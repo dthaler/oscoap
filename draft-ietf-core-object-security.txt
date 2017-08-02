@@ -1307,7 +1307,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
        Section 5.
 
    3.  Compose the AEAD nonce by XORing the Context IV (Sender IV) with
-       the partial IV (Sequence Number in network byte order).
+       the partial IV (Sequence Number in network byte order).  Then
+       increment the Sequence Number by one.
 
    4.  Encrypt the COSE object using the Sender Key. Compress the COSE
        Object as specified in Section 8.
@@ -1318,8 +1319,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    6.  Store the association Token - Security Context.  The client SHALL
        be able to find the Recipient Context from the Token in the
        response.
-
-   7.  Increment the Sequence Number by one.
 
 7.2.  Verifying the Request
 
@@ -1337,6 +1336,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
           the server SHALL respond with a 4.02 Bad Option error message.
           The diagnostic payload SHOULD contain the string "Failed to
           decode COSE".
+
 
 
 
@@ -1411,15 +1411,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
        *  If Observe is used, compose the AEAD nonce by XORing the
           Context IV (Sender IV) with the Partial IV of the response
-          (Sequence Number in network byte order).
+          (Sequence Number in network byte order).  Then increment the
+          Sequence Number by one.
 
    4.  Encrypt the COSE object using the Sender Key. Compress the COSE
        Object as specified in Section 8.
 
    5.  Format the OSCOAP message according to Section 4.  The Object-
        Security option is added, see Section 4.2.4.
-
-   6.  If Observe is used, increment the Sequence Number by one.
 
 7.4.  Verifying the Response
 
@@ -1449,7 +1448,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    3.  Compose the AEAD nonce
 
-
+       *  If the Observe option is not present in the response, compose
+          the AEAD nonce by XORing the Context IV (Recipient IV with the
 
 
 
@@ -1458,8 +1458,6 @@ Selander, et al.        Expires February 3, 2018               [Page 26]
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 
-       *  If the Observe option is not present in the response, compose
-          the AEAD nonce by XORing the Context IV (Recipient IV with the
           most significant bit in the first byte flipped) with the
           padded Partial IV parameter from the request.
 
@@ -1505,6 +1503,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    o  Example 1a.  Ordinary request/response.
 
+      *  Endpoint A sends a request, which is verified by Endpoint B:
+         key=K1, nonce=IV1 XOR PIV1.
 
 
 
@@ -1513,9 +1513,6 @@ Selander, et al.        Expires February 3, 2018               [Page 27]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
-
-      *  Endpoint A sends a request, which is verified by Endpoint B:
-         key=K1, nonce=IV1 XOR PIV1.
 
       *  Endpoint B sends a response, which is verified by Endpoint A:
          key=K2, nonce=BF(IV2) XOR PIV1, where BF(.) means that the most
@@ -1562,6 +1559,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    larger than necessary message expansion.  In this section, we define
    a simple stateless compression mechanism for OSCOAP, which
    significantly reduces the per-packet overhead.
+
+
+
 
 
 

@@ -962,11 +962,10 @@ external_aad = [
 <ol>
 <li>Retrieve the Sender Context associated with the target resource.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
-<li>Compose the AEAD nonce by XORing the Context IV (Sender IV) with the partial IV (Sequence Number in network byte order).</li>
+<li>Compose the AEAD nonce by XORing the Context IV (Sender IV) with the partial IV (Sequence Number in network byte order). Then increment the Sequence Number by one.</li>
 <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
 <li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.2.4</a>.</li>
 <li>Store the association Token - Security Context. The client SHALL be able to find the Recipient Context from the Token in the response.</li>
-<li>Increment the Sequence Number by one.</li>
 </ol>
 <h1 id="rfc.section.7.2">
 <a href="#rfc.section.7.2">7.2.</a> <a href="#verifying-the-request" id="verifying-the-request">Verifying the Request</a>
@@ -1009,12 +1008,11 @@ external_aad = [
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compose the AEAD nonce  <ul>
 <li>If Observe is not used, compose the AEAD nonce by XORing the Context IV (Sender IV with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
-<li>If Observe is used, compose the AEAD nonce by XORing the Context IV (Sender IV) with the Partial IV of the response (Sequence Number in network byte order).</li>
+<li>If Observe is used, compose the AEAD nonce by XORing the Context IV (Sender IV) with the Partial IV of the response (Sequence Number in network byte order). Then increment the Sequence Number by one.</li>
 </ul>
 </li>
 <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
 <li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.2.4</a>.</li>
-<li>If Observe is used, increment the Sequence Number by one.</li>
 </ol>
 <h1 id="rfc.section.7.4">
 <a href="#rfc.section.7.4">7.4.</a> <a href="#verifying-the-response" id="verifying-the-response">Verifying the Response</a>
