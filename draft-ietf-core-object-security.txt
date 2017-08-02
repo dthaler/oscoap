@@ -1164,10 +1164,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 6.3.  Sequence Number and Replay Window State
 
-   To prevent reuse of the Nonce/Sequence Number with the same key, or
-   from accepting replayed messages, a node needs to handle the
-   situation of suddenly losing sequence number and replay window state
-   in RAM, e.g. as a result of a reboot.
+   To prevent reuse of the Nonce with the same key, or from accepting
+   replayed messages, a node needs to handle the situation of suddenly
+   losing sequence number and replay window state in RAM, e.g. as a
+   result of a reboot.
 
 
 

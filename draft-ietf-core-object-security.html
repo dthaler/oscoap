@@ -916,7 +916,7 @@ external_aad = [
 <h1 id="rfc.section.6.3">
 <a href="#rfc.section.6.3">6.3.</a> <a href="#replay-state" id="replay-state">Sequence Number and Replay Window State</a>
 </h1>
-<p id="rfc.section.6.3.p.1">To prevent reuse of the Nonce/Sequence Number with the same key, or from accepting replayed messages, a node needs to handle the situation of suddenly losing sequence number and replay window state in RAM, e.g. as a result of a reboot.</p>
+<p id="rfc.section.6.3.p.1">To prevent reuse of the Nonce with the same key, or from accepting replayed messages, a node needs to handle the situation of suddenly losing sequence number and replay window state in RAM, e.g. as a result of a reboot.</p>
 <p id="rfc.section.6.3.p.2">After boot, a node MAY reject to use existing security contexts from before it booted and MAY establish a new security context with each party it communicates, e.g. using ACE <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>. However, establishing a fresh security context may have a non-negligible cost in terms of e.g. power consumption.</p>
 <p id="rfc.section.6.3.p.3">If a stored security context is to be used after reboot, then the node MUST NOT reuse a previous Sequence Number and MUST NOT accept previously accepted messages.</p>
 <h1 id="rfc.section.6.3.1">
