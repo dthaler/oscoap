@@ -1156,9 +1156,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    freshness in the sense that the sequence numbers allow a recipient to
    determine the relative order of messages.
 
-   For applications having stronger demands on freshness (e.g. control
-   of actuators), OSCOAP needs to be augmented with mechanisms providing
-   absolute freshness [I-D.amsuess-core-repeat-request-tag].
+   For applications having stronger demands on request freshness (e.g.
+   control of actuators), OSCOAP needs to be augmented with mechanisms
+   providing absolute freshness [I-D.amsuess-core-repeat-request-tag].
 
 6.4.  Replay Protection
 
