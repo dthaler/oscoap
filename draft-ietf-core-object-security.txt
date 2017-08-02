@@ -86,7 +86,7 @@ Table of Contents
    6.  Sequence Numbers, Replay, Message Binding, and Freshness  . .  21
      6.1.  AEAD Nonce Uniqueness . . . . . . . . . . . . . . . . . .  21
      6.2.  Replay Protection . . . . . . . . . . . . . . . . . . . .  21
-     6.3.  Sequence Number and Replay Window State . . . . . . . . .  21
+     6.3.  Sequence Number and Replay Window State . . . . . . . . .  22
      6.4.  Freshness . . . . . . . . . . . . . . . . . . . . . . . .  23
      6.5.  Delay and Mismatch Attacks  . . . . . . . . . . . . . . .  23
    7.  Processing  . . . . . . . . . . . . . . . . . . . . . . . . .  24
@@ -1165,10 +1165,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    the message received is a CON message, the client SHALL respond with
    an empty ACK and stop processing the response.
 
-6.3.  Sequence Number and Replay Window State
-
-   To prevent reuse of the Nonce with the same key, or from accepting
-   replayed messages, a node needs to handle the situation of suddenly
+   If messages are processed concurrently, the partial IV needs to be
+   validated a second time after decryption and before updating the
+   replay protection.  The operation of validating the partial IV and
+   updating the replay protection MUST be atomic.
 
 
 
@@ -1178,6 +1178,10 @@ Selander, et al.        Expires February 3, 2018               [Page 21]
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 
+6.3.  Sequence Number and Replay Window State
+
+   To prevent reuse of the Nonce with the same key, or from accepting
+   replayed messages, a node needs to handle the situation of suddenly
    losing sequence number and replay window state in RAM, e.g. as a
    result of a reboot.
 
@@ -1222,10 +1226,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
       it generates a pseudo-random nonce and responds with the Repeat
       option set to the nonce as described in
       [I-D.amsuess-core-repeat-request-tag].  If the server receives a
-      repeated OSCOAP request containing the Repeat option and the same
-      nonce, and if the server can verify the request, then the sequence
-      number obtained in the repeated message is set as the lower limit
-      of the replay window.
 
 
 
@@ -1233,6 +1233,11 @@ Selander, et al.        Expires February 3, 2018               [Page 22]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+      repeated OSCOAP request containing the Repeat option and the same
+      nonce, and if the server can verify the request, then the sequence
+      number obtained in the repeated message is set as the lower limit
+      of the replay window.
 
 6.3.2.  The Observe Case
 
@@ -1277,11 +1282,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    [I-D.mattsson-core-coap-actuators] from on-path attackers and
    compromised proxies, OSCOAP binds responses to the request by
    including the request's ID (Sender ID or Recipient ID) and sequence
-   number in the AAD of the response.  The server therefore needs to
-   store the request's ID (Sender ID or Recipient ID) and sequence
-   number until all responses have been sent.
-
-
 
 
 
@@ -1289,6 +1289,10 @@ Selander, et al.        Expires February 3, 2018               [Page 23]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+   number in the AAD of the response.  The server therefore needs to
+   store the request's ID (Sender ID or Recipient ID) and sequence
+   number until all responses have been sent.
 
 7.  Processing
 
@@ -1334,10 +1338,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
        *  either the decompression or the COSE message fails to decode,
           the server SHALL respond with a 4.02 Bad Option error message.
-          The diagnostic payload SHOULD contain the string "Failed to
-          decode COSE".
-
-
 
 
 
@@ -1345,6 +1345,9 @@ Selander, et al.        Expires February 3, 2018               [Page 24]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+          The diagnostic payload SHOULD contain the string "Failed to
+          decode COSE".
 
        *  the server fails to retrieve a Recipient Context with
           Recipient ID corresponding to the 'kid' parameter received,
@@ -1392,15 +1395,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    1.  Retrieve the Sender Context in the Security Context used to
        verify the request.
 
-   2.  Compose the Additional Authenticated Data, as described in
-       Section 5.
-
 
 
 Selander, et al.        Expires February 3, 2018               [Page 25]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+   2.  Compose the Additional Authenticated Data, as described in
+       Section 5.
 
    3.  Compose the AEAD nonce
 
@@ -1448,9 +1451,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    3.  Compose the AEAD nonce
 
-       *  If the Observe option is not present in the response, compose
-          the AEAD nonce by XORing the Context IV (Recipient IV with the
-
 
 
 Selander, et al.        Expires February 3, 2018               [Page 26]
@@ -1458,6 +1458,8 @@ Selander, et al.        Expires February 3, 2018               [Page 26]
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 
+       *  If the Observe option is not present in the response, compose
+          the AEAD nonce by XORing the Context IV (Recipient IV with the
           most significant bit in the first byte flipped) with the
           padded Partial IV parameter from the request.
 
@@ -1503,8 +1505,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    o  Example 1a.  Ordinary request/response.
 
-      *  Endpoint A sends a request, which is verified by Endpoint B:
-         key=K1, nonce=IV1 XOR PIV1.
 
 
 
@@ -1513,6 +1513,9 @@ Selander, et al.        Expires February 3, 2018               [Page 27]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+      *  Endpoint A sends a request, which is verified by Endpoint B:
+         key=K1, nonce=IV1 XOR PIV1.
 
       *  Endpoint B sends a response, which is verified by Endpoint A:
          key=K2, nonce=BF(IV2) XOR PIV1, where BF(.) means that the most
@@ -1559,9 +1562,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    larger than necessary message expansion.  In this section, we define
    a simple stateless compression mechanism for OSCOAP, which
    significantly reduces the per-packet overhead.
-
-
-
 
 
 
