@@ -942,7 +942,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    that the Partial IV of a received notification is greater than any
    previously received Partial IV bound to the Observe request.  If the
    verification fails, the client SHALL stop processing the response,
-   and in the case of CON respond with and empty ACK.
+   and in the case of CON respond with an empty ACK.
 
    The Observe option in the CoAP request may be legitimately removed by
    a proxy.  If the Observe option is removed from a CoAP request by a
