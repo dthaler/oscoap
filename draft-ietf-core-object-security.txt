@@ -1473,8 +1473,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
           response and, if the response is a CON message, the client
           MUST respond with an empty ACK back.
 
-       *  If decryption succeeds and Observe is used, update the
-          Recipient Replay Window, as described in Section 6.
+       *  If decryption succeeds and Observe is used, update the replay
+          protection mechanism, as described in Section 6.
 
    7.  Add decrypted options or payload to the decrypted response
        overwriting any outer E options (see Section 4).  The Object-

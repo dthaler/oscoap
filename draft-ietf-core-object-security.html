@@ -1032,7 +1032,7 @@ external_aad = [
 </li>
 <li>Decrypt the COSE object using the Recipient Key.  <ul>
 <li>If decryption fails, the client MUST stop processing the response and, if the response is a CON message, the client MUST respond with an empty ACK back.</li>
-<li>If decryption succeeds and Observe is used, update the Recipient Replay Window, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
+<li>If decryption succeeds and Observe is used, update the replay protection mechanism, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
 </ul>
 </li>
 <li>Add decrypted options or payload to the decrypted response overwriting any outer E options (see <a href="#protected-fields" class="xref">Section 4</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the sequence number.</li></ul>
