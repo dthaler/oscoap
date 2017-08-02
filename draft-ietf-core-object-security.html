@@ -905,7 +905,7 @@ external_aad = [
 <h1 id="rfc.section.6.1">
 <a href="#rfc.section.6.1">6.1.</a> <a href="#message-binding" id="message-binding">Message Binding</a>
 </h1>
-<p id="rfc.section.6.1.p.1">In order to prevent response delay and mismatch attacks <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a> from on-path attackers and compromised proxies, OSCOAP binds responses to the request by including the request&#8217;s ID (Sender ID or Recipient ID) and sequence number in the AAD of the response. The server therefore needs to store the request&#8217;s ID (Sender ID or Recipient ID) and sequence number until all responses have been sent.</p>
+<p id="rfc.section.6.1.p.1">In order to prevent response delay and mismatch attacks <a href="#I-D.mattsson-core-coap-actuators" class="xref">[I-D.mattsson-core-coap-actuators]</a> from on-path attackers and compromised proxies, OSCOAP binds responses to the request by including the request&#8217;s ID (Sender ID or Recipient ID) and partial IV in the AAD of the response. The server therefore needs to store the request&#8217;s ID (Sender ID or Recipient ID) and partial IV until all responses have been sent.</p>
 <h1 id="rfc.section.6.2">
 <a href="#rfc.section.6.2">6.2.</a> <a href="#aead-nonce-uniqueness" id="aead-nonce-uniqueness">AEAD Nonce Uniqueness</a>
 </h1>
