@@ -716,9 +716,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    Specifications of new CoAP options SHOULD define how they are
    processed with OSCOAP.  New COAP options SHOULD be of class E and
-   SHOULD NOT have outer values unless a forwarding proxy needs to read
-   that option value.  If a certain option has both inner and outer
-   values, the two values SHOULD NOT be the same.
+   SHOULD NOT have outer values unless a proxy needs to read that option
+   value.  If a certain option has both inner and outer values, the two
+   values SHOULD NOT be the same.
 
 
 
@@ -1856,13 +1856,13 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    DTLS protects hop-by-hop the entire CoAP message, including header,
    options, and payload.  OSCOAP protects end-to-end the payload, and
    all information in the options and header, that is not required for
-   forwarding (see Section 4).  DTLS and OSCOAP can be combined, thereby
-   enabling end-to-end security of CoAP payload, in combination with
-   hop-by-hop protection of the entire CoAP message, during transport
-   between end-point and intermediary node.  The CoAP message layer,
-   however, cannot be protected end-to-end through intermediary devices
-   since the parameters Type and Message ID, as well as Token and Token
-   Length may be changed by a proxy.
+   proxy operations (see Section 4).  DTLS and OSCOAP can be combined,
+   thereby enabling end-to-end security of CoAP payload, in combination
+   with hop-by-hop protection of the entire CoAP message, during
+   transport between end-point and intermediary node.  The CoAP message
+   layer, however, cannot be protected end-to-end through intermediary
+   devices since the parameters Type and Message ID, as well as Token
+   and Token Length may be changed by a proxy.
 
    The use of COSE to protect CoAP messages as specified in this
    document requires an established security context.  The method to
@@ -1939,8 +1939,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    Privacy threats executed through intermediate nodes are considerably
    reduced by means of OSCOAP.  End-to-end integrity protection and
    encryption of CoAP payload and all options that are not used for
-   forwarding, provide mitigation against attacks on sensor and actuator
-   communication, which may have a direct impact on the personal sphere.
+   proxy operations, provide mitigation against attacks on sensor and
+   actuator communication, which may have a direct impact on the
+   personal sphere.
 
    The unprotected options (Figure 4) may reveal privacy sensitive
    information.  In particular Uri-Host SHOULD NOT contain privacy
@@ -1952,8 +1953,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    Using the mechanisms described in Section 6.3 reveals when a device
    goes through a reboot.  This can be mitigated by the device storing
-   the precise state of sender sequence number and recipient replay
-   window on a clean shutdown.
+
 
 
 
@@ -1961,6 +1961,9 @@ Selander, et al.        Expires February 3, 2018               [Page 35]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+   the precise state of sender sequence number and recipient replay
+   window on a clean shutdown.
 
 13.  IANA Considerations
 
@@ -2007,9 +2010,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
               Amsuess, C., Mattsson, J., and G. Selander, "Repeat And
               Request-Tag", draft-amsuess-core-repeat-request-tag-00
               (work in progress), July 2017.
-
-
-
 
 
 
