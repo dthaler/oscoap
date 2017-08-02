@@ -1890,14 +1890,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    wrap is a complication, but it also forces the user of this
    specification to think about implementing key renewal.
 
-   The maximum sequence number to guarantee nonce uniqueness
-   (Section 6.2) is dependent on the AEAD algorithm.  The maximum
-   sequence number SHALL be 2^(min(nonce length in bits, 56) - 1) - 1,
-   or any algorithm specific lower limit.  The "-1" in the exponent
-   stems from the same partial IV and flipped bit of IV (Section 5) is
-   used in request and response.  The compression mechanism (Section 8)
-   assumes that the partial IV is 56 bits or less (which is the reason
-   for min(,) in the exponent).
+   The maximum sequence number is dependent on the AEAD algorithm.  The
+   maximum sequence number SHALL be 2^(min(nonce length in bits, 56) -
+   1) - 1, or any algorithm specific lower limit.  The "-1" in the
+   exponent stems from the same partial IV and flipped bit of IV
+   (Section 5) is used in request and response.  The compression
+   mechanism (Section 8) assumes that the partial IV is 56 bits or less
+   (which is the reason for min(,) in the exponent).
+
 
 
 
