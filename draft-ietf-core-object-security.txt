@@ -1124,9 +1124,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 6.  Sequence Numbers, Replay, Message Binding, and Freshness
 
-   Sequence numbers and replay window are initialized as defined in
-   Section 3.2.2.
-
 6.1.  AEAD Nonce Uniqueness
 
    An AEAD nonce MUST NOT be used more than once per AEAD key.  In order
@@ -1169,6 +1166,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    validated a second time after decryption and before updating the
    replay protection.  The operation of validating the partial IV and
    updating the replay protection MUST be atomic.
+
+
+
 
 
 
