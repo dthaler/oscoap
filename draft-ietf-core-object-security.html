@@ -906,7 +906,8 @@ external_aad = [
 <h1 id="rfc.section.6.1">
 <a href="#rfc.section.6.1">6.1.</a> <a href="#nonce-uniqueness" id="nonce-uniqueness">AEAD Nonce Uniqueness</a>
 </h1>
-<p id="rfc.section.6.1.p.1">An AEAD nonce MUST NOT be used more than once per AEAD key. In order to assure unique nonces, each Sender Context contains a Sequence Number used to protect requests, and - in case of Observe - responses. The maximum sequence number is algorithm dependent, see <a href="#sec-considerations" class="xref">Section 11</a>. If the Sequence Number exceeds the maximum sequence number, the endpoint MUST NOT process any more messages with the given Sender Context. The endpoint SHOULD acquire a new security context (and consequently inform the other endpoint) before this happens. The latter is out of scope of this document.</p>
+<p id="rfc.section.6.1.p.1">An AEAD nonce MUST NOT be used more than once per AEAD key. In order to assure unique nonces, each Sender Context contains a Sequence Number used to protect requests, and - in case of Observe - responses. If messages are processed concurrently, the operation of reading and increasing the sequence number MUST be atomic.</p>
+<p id="rfc.section.6.1.p.2">The maximum sequence number is algorithm dependent, see <a href="#sec-considerations" class="xref">Section 11</a>. If the Sequence Number exceeds the maximum sequence number, the endpoint MUST NOT process any more messages with the given Sender Context. The endpoint SHOULD acquire a new security context (and consequently inform the other endpoint) before this happens. The latter is out of scope of this document.</p>
 <h1 id="rfc.section.6.2">
 <a href="#rfc.section.6.2">6.2.</a> <a href="#replay-protection" id="replay-protection">Replay Protection</a>
 </h1>

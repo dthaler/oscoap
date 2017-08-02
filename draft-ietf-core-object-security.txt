@@ -1132,12 +1132,15 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    An AEAD nonce MUST NOT be used more than once per AEAD key.  In order
    to assure unique nonces, each Sender Context contains a Sequence
    Number used to protect requests, and - in case of Observe -
-   responses.  The maximum sequence number is algorithm dependent, see
-   Section 11.  If the Sequence Number exceeds the maximum sequence
-   number, the endpoint MUST NOT process any more messages with the
-   given Sender Context.  The endpoint SHOULD acquire a new security
-   context (and consequently inform the other endpoint) before this
-   happens.  The latter is out of scope of this document.
+   responses.  If messages are processed concurrently, the operation of
+   reading and increasing the sequence number MUST be atomic.
+
+   The maximum sequence number is algorithm dependent, see Section 11.
+   If the Sequence Number exceeds the maximum sequence number, the
+   endpoint MUST NOT process any more messages with the given Sender
+   Context.  The endpoint SHOULD acquire a new security context (and
+   consequently inform the other endpoint) before this happens.  The
+   latter is out of scope of this document.
 
 6.2.  Replay Protection
 
@@ -1166,9 +1169,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    To prevent reuse of the Nonce with the same key, or from accepting
    replayed messages, a node needs to handle the situation of suddenly
-   losing sequence number and replay window state in RAM, e.g. as a
-   result of a reboot.
-
 
 
 
@@ -1177,6 +1177,9 @@ Selander, et al.        Expires February 3, 2018               [Page 21]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+   losing sequence number and replay window state in RAM, e.g. as a
+   result of a reboot.
 
    After boot, a node MAY reject to use existing security contexts from
    before it booted and MAY establish a new security context with each
@@ -1223,9 +1226,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
       nonce, and if the server can verify the request, then the sequence
       number obtained in the repeated message is set as the lower limit
       of the replay window.
-
-
-
 
 
 
