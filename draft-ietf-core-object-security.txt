@@ -936,16 +936,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    In order for a proxy to support forwarding of Observe messages, there
    must be an Observe option present in options part of the OSCOAP
-   message ([RFC7641]), so Observe must have an outer value.
+   message ([RFC7641]), so Observe must have an outer value.  OCOAP
+   aware proxies MAY look at the Partial IV value instead of the outer
+   Observe value.
 
    To secure the order of the notifications, the client SHALL verify
    that the Partial IV of a received notification is greater than any
    previously received Partial IV bound to the Observe request.  If the
    verification fails, the client SHALL stop processing the response,
-   and in the case of CON respond with an empty ACK.
-
-   The Observe option in the CoAP request may be legitimately removed by
-   a proxy.  If the Observe option is removed from a CoAP request by a
+   and in the case of CON respond with an empty ACK.  The client MAY
+   ignore the outer Observe value.
 
 
 
@@ -954,6 +954,8 @@ Selander, et al.        Expires February 3, 2018               [Page 17]
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 
+   The Observe option in the CoAP request may be legitimately removed by
+   a proxy.  If the Observe option is removed from a CoAP request by a
    proxy, then the server can still verify the request (as a non-Observe
    request), and produce a non-Observe response.  If the OSCOAP client
    receives a response to an Observe request without an outer Observe
@@ -1000,8 +1002,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    The COSE Object SHALL be a COSE_Encrypt0 object with fields defined
    as follows
 
-   o  The "protected" field is empty.
-
 
 
 
@@ -1009,6 +1009,8 @@ Selander, et al.        Expires February 3, 2018               [Page 18]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+   o  The "protected" field is empty.
 
    o  The "unprotected" field includes:
 
@@ -1054,8 +1056,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    o  the Payload of original CoAP message, if present, and in that case
       prefixed by the one-byte Payload Marker (0xFF).
-
-
 
 
 
