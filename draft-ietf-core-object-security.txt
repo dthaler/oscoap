@@ -73,7 +73,7 @@ Table of Contents
    2.  The Object-Security Option  . . . . . . . . . . . . . . . . .   5
    3.  The Security Context  . . . . . . . . . . . . . . . . . . . .   6
      3.1.  Security Context Definition . . . . . . . . . . . . . . .   6
-     3.2.  Derivation of Security Context Parameters . . . . . . . .   9
+     3.2.  Establishment of Security Context Parameters  . . . . . .   9
      3.3.  Requirements on the Security Context Parameters . . . . .  11
    4.  Protected CoAP Message Fields . . . . . . . . . . . . . . . .  11
      4.1.  CoAP Header . . . . . . . . . . . . . . . . . . . . . . .  12
@@ -137,7 +137,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    reorder packages since they are no longer protected by DTLS.
 
    This document defines the security protocol Object Security of CoAP
-   (OSCOAP), protecting CoAP request and responses end-to-end across
+   (OSCOAP), protecting CoAP requests and responses end-to-end across
    intermediary nodes such as CoAP forward proxies and HTTP-to-CoAP
    proxies [RFC8075].  An analysis of end-to-end security for CoAP
    messages through some types of intermediary nodes is performed in
@@ -148,7 +148,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    OSCOAP is designed for constrained nodes and networks and provides an
    in-layer security protocol for CoAP which does not depend on
    underlying layers.  OSCOAP can be used anywhere that CoAP can be
-   used, including unreliable transport [RFC7228], reliable transport
+   used, including unreliable transport [RFC7252], reliable transport
    [I-D.ietf-core-coap-tcp-tls], and non-IP transport
    [I-D.bormann-6lo-coap-802-15-ie].  An extension of OSCOAP may also be
    used to protect group communication for CoAP
@@ -409,9 +409,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
       security context is established.
 
    o  Sender Sequence Number.  Non-negative integer used to protect
-      requests and observe responses to send.  Used as partial IV
-      [RFC8152] to generate unique nonces for the AEAD.  Maximum value
-      is determined by the AEAD Algorithm.
+      requests and Observe notifications.  Used as partial IV [RFC8152]
+      to generate unique nonces for the AEAD.  Maximum value is
+      determined by the AEAD Algorithm.
 
    The Recipient Context contains the following parameters:
 
@@ -464,7 +464,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    Sender/Recipient ID when changing roles.  In other words, changing
    the roles does not change the set of keys to be used.
 
-3.2.  Derivation of Security Context Parameters
+3.2.  Establishment of Security Context Parameters
 
    The parameters in the security context are derived from a small set
    of input parameters.  The following input parameters SHALL be pre-
@@ -701,7 +701,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
                     |  8 | Location-Path  | x |   |   |
                     | 11 | Uri-Path       | x |   |   |
                     | 12 | Content-Format | x |   |   |
-                    | 14 | Max-Age        | * |   |   |
+                    | 14 | Max-Age        | * |   | * |
                     | 15 | Uri-Query      | x |   |   |
                     | 17 | Accept         | x |   |   |
                     | 20 | Location-Query | x |   |   |
@@ -911,7 +911,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    other documents specifying cross-protocol proxying behavior using
    different URI structures, it is expected that the authors will create
    Uri-* options that allow decomposing the Proxy-Uri, and specify in
-   which OSCOAP class they are.
+   which OSCOAP class they belong.
 
    An example of how Proxy-Uri is processed is given here.  Assume that
    the original CoAP message contains:
@@ -956,7 +956,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    In order for a proxy to support forwarding of Observe messages, there
    must be an Observe option present in options part of the OSCOAP
-   message ([RFC7641]), so Observe must have an outer value.  OCOAP
+   message ([RFC7641]), so Observe must have an outer value.  OSCOAP
    aware proxies MAY look at the Partial IV value instead of the outer
    Observe value.
 
@@ -977,7 +977,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    request), and produce a non-Observe response.  If the OSCOAP client
    receives a response to an Observe request without an outer Observe
    value, then it MUST verify the response as a non-Observe response.
-   (The reverse case is covered in the verification of the response
+   (The reverse case is covered in the verification of the response, see
    Section 7.)
 
 4.2.4.  Outer Options in the OSCOAP Message
@@ -1181,7 +1181,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 6.3.  Freshness
 
    For requests, OSCOAP provides weak absolute freshness as the only
-   guarantee is that the request is not older that the security context.
+   guarantee is that the request is not older than the security context.
    For applications having stronger demands on request freshness (e.g.
    control of actuators), OSCOAP needs to be augmented with mechanisms
    providing freshness [I-D.amsuess-core-repeat-request-tag].
@@ -1244,9 +1244,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    To prevent reuse of the Nonce with the same key, or from accepting
    replayed messages, a node needs to handle the situation of losing
    rapidly changing parts of the context, such as the request Token,
-   Sender Sequence Number, Replay Window, and Recipient Sequence Number.
-   These are typically stored in RAM and therefore lost in the case of
-   an unplanned reboot.
+   Sender Sequence Number, Replay Window, and Recipient Sequence
+   Numbers.  These are typically stored in RAM and therefore lost in the
+   case of an unplanned reboot.
 
    After boot, a node MAY reject to use existing security contexts from
    before it booted and MAY establish a new security context with each
@@ -1318,7 +1318,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    2.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
-   3.  Compose the AEAD nonce by XORing the Context IV (Sender IV) with
+   3.  Compute the AEAD nonce by XORing the Context IV (Sender IV) with
        the partial IV (Sender Sequence Number in network byte order).
        Then (in one atomic operation, see Section 6.2) increment the
        Sender Sequence Number by one.
@@ -1376,7 +1376,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    2.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
-   3.  Compose the AEAD nonce by XORing the Context IV (Recipient IV)
+   3.  Compute the AEAD nonce by XORing the Context IV (Recipient IV)
        with the padded 'Partial IV' parameter, received in the COSE
        Object.
 
@@ -1391,8 +1391,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
           in Section 6.
 
    5.  Add decrypted options and payload to the decrypted request,
-       processing the E options as described in (Section 4).  The
-       Object-Security option is removed.
+       processing the E options as described in Section 4.  The Object-
+       Security option is removed.
 
 
 
@@ -1415,14 +1415,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    2.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
-   3.  Compose the AEAD nonce
+   3.  Compute the AEAD nonce
 
-       *  If Observe is not used, compose the AEAD nonce by XORing the
+       *  If Observe is not used, compute the AEAD nonce by XORing the
           Context IV (Sender IV with the most significant bit in the
           first byte flipped) with the padded Partial IV parameter from
           the request.
 
-       *  If Observe is used, compose the AEAD nonce by XORing the
+       *  If Observe is used, compute the AEAD nonce by XORing the
           Context IV (Sender IV) with the Partial IV of the response
           (Sender Sequence Number in network byte order).  Then (in one
           atomic operation, see Section 6.2) increment the Sender
@@ -1459,22 +1459,23 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
 
    3.  For Observe notifications, verify the received 'Partial IV'
-       parameter against the Recipient Sequence Number as described in
-       Section 6.  If the client receives a notification for which no
-       Observe request was sent, the client SHALL stop processing the
-       response and, in the case of CON send an empty ACK back.
+       parameter against the corresponding Recipient Sequence Number as
+       described in Section 6.  If the client receives a notification
+       for which no Observe request was sent, the client SHALL stop
+       processing the response and, in the case of CON send an empty ACK
+       back.
 
    4.  Compose the Additional Authenticated Data, as described in
        Section 5.
 
-   5.  Compose the AEAD nonce
+   5.  Compute the AEAD nonce
 
-       *  If the Observe option is not present in the response, compose
+       *  If the Observe option is not present in the response, compute
           the AEAD nonce by XORing the Context IV (Recipient IV with the
           most significant bit in the first byte flipped) with the
           padded Partial IV parameter from the request.
 
-       *  If the Observe option is present in the response, compose the
+       *  If the Observe option is present in the response, compute the
           AEAD nonce by XORing the Context IV (Recipient IV) with the
           padded Partial IV parameter from the response.
 
@@ -1485,14 +1486,16 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
           MUST respond with an empty ACK back.
 
        *  If decryption succeeds and Observe is used, update the
-          Recipient Sequence Number, as described in Section 6.
+          corresponding Recipient Sequence Number, as described in
+          Section 6.
 
    7.  Add decrypted options or payload to the decrypted response
        overwriting any outer E options (see Section 4).  The Object-
        Security option is removed.
 
        *  If Observe is used, replace the Observe value with the 3 least
-          significant bytes in the Recipient Sequence Number.
+          significant bytes in the corresponding Recipient Sequence
+          Number.
 
    8.  The decrypted CoAP response is processed according to [RFC7252]
 
@@ -1501,9 +1504,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
    This section illustrates the nonce generation in the different
    processing steps.  Assume that:
 
-   o  Endpoint A has the following security context parameters: Sender
-      Key=K1, Sender IV=IV1, Sender Sequence Number=PIV1 and Recipient
-      Key=K2, Recipient IV=IV2
 
 
 
@@ -1513,6 +1513,10 @@ Selander, et al.        Expires February 25, 2018              [Page 27]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+   o  Endpoint A has the following security context parameters: Sender
+      Key=K1, Sender IV=IV1, Sender Sequence Number=PIV1 and Recipient
+      Key=K2, Recipient IV=IV2
 
    o  Endpoint B has the following security context parameters: Sender
       Key=K2, Sender IV=IV2, Sender Sequence Number=PIV2 and Recipient
@@ -1559,16 +1563,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
       *  Endpoint A sends a notification, which is verified by Endpoint
          B: key=K1, nonce=IV1 XOR PIV1.
 
-   Remarks:
-
-
-
 
 
 Selander, et al.        Expires February 25, 2018              [Page 28]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
+
+   Remarks:
 
    o  Note that endpoint A always uses key K1 for encrypting and K2 for
       verification, and vice versa for endpoint B.
@@ -1616,8 +1618,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
 
    o  The following 1 byte encodes the kid size m, if the kid is present
       (k = 1).
-
-
 
 
 
