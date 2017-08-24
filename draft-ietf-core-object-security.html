@@ -605,7 +605,7 @@ Verify request with   |                       |
 <li>Recipient Key. Byte string containing the symmetric key to verify messages received. Derived from Common Context and Recipient ID. Length is determined by the AEAD Algorithm. Its value is immutable once the security context is established.</li>
 <li>Recipient IV. Byte string containing the IV to verify messages received. Derived from Common Context and Recipient ID. Length is determined by the AEAD Algorithm. Its value is immutable once the security context is established.</li>
 <li>Replay Window (Server only). The replay window to verify requests received.</li>
-<li>Recipient Sequence Number (Client only, in case of Observe). Non-negative integer used to verify Observe notifications received. One Recipient Sequence Number for each active Observe registration.</li>
+<li>Recipient Sequence Number (Client only, in case of Observe). Non-negative integer used to detect replay of received Observe notifications. One Recipient Sequence Number for each active Observe registration.</li>
 </ul>
 <p id="rfc.section.3.1.p.10">When it is understood which context is referred to (Sender Context or Recipient Context), the term &#8220;Context IV&#8221; is used to denote the IV currently used with this context.</p>
 <p id="rfc.section.3.1.p.11">An endpoint may free up memory by not storing the Sender Key, Sender IV, Recipient Key, and Recipient IV, deriving them from the Common Context when needed. Alternatively, an endpoint may free up memory by not storing the Master Secret and Master Salt after the other parameters have been derived.</p>

@@ -433,9 +433,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)         August 2017
       received.
 
    o  Recipient Sequence Number (Client only, in case of Observe).  Non-
-      negative integer used to verify Observe notifications received.
-      One Recipient Sequence Number for each active Observe
-      registration.
+      negative integer used to detect replay of received Observe
+      notifications.  One Recipient Sequence Number for each active
+      Observe registration.
 
    When it is understood which context is referred to (Sender Context or
    Recipient Context), the term "Context IV" is used to denote the IV
