@@ -502,7 +502,7 @@ address {
 <p id="rfc.section.1.p.1">The Constrained Application Protocol (CoAP) is a web application protocol, designed for constrained nodes and networks <a href="#RFC7228" class="xref">[RFC7228]</a>. CoAP specifies the use of proxies for scalability and efficiency. At the same time CoAP <a href="#RFC7252" class="xref">[RFC7252]</a> references DTLS <a href="#RFC6347" class="xref">[RFC6347]</a> for security. CoAP proxies require DTLS to be terminated at the proxy. The proxy therefore not only has access to the data required for performing the intended proxy functionality, but is also able to eavesdrop on, or manipulate any part of the CoAP payload and metadata, in transit between client and server. The proxy can also inject, delete, or reorder packages since they are no longer protected by DTLS.</p>
 <p id="rfc.section.1.p.2">This document defines the security protocol Object Security of CoAP (OSCOAP), protecting CoAP requests and responses end-to-end across intermediary nodes such as CoAP forward proxies and HTTP-to-CoAP proxies <a href="#RFC8075" class="xref">[RFC8075]</a>. OSCOAP protects the CoAP Request/Response layer only, and not the Messaging Layer (Section 2 of <a href="#RFC7252" class="xref">[RFC7252]</a>). All the messages mentioned in this document refer to non-empty CON, NON, and ACK messages. Additionally, since the message formats for CoAP over unreliable transport <a href="#RFC7252" class="xref">[RFC7252]</a> and for CoAP over reliable transport <a href="#I-D.ietf-core-coap-tcp-tls" class="xref">[I-D.ietf-core-coap-tcp-tls]</a> differ only in terms of Messaging Layer, OSCOAP can be applied to both unreliable and reliable transport. In addition to the core features defined in <a href="#RFC7252" class="xref">[RFC7252]</a>, OSCOAP supports Observe <a href="#RFC7641" class="xref">[RFC7641]</a> and Blockwise <a href="#RFC7959" class="xref">[RFC7959]</a>. An analysis of end-to-end security for CoAP messages through some types of intermediary nodes is performed in <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a>.</p>
 <p id="rfc.section.1.p.3">OSCOAP is designed for constrained nodes and networks and provides an in-layer security protocol for CoAP which does not depend on underlying layers. OSCOAP can be used anywhere where CoAP can be used, including non-IP transport <a href="#I-D.bormann-6lo-coap-802-15-ie" class="xref">[I-D.bormann-6lo-coap-802-15-ie]</a>. An extension of OSCOAP may also be used to protect group communication for CoAP <a href="#I-D.tiloca-core-multicast-oscoap" class="xref">[I-D.tiloca-core-multicast-oscoap]</a>. The use of OSCOAP does not affect the URI scheme and OSCOAP can therefore be used with any URI scheme defined for CoAP. The application decides the conditions for which OSCOAP is required.</p>
-<p id="rfc.section.1.p.4">OSCOAP builds on CBOR Object Signing and Encryption (COSE) <a href="#RFC8152" class="xref">[RFC8152]</a>, providing end-to-end encryption, integrity, replay protection, and secure message binding. A compressed version of COSE is used, see <a href="#compression" class="xref">Section 8</a>. The use of OSCOAP is signaled with the CoAP option Object-Security, defined in <a href="#option" class="xref">Section 2</a>. OSCOAP protects as much information as possible, while still allowing proxy operations (<a href="#proxy-operations" class="xref">Section 10</a>). OSCOAP provides protection of CoAP payload, most options, and certain header fields. The solution transforms a CoAP message into an &#8220;OSCOAP message&#8221; before sending, and vice versa after receiving. The OSCOAP message is a CoAP message related to the original CoAP message in the following way: the original CoAP message payload (if present), options not processed by a proxy, and the request/response method (CoAP code) are protected in a COSE object. The message fields of the original messages that are encrypted are not present in the OSCOAP message, and instead the Object-Security option and the compressed COSE object are added, see <a href="#fig-sketch" class="xref">Figure 1</a>.</p>
+<p id="rfc.section.1.p.4">OSCOAP builds on CBOR Object Signing and Encryption (COSE) <a href="#RFC8152" class="xref">[RFC8152]</a>, providing end-to-end encryption, integrity, replay protection, and secure message binding. A compressed version of COSE is used, see <a href="#compression" class="xref">Section 8</a>. The use of OSCOAP is signaled with the CoAP option Object-Security, defined in <a href="#option" class="xref">Section 2</a>. OSCOAP protects as much information as possible, while still allowing proxy operations (<a href="#proxy-operations" class="xref">Section 10</a>). OSCOAP provides protection of CoAP payload, most options, and certain header fields. The solution transforms a CoAP message into an &#8220;OSCOAP message&#8221; before sending, and vice versa after receiving. The OSCOAP message is a CoAP message related to the original CoAP message in the following way: the original CoAP message payload (if present), options not processed by a proxy, and the request/response method (CoAP Code) are protected in a COSE object. The message fields of the original messages that are encrypted are not present in the OSCOAP message, and instead the Object-Security option and the compressed COSE object are added, see <a href="#fig-sketch" class="xref">Figure 1</a>.</p>
 <div id="rfc.figure.1"></div>
 <div id="fig-sketch"></div>
 <pre>
@@ -807,20 +807,18 @@ Verify request with   |                       |
 <a href="#rfc.section.4.2.3.4">4.2.3.4.</a> <a href="#observe" id="observe">Observe</a>
 </h1>
 <p id="rfc.section.4.2.3.4.p.1">Observe <a href="#RFC7641" class="xref">[RFC7641]</a> is an optional feature. An implementation MAY support <a href="#RFC7252" class="xref">[RFC7252]</a> and the Object-Security option without supporting <a href="#RFC7641" class="xref">[RFC7641]</a>. The Observe option as used here targets the requirements on forwarding of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> (Section 2.2.1.2).</p>
-<p id="rfc.section.4.2.3.4.p.2">In order for a proxy to support forwarding of Observe messages there SHALL be an Observe option present in options part of the OSCOAP message (<a href="#RFC7641" class="xref">[RFC7641]</a>), so Observe must have an outer value. OSCOAP aware proxies MAY look at the Partial IV value instead of the outer Observe value.</p>
-<p id="rfc.section.4.2.3.4.p.3">Additionally, the outer CoAP Code for Observe messages SHALL NOT be replaced as described in XX.</p>
-<p id="rfc.section.4.2.3.4.p.4">To secure the order of notifications, the client SHALL maintain a Notification Number for each Observation it registers. The Notification Number is a non-negative integer containing the largest Partial IV of the successfully received notifications for the associated Observe registration, see <a href="#replay-protection" class="xref">Section 6.4</a>. The Notification Number is initialized to the Partial IV of the first successfully received notification. In contrast to <a href="#RFC7641" class="xref">[RFC7641]</a>, the received partial IV MUST always be compared with the Notification Number, which thus MUST NOT be forgotten after 128 seconds.</p>
-<p id="rfc.section.4.2.3.4.p.5">If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with an empty ACK. The client MAY ignore the outer Observe value.</p>
-<p id="rfc.section.4.2.3.4.p.6">The Observe option in the CoAP request may be legitimately removed by a proxy. If the Observe option is removed from a CoAP request by a proxy, then the server can still verify the request (as a non-Observe request), and produce a non-Observe response. If the OSCOAP client receives a response to an Observe request without an outer Observe value, then it MUST verify the response as a non-Observe response. (The reverse case is covered in the verification of the response, see <a href="#processing" class="xref">Section 7</a>.)</p>
+<p id="rfc.section.4.2.3.4.p.2">In order for an OSCOAP-unaware proxy to support forwarding of Observe messages there SHALL be an Observe option present in options part of the OSCOAP message (<a href="#RFC7641" class="xref">[RFC7641]</a>). OSCOAP-aware proxies MAY look at the Partial IV value instead of the outer Observe value. The processing of the CoAP Code for Observe messages is described in <a href="#coap-header" class="xref">Section 4.3</a>.</p>
+<p id="rfc.section.4.2.3.4.p.3">To secure the order of notifications, the client SHALL maintain a Notification Number for each Observation it registers. The Notification Number is a non-negative integer containing the largest Partial IV of the successfully received notifications for the associated Observe registration, see <a href="#replay-protection" class="xref">Section 6.4</a>. The Notification Number is initialized to the Partial IV of the first successfully received notification. In contrast to <a href="#RFC7641" class="xref">[RFC7641]</a>, the received partial IV MUST always be compared with the Notification Number, which thus MUST NOT be forgotten after 128 seconds.</p>
+<p id="rfc.section.4.2.3.4.p.4">If the verification fails, the client SHALL stop processing the response, and in the case of CON respond with an empty ACK. The client MAY ignore the Observe option value.</p>
+<p id="rfc.section.4.2.3.4.p.5">The Observe option in the CoAP request may be legitimately removed by a proxy. If the Observe option is removed from a CoAP request by a proxy, then the server can still verify the request (as a non-Observe request), and produce a non-Observe response. If the OSCOAP client receives a response to an Observe request without an outer Observe value, then it MUST verify the response as a non-Observe response. (The reverse case is covered in the verification of the response, see <a href="#processing" class="xref">Section 7</a>.)</p>
 <h1 id="rfc.section.4.3">
 <a href="#rfc.section.4.3">4.3.</a> <a href="#coap-header" id="coap-header">CoAP Header</a>
 </h1>
 <p id="rfc.section.4.3.p.1">Most CoAP header fields are required to be read and/or changed by CoAP proxies and thus cannot in general be protected end-to-end between the endpoints. As mentioned in <a href="#intro" class="xref">Section 1</a>, OSCOAP protects the CoAP Request/Response layer only, and not the Messaging Layer (Section 2 of <a href="#RFC7252" class="xref">[RFC7252]</a>), so fields such as Type and Message ID are not protected with OSCOAP.</p>
 <p id="rfc.section.4.3.p.2">The CoAP header field Code is protected by OSCOAP. Code SHALL be encrypted and integrity protected (Class E) to prevent an intermediary from eavesdropping or manipulating the Code (e.g. changing from GET to DELETE).</p>
-<p id="rfc.section.4.3.p.3">The sending endpoint SHALL write the Code of the original CoAP message into the plaintext of the COSE object <a href="#plaintext" class="xref">Section 5.2</a>. After that, the Code of the OSCOAP message for requests SHALL be set to 0.02 (POST) and for responses to 2.04 (Changed), except for Observe messages, for which it SHALL be 0.01 (GET) for requests and 2.05 (Content) for responses. The exception allows OSCOAP to be compliant with the Observe specification <a href="#RFC7641" class="xref">[RFC7641]</a>, that only define the use of GET for observing resources.</p>
-<p id="rfc.section.4.3.p.4">TODO: Consider error messages on Observe - is the outer code still 2.05?</p>
-<p id="rfc.section.4.3.p.5">The receiving endpoint SHALL discard the Code in the OSCOAP message and copy the Code in the plaintext of the COSE object into the decrypted CoAP message.</p>
-<p id="rfc.section.4.3.p.6">The other CoAP header fields are Unprotected. The sending endpoint SHALL include all other header fields of the original message in the header of the OSCOAP message. The receiving endpoint SHALL include the header fields from the OSCOAP message to the header of the decrypted CoAP message.</p>
+<p id="rfc.section.4.3.p.3">The sending endpoint SHALL write the Code of the original CoAP message into the plaintext of the COSE object <a href="#plaintext" class="xref">Section 5.2</a>. After that, the Code of the OSCOAP message SHALL be set to 0.02 (POST) for requests and to 2.04 (Changed) to responses, except for Observe messages, for which it SHALL be 0.01 (GET) for registrations and 2.05 (Content) for notifications (<a href="#RFC7641" class="xref">[RFC7641]</a>). The exception allows OSCOAP to be compliant with the Observe processing in OSCOAP-unaware proxies.</p>
+<p id="rfc.section.4.3.p.4">The receiving endpoint SHALL discard the Code in the OSCOAP message and write the Code in the plaintext of the COSE object into the decrypted CoAP message.</p>
+<p id="rfc.section.4.3.p.5">The other CoAP header fields are Unprotected. The sending endpoint SHALL include all other header fields of the original message in the header of the OSCOAP message. The receiving endpoint SHALL include the header fields from the OSCOAP message to the header of the decrypted CoAP message.</p>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#cose-object" id="cose-object">The COSE Object</a>
 </h1>
@@ -988,7 +986,7 @@ external_aad = [
 <li>If decryption succeeds, update the Replay Window, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
 </ul>
 </li>
-<li>Add decrypted options and payload to the decrypted request, processing the E options as described in <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is removed.</li>
+<li>Add decrypted code, options and payload to the decrypted request, processing the class E options as described in <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is removed.</li>
 <li>The decrypted CoAP request is processed according to <a href="#RFC7252" class="xref">[RFC7252]</a>
 </li>
 </ol>
@@ -1030,7 +1028,7 @@ external_aad = [
 <li>If decryption succeeds and Observe is used, update the corresponding Notification Number, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
 </ul>
 </li>
-<li>Add decrypted options or payload to the decrypted response overwriting any outer E options (see <a href="#protected-fields" class="xref">Section 4</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the corresponding Notification Number.</li></ul>
+<li>Add decrypted code, options and payload to the decrypted response overwriting any outer E options (see <a href="#protected-fields" class="xref">Section 4</a>). The Object-Security option is removed.  <ul><li>If Observe is used, replace the Observe value with the 3 least significant bytes in the corresponding Notification Number.</li></ul>
 </li>
 <li>The decrypted CoAP response is processed according to <a href="#RFC7252" class="xref">[RFC7252]</a>
 </li>
@@ -1206,9 +1204,7 @@ h'aea0155667924dff8a24e4cb35b9'
 </h1>
 <p id="rfc.section.10.2.p.1">As requested in Section 1 of <a href="#RFC8075" class="xref">[RFC8075]</a>, this section describes the HTTP mapping for the OSCOAP protocol extension of CoAP.</p>
 <p id="rfc.section.10.2.p.2">The presence and content of the Object-Security option, both in requests and responses, is expressed in a HTTP header field named Object-Security in the mapped request or response. The value of the field is the value of the CoAP Object-Security option in base64url encoding without padding (see <a href="#RFC7515" class="xref">[RFC7515]</a> Appendix C for implementation notes for this encoding).</p>
-<p id="rfc.section.10.2.p.3">In addition, whenever the Object-Security field is present, the protected message&#8217;s code is expressed in a HTTP header field named CoAP-Code in dotted code number notation with leading zero. When converting an HTTP request or response to CoAP, the code in the CoAP-Code field gets used in the CoAP message, and the response code mapping rules (<a href="#RFC8075" class="xref">[RFC8075]</a> Section 7) are not applied.</p>
-<p id="rfc.section.10.2.p.4">Invalid base64url data, the absence of the CoAP-Code field or a CoAP-Code field value that cannot be expressed as a CoAP code byte constitute an error, and MUST result in a 4.02 Bad Option or 400 Bad Request, depending on the protocol used in the request. If any mapper receives an Object-Security header, it MUST verify that the code classes match to the extent of being a request (CoAP code class 0 mapped to an HTTP request) or a response (CoAP code classes 1-5 mapped to a HTTP response) code.</p>
-<p id="rfc.section.10.2.p.5">Example:</p>
+<p id="rfc.section.10.2.p.3">Example:</p>
 <pre>
 [HTTP request -- Before object security processing]
 
@@ -1217,20 +1213,21 @@ h'aea0155667924dff8a24e4cb35b9'
 
 [HTTP request -- HTTP Client to Proxy]
 
-  GET /hc/coap://device.local/ HTTP/1.1
+  POST /hc/coap://device.local/ HTTP/1.1
   Host: proxy.local
-  CoAP-Code: 0.01
-  Object-Security: CQcBE2H3D9KXsQ
-
+  Object-Security: [empty]
+  Body: 09 07 01 13 61 f7 0f d2 97 b1 [binary]
+  
 [CoAP request -- Proxy to CoAP Server]
 
-  GET /
+  POST /
   Uri-Host: device.local
-  Object-Security: 09 07 01 13 61 f7 0f d2 97 b1 [binary]
+  Object-Security: [empty]
+  Payload: 09 07 01 13 61 f7 0f d2 97 b1 [binary]
 
-[CoAP response -- CoAP Sever to Proxy]
+[CoAP response -- CoAP Server to Proxy]
 
-  2.05 Content
+  2.04 Changed
   Object-Security: [empty]
   Payload: 00 31 d1 fc f6 70 fb 0c 1d d5 ... [binary]
 
@@ -1238,7 +1235,6 @@ h'aea0155667924dff8a24e4cb35b9'
 
   HTTP/1.1 200 OK
   Object-Security: [empty]
-  CoAP-Code: 2.05
   Body: 00 31 d1 fc f6 70 fb 0c 1d d5 ... [binary]
 
 [HTTP response -- After object security processing]
@@ -1246,6 +1242,7 @@ h'aea0155667924dff8a24e4cb35b9'
   HTTP/1.1 200 OK
   Body: Exterminate! Exterminate!
 </pre>
+<p id="rfc.section.10.2.p.4">Note that the HTTP Status Code 200 in the next-to-last message is the mapping of CoAP Code 2.04 (Changed), whereas the HTTP Status Code 200 in the last message is the mapping of the CoAP Code 2.05 (Content), encrypted within the compressed COSE object carried in the Body of the HTTP response.</p>
 <h1 id="rfc.section.10.3">
 <a href="#rfc.section.10.3">10.3.</a> <a href="#coap-http-translation-proxy" id="coap-http-translation-proxy">CoAP-HTTP Translation Proxy</a>
 </h1>
@@ -1285,12 +1282,11 @@ h'aea0155667924dff8a24e4cb35b9'
 <h1 id="rfc.section.13.2">
 <a href="#rfc.section.13.2">13.2.</a> <a href="#header-field-registrations" id="header-field-registrations">Header Field Registrations</a>
 </h1>
-<p id="rfc.section.13.2.p.1">The HTTP header fields Object-Security and CoAP-Code are added to the Message Headers registry:</p>
+<p id="rfc.section.13.2.p.1">The HTTP header field Object-Security is added to the Message Headers registry:</p>
 <pre>
 +-------------------+----------+----------+-------------------+
 | Header Field Name | Protocol | Status   | Reference         |
 +-------------------+----------+----------+-------------------+
-| CoAP-Code         | http     | standard | [[this document]] |
 | Object-Security   | http     | standard | [[this document]] |
 +-------------------+----------+----------+-------------------+
 </pre>
@@ -1436,32 +1432,34 @@ h'aea0155667924dff8a24e4cb35b9'
 <pre>
 Client  Proxy  Server
    |      |      |
-   +-----&gt;|      |            Code: 0.01 (GET)
-   | GET  |      |           Token: 0x8c
-   |      |      | Object-Security: [kid:5f, Partial IV:42,
-   |      |      |                   {Uri-Path:"alarm_status"}]
-   |      |      |         Payload: -
-   |      |      |
-   |      +-----&gt;|            Code: 0.01 (GET)
-   |      | GET  |           Token: 0x7b
-   |      |      | Object-Security: [kid:5f, Partial IV:42,
-   |      |      |                   {Uri-Path:"alarm_status"}]
-   |      |      |         Payload: -
-   |      |      |
-   |      |&lt;-----+            Code: 2.05 (Content)
-   |      | 2.05 |           Token: 0x7b
+   +-----&gt;|      |            Code: 0.02 (POST)
+   | POST |      |           Token: 0x8c
    |      |      | Object-Security: -
-   |      |      |         Payload: [{"OFF"}]
+   |      |      |         Payload: [kid:5f, Partial IV:42,
+   |      |      |                  {Code:0.01,
+   |      |      |                   Uri-Path:"alarm_status"}]
    |      |      |
-   |&lt;-----+      |            Code: 2.05 (Content)
-   | 2.05 |      |           Token: 0x8c
+   |      +-----&gt;|            Code: 0.02 (POST))
+   |      | POST |           Token: 0x7b
    |      |      | Object-Security: -
-   |      |      |         Payload: [{"OFF"}]
+   |      |      |         Payload: [kid:5f, Partial IV:42,
+   |      |      |                  {Code:0.01,
+   |      |      |                   Uri-Path:"alarm_status"}]
+   |      |      |
+   |      |&lt;-----+            Code: 2.04 (Changed)
+   |      | 2.04 |           Token: 0x7b
+   |      |      | Object-Security: -
+   |      |      |         Payload: [{Code:2.05, "OFF"}]
+   |      |      |
+   |&lt;-----+      |            Code: 2.04 (Changed)
+   | 2.04 |      |           Token: 0x8c
+   |      |      | Object-Security: -
+   |      |      |         Payload: [{Code:2.05, "OFF"}]
    |      |      |
 </pre>
 <p class="figure">Figure 7: Secure Access to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
-<p id="rfc.section.B.1.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
-<p id="rfc.section.B.1.p.3">The COSE header of the request contains an identifier (5f), indicating which security context was used to protect the message and a Partial IV (42). The option Uri-Path (&#8220;alarm_status&#8221;) and payload (&#8220;OFF&#8221;) are encrypted.</p>
+<p id="rfc.section.B.1.p.2">The request/response Codes are encrypted by OSCOAP and only dummy Codes (POST/Changed) are visible in the header of the OSCOAP message. The option Uri-Path (&#8220;alarm_status&#8221;) and payload (&#8220;OFF&#8221;) are encrypted.</p>
+<p id="rfc.section.B.1.p.3">The COSE header of the request contains an identifier (5f), indicating which security context was used to protect the message and a Partial IV (42).</p>
 <p id="rfc.section.B.1.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the response is bound to the request.</p>
 <h1 id="rfc.appendix.B.2">
 <a href="#rfc.appendix.B.2">B.2.</a> <a href="#secure-subscribe-to-sensor" id="secure-subscribe-to-sensor">Secure Subscribe to Sensor</a>
@@ -1476,14 +1474,16 @@ Client  Proxy  Server
    | GET  |      |           Token: 0x83
    |      |      |         Observe: 0
    |      |      | Object-Security: [kid:ca, Partial IV:15,
-   |      |      |                   {Uri-Path:"glucose"}]
+   |      |      |                  {Code:0.01,
+   |      |      |                   Uri-Path:"glucose"}]
    |      |      |         Payload: -
    |      |      |
    |      +-----&gt;|            Code: 0.01 (GET)
    |      | GET  |           Token: 0xbe
    |      |      |         Observe: 0
    |      |      | Object-Security: [kid:ca, Partial IV:15,
-   |      |      |                   {Uri-Path:"glucose"}]
+   |      |      |                  {Code:0.01,
+   |      |      |                   Uri-Path:"glucose"}]
    |      |      |         Payload: -
    |      |      |
    |      |&lt;-----+            Code: 2.05 (Content)
@@ -1491,34 +1491,38 @@ Client  Proxy  Server
    |      |      |         Observe: 7
    |      |      | Object-Security: -
    |      |      |         Payload: [Partial IV:32,
-   |      |      |                   {Content-Format:0, "220"}]
+   |      |      |                  {Code:2.05,   
+   |      |      |                   Content-Format:0, "220"}]
    |      |      |
    |&lt;-----+      |            Code: 2.05 (Content)
    | 2.05 |      |           Token: 0x83
    |      |      |         Observe: 7
    |      |      | Object-Security: -
    |      |      |         Payload: [Partial IV:32,
-   |      |      |                   {Content-Format:0, "220"}]
-  ...    ...    ...
+   |      |      |                  {Code:2.05,   
+   |      |      |                   Content-Format:0, "220"}]
+     ...    ...    ...
    |      |      |
    |      |&lt;-----+            Code: 2.05 (Content)
    |      | 2.05 |           Token: 0xbe
    |      |      |         Observe: 8
    |      |      | Object-Security: -
    |      |      |         Payload: [Partial IV:36,
-   |      |      |                   {Content-Format:0, "180"}]
+   |      |      |                  {Code:2.05,
+   |      |      |                   Content-Format:0, "180"}]
    |      |      |
    |&lt;-----+      |            Code: 2.05 (Content)
    | 2.05 |      |           Token: 0x83
    |      |      |         Observe: 8
    |      |      | Object-Security: -
    |      |      |         Payload: [Partial IV:36,
-   |      |      |                   {Content-Format:0, "180"}]
+   |      |      |                  {Code:2.05,
+   |      |      |                   Content-Format:0, "180"}]
    |      |      |
 </pre>
 <p class="figure">Figure 8: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
-<p id="rfc.section.B.2.p.2">Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. Since the response code (Content) allows payload, the COSE object is carried as the CoAP payload.</p>
-<p id="rfc.section.B.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and 36). The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted. The Observe option is not protected.</p>
+<p id="rfc.section.B.2.p.2">The request/response Codes are encrypted by OSCOAP but since this is Observe, the Codes are visible in the header of the OSCOAP message. Since the method (GET) doesn&#8217;t allow payload, the Object-Security option carries the COSE object as its value. The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted.</p>
+<p id="rfc.section.B.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and  36).</p>
 <p id="rfc.section.B.2.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any Partial IV previously received in a response bound to the request.</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
