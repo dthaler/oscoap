@@ -1011,8 +1011,8 @@ external_aad = [
 <ol>
 <li>Process outer Block options according to <a href="#RFC7959" class="xref">[RFC7959]</a>, until all blocks of the OSCOAP message have been received, see <a href="#block-options" class="xref">Section 4.2.3.2</a>.</li>
 <li>Discard the message Code and all Outer options of Class non I and non U from the message. For example, ETag Outer option is discarded, Max-Age Outer option is not discarded.</li>
-<li>Retrieve the Recipient Context associated with the Token. Decompress the COSE Object (<a href="#compression" class="xref">Section 8</a>). If the response is a CON message and either the decompression or the COSE message fails to decode, then the client SHALL send an empty ACK back and stop processing the response. If the response is a NON message and any of the previous conditions appear, then the client SHALL simply stop processing the response.</li>
-<li>For Observe notifications, verify the received &#8216;Partial IV&#8217; parameter against the corresponding Notification Number as described in <a href="#sequence-numbers" class="xref">Section 6</a>. If the client receives a notification for which no Observe request was sent, the client SHALL stop processing the response and, in the case of CON send an empty ACK back.</li>
+<li>Retrieve the Recipient Context associated with the Token. Decompress the COSE Object (<a href="#compression" class="xref">Section 8</a>). If either the decompression or the COSE message fails to decode, then go to 11.</li>
+<li>For Observe notifications, verify the received &#8216;Partial IV&#8217; parameter against the corresponding Notification Number as described in <a href="#sequence-numbers" class="xref">Section 6</a>. If the client receives a notification for which no Observe request was sent, then go to 11.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compute the AEAD nonce  <ul>
 <li>If the Observe option is not present in the response, compute the AEAD nonce by XORing the Context IV (Recipient IV with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
@@ -1020,7 +1020,7 @@ external_aad = [
 </ul>
 </li>
 <li>Decrypt the COSE object using the Recipient Key.  <ul>
-<li>If decryption fails, the client MUST stop processing the response and, if the response is a CON message, the client MUST respond with an empty ACK back.</li>
+<li>If decryption fails, then go to 11.</li>
 <li>If decryption succeeds and Observe is used, update the corresponding Notification Number, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
 </ul>
 </li>
@@ -1029,6 +1029,7 @@ external_aad = [
 </li>
 <li>The decrypted CoAP response is processed according to <a href="#RFC7252" class="xref">[RFC7252]</a>
 </li>
+<li>(Optional) In case any of the previous erroneous conditions apply: if the response is a CON message, then the client SHALL send an empty ACK back and stop processing the response; if the response is a NON message, then the client SHALL simply stop processing the response.</li>
 </ol>
 <h1 id="rfc.section.7.5">
 <a href="#rfc.section.7.5">7.5.</a> <a href="#nonce-generation" id="nonce-generation">Nonce generation examples</a>
