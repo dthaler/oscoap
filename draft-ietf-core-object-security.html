@@ -988,7 +988,7 @@ external_aad = [
 <h1 id="rfc.section.7.3">
 <a href="#rfc.section.7.3">7.3.</a> <a href="#prot-res" id="prot-res">Protecting the Response</a>
 </h1>
-<p id="rfc.section.7.3.p.1">Given a CoAP response, the server SHALL perform the following steps to create an OSCOAP response:</p>
+<p id="rfc.section.7.3.p.1">Given a CoAP response, the server SHALL perform the following steps to create an OSCOAP response. Note that CoAP error responses derived from CoAP processing (point 10. in <a href="#ver-req" class="xref">Section 7.2</a>) are protected, as well as successful CoAP responses, while the OSCOAP errors (point 3., 4., 7. in <a href="#ver-req" class="xref">Section 7.2</a>) do not follow the processing below, but are sent as simple CoAP responses, without OSCOAP processing.</p>
 <p></p>
 
 <ol>

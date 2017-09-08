@@ -1389,11 +1389,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 7.3.  Protecting the Response
 
    Given a CoAP response, the server SHALL perform the following steps
-   to create an OSCOAP response:
-
-   1.  Retrieve the Sender Context in the Security Context used to
-       verify the request.
-
+   to create an OSCOAP response.  Note that CoAP error responses derived
+   from CoAP processing (point 10. in Section 7.2) are protected, as
+   well as successful CoAP responses, while the OSCOAP errors (point 3.,
+   4., 7. in Section 7.2) do not follow the processing below, but are
+   sent as simple CoAP responses, without OSCOAP processing.
 
 
 
@@ -1401,6 +1401,9 @@ Selander, et al.         Expires March 12, 2018                [Page 25]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   1.  Retrieve the Sender Context in the Security Context used to
+       verify the request.
 
    2.  Compose the Additional Authenticated Data, as described in
        Section 5.
@@ -1447,9 +1450,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
         described in Section 6.  If the client receives a notification
         for which no Observe request was sent, then go to 11.
 
-   5.   Compose the Additional Authenticated Data, as described in
-        Section 5.
-
 
 
 
@@ -1457,6 +1457,9 @@ Selander, et al.         Expires March 12, 2018                [Page 26]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   5.   Compose the Additional Authenticated Data, as described in
+        Section 5.
 
    6.   Compute the AEAD nonce
 
@@ -1501,9 +1504,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    This section illustrates the nonce generation in the different
    processing steps.  Assume that:
 
-   o  Endpoint A has the following security context parameters: Sender
-      Key=K1, Sender IV=IV1, Sender Sequence Number=PIV1 and Recipient
-      Key=K2, Recipient IV=IV2
 
 
 
@@ -1513,6 +1513,10 @@ Selander, et al.         Expires March 12, 2018                [Page 27]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   o  Endpoint A has the following security context parameters: Sender
+      Key=K1, Sender IV=IV1, Sender Sequence Number=PIV1 and Recipient
+      Key=K2, Recipient IV=IV2
 
    o  Endpoint B has the following security context parameters: Sender
       Key=K2, Sender IV=IV2, Sender Sequence Number=PIV2 and Recipient
@@ -1559,16 +1563,14 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
       *  Endpoint A sends a notification, which is verified by Endpoint
          B: key=K1, nonce=IV1 XOR PIV1.
 
-   Remarks:
-
-
-
 
 
 Selander, et al.         Expires March 12, 2018                [Page 28]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   Remarks:
 
    o  Note that endpoint A always uses key K1 for encrypting and K2 for
       verification, and vice versa for endpoint B.
@@ -1616,8 +1618,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    o  The following m bytes encode the value of the kid, if the kid is
       present (k = 1).
 
-   o  The remaining bytes encode the ciphertext.
-
 
 
 
@@ -1625,6 +1625,8 @@ Selander, et al.         Expires March 12, 2018                [Page 29]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   o  The remaining bytes encode the ciphertext.
 
     7 6 5 4 3 2 1 0
    +-+-+-+-+-+-+-+-+  k: kid flag bit
@@ -1669,9 +1671,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    0x09 05 01 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
    35 b9 (18 bytes)
 
-8.2.2.  Example: Response (without Observe)
 
-   Before compression:
 
 
 
@@ -1681,6 +1681,10 @@ Selander, et al.         Expires March 12, 2018                [Page 30]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+8.2.2.  Example: Response (without Observe)
+
+   Before compression:
 
    [
    h'',
@@ -1727,10 +1731,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    security context material or any other information required to run
    OSCOAP.
 
-   A value MUST NOT be given for the "osc" attribute; any present value
-   MUST be ignored by parsers.  The "osc" attribute MUST NOT appear more
-
-
 
 
 Selander, et al.         Expires March 12, 2018                [Page 31]
@@ -1738,6 +1738,8 @@ Selander, et al.         Expires March 12, 2018                [Page 31]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
+   A value MUST NOT be given for the "osc" attribute; any present value
+   MUST be ignored by parsers.  The "osc" attribute MUST NOT appear more
    than once in a given link-value; occurrences after the first MUST be
    ignored by parsers.
 
@@ -1765,8 +1767,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    notes for this encoding).
 
    Example:
-
-
 
 
 
