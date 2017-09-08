@@ -693,12 +693,13 @@ Verify request with   |                       |
 <li>Class I: integrity protected only, or</li>
 <li>Class U: unprotected.</li>
 </ul>
-<p id="rfc.section.4.p.4">Class E message fields are encrypted and integrity protected by the AEAD algorithm, and transferred in the ciphertext of the COSE object in the OSCOAP message. Class E message fields are not visible to proxies, and are therefore called &#8220;Inner&#8221;. Class I message fields are included in the Additional Authenticated Data (AAD) of the AEAD algorithm, allowing the receiving endpoint to detect if the value has changed in transfer. Class U message fields are not protected in transfer. Class I and Class U message field values are transferred in the header or options part of the OSCOAP message which is visible to proxies, and are therefore called &#8220;Outer&#8221; options.</p>
-<p id="rfc.section.4.p.5">CoAP message fields are either Inner or Outer: Inner if the value is intended for the destination endpoint, Outer if the value is intended for a proxy. An OSCOAP message may contain both an Inner and an Outer message field of certain CoAP message fields. Inner and Outer message fields are processed independently.</p>
+<p id="rfc.section.4.p.4">The sending endpoint SHALL transfer Class E message fields in the ciphertext of the COSE object in the OSCOAP message. The sending endpoint SHALL included Class I message fields in the Additional Authenticated Data (AAD) of the AEAD algorithm, allowing the receiving endpoint to detect if the value has changed in transfer. Class U message fields SHALL NOT be protected in transfer. Class I and Class U message field values are transferred in the header or options part of the OSCOAP message which is visible to proxies.</p>
+<p id="rfc.section.4.p.5">Message fields not visible to proxies, i.e. transported in the ciphertext of the COSE object, are called &#8220;Inner&#8221;. Message fields transferred in the header or options part of the OSCOAP message which is visible to proxies are called &#8220;Outer&#8221;.</p>
+<p id="rfc.section.4.p.6">CoAP message fields are either Inner or Outer: Inner if the value is intended for the destination endpoint, Outer if the value is intended for a proxy. An OSCOAP message may contain both an Inner and an Outer message field of certain CoAP message fields. Inner and Outer message fields are processed independently.</p>
 <h1 id="rfc.section.4.1">
 <a href="#rfc.section.4.1">4.1.</a> <a href="#coap-payload" id="coap-payload">CoAP Payload</a>
 </h1>
-<p id="rfc.section.4.1.p.1">The CoAP Payload, if present in the original message, SHALL be encrypted and integrity protected and is thus an Inner message field. The sending endpoint writes the payload of the original CoAP message into the plaintext <a href="#plaintext" class="xref">Section 5.2</a> input to the COSE object. The receiving endpoint verifies and decrypts the COSE object, and recreates the payload of the original CoAP message.</p>
+<p id="rfc.section.4.1.p.1">The CoAP Payload, if present in the original message, SHALL be encrypted and integrity protected and is thus a Class E message field. The sending endpoint writes the payload of the original CoAP message into the plaintext <a href="#plaintext" class="xref">Section 5.2</a> input to the COSE object. The receiving endpoint verifies and decrypts the COSE object, and recreates the payload of the original CoAP message.</p>
 <h1 id="rfc.section.4.2">
 <a href="#rfc.section.4.2">4.2.</a> <a href="#coap-options" id="coap-options">CoAP Options</a>
 </h1>
@@ -736,8 +737,8 @@ Verify request with   |                       |
  * = Special
 </pre>
 <p class="figure">Figure 4: Protection of CoAP Options</p>
-<p id="rfc.section.4.2.p.2">Unless specified otherwise, CoAP options not listed in <a href="#fig-option-protection" class="xref">Figure 4</a> SHALL be Inner.</p>
-<p id="rfc.section.4.2.p.3">Specifications of new CoAP options SHOULD define how they are processed with OSCOAP. A new COAP option SHOULD be Inner unless it requires proxy processing.</p>
+<p id="rfc.section.4.2.p.2">Unless specified otherwise, CoAP options not listed in <a href="#fig-option-protection" class="xref">Figure 4</a> SHALL be of class E.</p>
+<p id="rfc.section.4.2.p.3">Specifications of new CoAP options SHOULD define how they are processed with OSCOAP. A new COAP option SHOULD be of class E unless it requires proxy processing.</p>
 <h1 id="rfc.section.4.2.1">
 <a href="#rfc.section.4.2.1">4.2.1.</a> <a href="#inner-options" id="inner-options">Inner Options</a>
 </h1>
