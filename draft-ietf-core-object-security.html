@@ -1206,7 +1206,7 @@ h'aea0155667924dff8a24e4cb35b9'
 <a href="#rfc.section.10.2">10.2.</a> <a href="#http-to-coap-translation-proxy" id="http-to-coap-translation-proxy">HTTP-to-CoAP Translation Proxy</a>
 </h1>
 <p id="rfc.section.10.2.p.1">As requested in Section 1 of <a href="#RFC8075" class="xref">[RFC8075]</a>, this section describes the HTTP mapping for the OSCOAP protocol extension of CoAP.</p>
-<p id="rfc.section.10.2.p.2">The presence and content of the Object-Security option, both in requests and responses, is expressed in a HTTP header field named Object-Security in the mapped request or response. The value of the field is the value of the CoAP Object-Security option in base64url encoding without padding (see <a href="#RFC7515" class="xref">[RFC7515]</a> Appendix C for implementation notes for this encoding).</p>
+<p id="rfc.section.10.2.p.2">The presence of the Object-Security option, both in requests and responses, is expressed in a HTTP header field named Object-Security in the mapped request or response. The value of the field is the COSE Object of the OSCOAP message in base64url encoding without padding (see <a href="#RFC7515" class="xref">[RFC7515]</a> Appendix C for implementation notes for this encoding).</p>
 <p id="rfc.section.10.2.p.3">Example:</p>
 <pre>
 [HTTP request -- Before object security processing]
