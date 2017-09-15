@@ -973,9 +973,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    that, the Outer Code of the OSCOAP message SHALL be set to 0.02
    (POST) for requests and to 2.04 (Changed) for responses, except for
    Observe messages.  For Observe messages, the Outer Code of the OSCOAP
-   message SHALL be set to 0.01 (GET) for requests and to 2.05 (Content)
-   for responses.  The exception allows OSCOAP to be compliant with the
-   Observe processing in OSCOAP-unaware proxies.
+   message SHALL be set to 0.05 (FETCH) for requests and to 2.05
+   (Content) for responses.  The exception allows OSCOAP to be compliant
+   with the Observe processing in OSCOAP-unaware proxies.  The choice of
+   FETCH allows all OSCOAP messages to have payload.
 
    The receiving endpoint SHALL discard the Code in the OSCOAP message
    and write the Code of the Plaintext in the COSE object (Section 5.2)
@@ -1000,7 +1001,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    length of Sender Key and Recipient Key is 128 bits, the length of
    nonce, Sender IV, and Recipient IV is 7 bytes.  The maximum Sender
    Sequence Number is specified in Section 11.
-
 
 
 
@@ -1046,9 +1046,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    and XORing it with the Context IV (Sender IV or Recipient IV), with
    the following addition: The most significant bit in the first byte of
    the Context IV SHALL be flipped for responses, in case there is a
-   single response (not Observe).  In this way, the partial IV can be
-   reused for the corresponding responses, which reduces the size of the
-   response.  For detailed processing instructions, see Section 7.
+   single response (i.e. not in the case of Observe).  In this way, the
+   partial IV can be reused for the corresponding responses, which
+   reduces the size of the response.  For detailed processing
+   instructions, see Section 7.
 
 5.2.  Plaintext
 
@@ -1057,7 +1058,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
    o  the Code of the original CoAP message as defined in Section 3 of
       [RFC7252]; and
-
 
 
 
