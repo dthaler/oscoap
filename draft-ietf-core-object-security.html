@@ -1473,10 +1473,65 @@ Client  Proxy  Server
 <a href="#rfc.appendix.B.2">B.2.</a> <a href="#secure-subscribe-to-sensor" id="secure-subscribe-to-sensor">Secure Subscribe to Sensor</a>
 </h1>
 <p id="rfc.section.B.2.p.1">This example targets the scenario in Section 3.2 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting subscription to a blood sugar measurement resource (GET /glucose), first receiving the value 220 mg/dl and then a second value 180 mg/dl.</p>
-<p id="rfc.section.B.2.p.2">~~~~~~~~~~~ Client   Proxy   Server |       |       | +&#8212;&#8212;&gt;|       |            Code: 0.05 (FETCH) | FETCH |       |           Token: 0x83 |       |       |         Observe: 0 |       |       | Object-Security: [kid:ca, Partial IV:15, |       |       |                  {Code:0.01, |       |       |                   Uri-Path:&#8221;glucose&#8221;}] |       |       |         Payload: - |       |       | |       +&#8212;&#8212;&gt;|            Code: 0.01 (FETCH) |       | FETCH |           Token: 0xbe |       |       |         Observe: 0 |       |       | Object-Security: [kid:ca, Partial IV:15, |       |       |                  {Code:0.01, |       |       |                   Uri-Path:&#8221;glucose&#8221;}] |       |       |         Payload: - |       |       | |       |&lt;&#8212;&#8212;+            Code: 2.05 (Content) |       |  2.05 |           Token: 0xbe |       |       |         Observe: 7 |       |       | Object-Security: - |       |       |         Payload: [Partial IV:32, |       |       |                  {Code:2.05, <br> |       |       |                   Content-Format:0, &#8220;220&#8221;}] |       |       | |&lt;&#8212;&#8212;+       |            Code: 2.05 (Content) |  2.05 |       |           Token: 0x83 |       |       |         Observe: 7 |       |       | Object-Security: - |       |       |         Payload: [Partial IV:32, |       |       |                  {Code:2.05, <br> |       |       |                   Content-Format:0, &#8220;220&#8221;}] &#8230;     &#8230;     &#8230; |       |       | |       |&lt;&#8212;&#8212;+            Code: 2.05 (Content) |       |  2.05 |           Token: 0xbe |       |       |         Observe: 8 |       |       | Object-Security: - |       |       |         Payload: [Partial IV:36, |       |       |                  {Code:2.05, |       |       |                   Content-Format:0, &#8220;180&#8221;}] |       |       | |&lt;&#8212;&#8212;+       |            Code: 2.05 (Content) |  2.05 |       |           Token: 0x83 |       |       |         Observe: 8 |       |       | Object-Security: - |       |       |         Payload: [Partial IV:36, |       |       |                  {Code:2.05, |       |       |                   Content-Format:0, &#8220;180&#8221;}] |       |       | ~~~~~~~~~~~{: #fig-blood-sugar title=&#8221;Secure Subscribe to Sensor. Square brackets [ &#8230; ] indicate a COSE object. Curly brackets { &#8230; } indicate encrypted data.&#8221; artwork-align=&#8221;center&#8221;}</p>
-<p id="rfc.section.B.2.p.3">The request/response Codes are encrypted by OSCOAP and only dummy Codes (FETCH/Content) are visible in the header of the OSCOAP message. The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted.</p>
-<p id="rfc.section.B.2.p.4">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and 36).</p>
-<p id="rfc.section.B.2.p.5">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any Partial IV previously received in a response bound to the request.</p>
+<div id="rfc.figure.8"></div>
+<div id="fig-blood-sugar"></div>
+<pre>
+Client   Proxy   Server
+   |       |       |
+   +------&gt;|       |            Code: 0.05 (FETCH)
+   | FETCH |       |           Token: 0x83
+   |       |       |         Observe: 0
+   |       |       | Object-Security: [kid:ca, Partial IV:15,
+   |       |       |                  {Code:0.01,
+   |       |       |                   Uri-Path:"glucose"}]
+   |       |       |         Payload: -
+   |       |       |
+   |       +------&gt;|            Code: 0.01 (FETCH)
+   |       | FETCH |           Token: 0xbe
+   |       |       |         Observe: 0
+   |       |       | Object-Security: [kid:ca, Partial IV:15,
+   |       |       |                  {Code:0.01,
+   |       |       |                   Uri-Path:"glucose"}]
+   |       |       |         Payload: -
+   |       |       |
+   |       |&lt;------+            Code: 2.05 (Content)
+   |       |  2.05 |           Token: 0xbe
+   |       |       |         Observe: 7
+   |       |       | Object-Security: -
+   |       |       |         Payload: [Partial IV:32,
+   |       |       |                  {Code:2.05,   
+   |       |       |                   Content-Format:0, "220"}]
+   |       |       |
+   |&lt;------+       |            Code: 2.05 (Content)
+   |  2.05 |       |           Token: 0x83
+   |       |       |         Observe: 7
+   |       |       | Object-Security: -
+   |       |       |         Payload: [Partial IV:32,
+   |       |       |                  {Code:2.05,   
+   |       |       |                   Content-Format:0, "220"}]
+  ...     ...     ...
+   |       |       |
+   |       |&lt;------+            Code: 2.05 (Content)
+   |       |  2.05 |           Token: 0xbe
+   |       |       |         Observe: 8
+   |       |       | Object-Security: -
+   |       |       |         Payload: [Partial IV:36,
+   |       |       |                  {Code:2.05,
+   |       |       |                   Content-Format:0, "180"}]
+   |       |       |
+   |&lt;------+       |            Code: 2.05 (Content)
+   |  2.05 |       |           Token: 0x83
+   |       |       |         Observe: 8
+   |       |       | Object-Security: -
+   |       |       |         Payload: [Partial IV:36,
+   |       |       |                  {Code:2.05,
+   |       |       |                   Content-Format:0, "180"}]
+   |       |       |
+</pre>
+<p class="figure">Figure 8: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
+<p id="rfc.section.B.2.p.2">The request/response Codes are encrypted by OSCOAP and only dummy Codes (FETCH/Content) are visible in the header of the OSCOAP message. The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted.</p>
+<p id="rfc.section.B.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and 36).</p>
+<p id="rfc.section.B.2.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any Partial IV previously received in a response bound to the request.</p>
 <h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
 <div class="avoidbreak">
   <address class="vcard">
