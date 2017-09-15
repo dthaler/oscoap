@@ -2193,31 +2193,31 @@ B.1.  Secure Access to Sensor
    requesting the alarm status from a server.
 
       Client  Proxy  Server
-         |      |      |
-         +----->|      |            Code: 0.02 (POST)
-         | POST |      |           Token: 0x8c
-         |      |      | Object-Security: -
-         |      |      |         Payload: [kid:5f, Partial IV:42,
-         |      |      |                  {Code:0.01,
-         |      |      |                   Uri-Path:"alarm_status"}]
-         |      |      |
-         |      +----->|            Code: 0.02 (POST))
-         |      | POST |           Token: 0x7b
-         |      |      | Object-Security: -
-         |      |      |         Payload: [kid:5f, Partial IV:42,
-         |      |      |                  {Code:0.01,
-         |      |      |                   Uri-Path:"alarm_status"}]
-         |      |      |
-         |      |<-----+            Code: 2.04 (Changed)
-         |      | 2.04 |           Token: 0x7b
-         |      |      | Object-Security: -
-         |      |      |         Payload: [{Code:2.05, "OFF"}]
-         |      |      |
-         |<-----+      |            Code: 2.04 (Changed)
-         | 2.04 |      |           Token: 0x8c
-         |      |      | Object-Security: -
-         |      |      |         Payload: [{Code:2.05, "OFF"}]
-         |      |      |
+        |       |       |
+        +------>|       |            Code: 0.02 (POST)
+        | POST  |       |           Token: 0x8c
+        |       |       | Object-Security: -
+        |       |       |         Payload: [kid:5f, Partial IV:42,
+        |       |       |                  {Code:0.01,
+        |       |       |                   Uri-Path:"alarm_status"}]
+        |       |       |
+        |       +------>|            Code: 0.02 (POST))
+        |       | POST  |           Token: 0x7b
+        |       |       | Object-Security: -
+        |       |       |         Payload: [kid:5f, Partial IV:42,
+        |       |       |                  {Code:0.01,
+        |       |       |                   Uri-Path:"alarm_status"}]
+        |       |       |
+        |       |<------+            Code: 2.04 (Changed)
+        |       |  2.04 |           Token: 0x7b
+        |       |       | Object-Security: -
+        |       |       |         Payload: [{Code:2.05, "OFF"}]
+        |       |       |
+        |<------+       |            Code: 2.04 (Changed)
+        |  2.04 |       |           Token: 0x8c
+        |       |       | Object-Security: -
+        |       |       |         Payload: [{Code:2.05, "OFF"}]
+        |       |       |
 
    Figure 7: Secure Access to Sensor.  Square brackets [ ... ] indicate
       a COSE object.  Curly brackets { ... } indicate encrypted data.
@@ -2250,7 +2250,7 @@ B.2.  Secure Subscribe to Sensor
    /glucose), first receiving the value 220 mg/dl and then a second
    value 180 mg/dl.
 
-     Client   Proxy   Server
+      Client  Proxy  Server
         |       |       |
         +------>|       |            Code: 0.05 (FETCH)
         | FETCH |       |           Token: 0x83
