@@ -122,8 +122,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
      15.2.  Informative References . . . . . . . . . . . . . . . . .  38
    Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  39
    Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  39
-     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  39
-     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  40
+     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  40
+     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  41
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  42
 
 1.  Introduction
@@ -2074,6 +2074,11 @@ Selander, et al.         Expires March 19, 2018                [Page 37]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
+   [RFC8132]  van der Stok, P., Bormann, C., and A. Sehgal, "PATCH and
+              FETCH Methods for the Constrained Application Protocol
+              (CoAP)", RFC 8132, DOI 10.17487/RFC8132, April 2017,
+              <https://www.rfc-editor.org/info/rfc8132>.
+
    [RFC8152]  Schaad, J., "CBOR Object Signing and Encryption (COSE)",
               RFC 8152, DOI 10.17487/RFC8152, July 2017,
               <https://www.rfc-editor.org/info/rfc8152>.
@@ -2116,11 +2121,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
               mattsson-core-coap-actuators-02 (work in progress),
               November 2016.
 
-   [I-D.seitz-ace-oscoap-profile]
-              Seitz, L., Palombini, F., and M. Gunnarsson, "OSCOAP
-              profile of the Authentication and Authorization for
-              Constrained Environments Framework", draft-seitz-ace-
-              oscoap-profile-04 (work in progress), July 2017.
 
 
 
@@ -2129,6 +2129,12 @@ Selander, et al.         Expires March 19, 2018                [Page 38]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   [I-D.seitz-ace-oscoap-profile]
+              Seitz, L., Palombini, F., and M. Gunnarsson, "OSCOAP
+              profile of the Authentication and Authorization for
+              Constrained Environments Framework", draft-seitz-ace-
+              oscoap-profile-04 (work in progress), July 2017.
 
    [I-D.tiloca-core-multicast-oscoap]
               Tiloca, M., Selander, G., and F. Palombini, "Secure group
@@ -2172,12 +2178,6 @@ Appendix B.  Examples
    examples only indicate the content of the messages without going into
    detail of the COSE message format.
 
-B.1.  Secure Access to Sensor
-
-   This example targets the scenario in Section 3.1 of
-   [I-D.hartke-core-e2e-security-reqs] and illustrates a client
-   requesting the alarm status from a server.
-
 
 
 
@@ -2185,6 +2185,12 @@ Selander, et al.         Expires March 19, 2018                [Page 39]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+B.1.  Secure Access to Sensor
+
+   This example targets the scenario in Section 3.1 of
+   [I-D.hartke-core-e2e-security-reqs] and illustrates a client
+   requesting the alarm status from a server.
 
       Client  Proxy  Server
          |      |      |
@@ -2228,12 +2234,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    The server verifies that the Partial IV has not been received before.
    The client verifies that the response is bound to the request.
 
-B.2.  Secure Subscribe to Sensor
-
-   This example targets the scenario in Section 3.2 of
-   [I-D.hartke-core-e2e-security-reqs] and illustrates a client
-   requesting subscription to a blood sugar measurement resource (GET
-
 
 
 
@@ -2242,6 +2242,11 @@ Selander, et al.         Expires March 19, 2018                [Page 40]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
+B.2.  Secure Subscribe to Sensor
+
+   This example targets the scenario in Section 3.2 of
+   [I-D.hartke-core-e2e-security-reqs] and illustrates a client
+   requesting subscription to a blood sugar measurement resource (GET
    /glucose), first receiving the value 220 mg/dl and then a second
    value 180 mg/dl.
 
@@ -2285,11 +2290,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
          |      |      |         Observe: 8
          |      |      | Object-Security: -
          |      |      |         Payload: [Partial IV:36,
-         |      |      |                  {Code:2.05,
-         |      |      |                   Content-Format:0, "180"}]
-         |      |      |
-         |<-----+      |            Code: 2.05 (Content)
-         | 2.05 |      |           Token: 0x83
 
 
 
@@ -2298,6 +2298,11 @@ Selander, et al.         Expires March 19, 2018                [Page 41]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
+         |      |      |                  {Code:2.05,
+         |      |      |                   Content-Format:0, "180"}]
+         |      |      |
+         |<-----+      |            Code: 2.05 (Content)
+         | 2.05 |      |           Token: 0x83
          |      |      |         Observe: 8
          |      |      | Object-Security: -
          |      |      |         Payload: [Partial IV:36,
@@ -2339,11 +2344,6 @@ Authors' Addresses
    Email: john.mattsson@ericsson.com
 
 
-   Francesca Palombini
-   Ericsson AB
-
-   Email: francesca.palombini@ericsson.com
-
 
 
 
@@ -2354,16 +2354,16 @@ Selander, et al.         Expires March 19, 2018                [Page 42]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
+   Francesca Palombini
+   Ericsson AB
+
+   Email: francesca.palombini@ericsson.com
+
+
    Ludwig Seitz
    SICS Swedish ICT
 
    Email: ludwig@sics.se
-
-
-
-
-
-
 
 
 
