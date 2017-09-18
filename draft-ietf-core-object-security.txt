@@ -122,8 +122,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
      15.2.  Informative References . . . . . . . . . . . . . . . . .  38
    Appendix A.  Test Vectors . . . . . . . . . . . . . . . . . . . .  39
    Appendix B.  Examples . . . . . . . . . . . . . . . . . . . . . .  39
-     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  40
-     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  41
+     B.1.  Secure Access to Sensor . . . . . . . . . . . . . . . . .  39
+     B.2.  Secure Subscribe to Sensor  . . . . . . . . . . . . . . .  40
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  42
 
 1.  Introduction
@@ -471,7 +471,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
    o  AEAD Algorithm (alg)
 
-      *  Default is AES-CCM-64-64-128 (COSE abbreviation: 12)
+      *  Default is AES-CCM-16-64-128 (COSE abbreviation: 10)
 
    o  Master Salt
 
@@ -539,8 +539,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    o  L is the size of the key/IV for the AEAD algorithm used, in
       octets.
 
-   For example, if the algorithm AES-CCM-64-64-128 (see Section 10.2 in
-   [RFC8152]) is used, the value for L is 16 for keys and 7 for IVs.
+   For example, if the algorithm AES-CCM-16-64-128 (see Section 10.2 in
+   [RFC8152]) is used, the value for L is 16 for keys and 13 for IVs.
 
 3.2.2.  Initial Sequence Numbers and Replay Window
 
@@ -996,10 +996,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    Additional Data (AEAD) algorithm.  The key lengths, IV lengths, nonce
    length, and maximum Sender Sequence Number are algorithm dependent.
 
-   The AEAD algorithm AES-CCM-64-64-128 defined in Section 10.2 of
-   [RFC8152] is mandatory to implement.  For AES-CCM-64-64-128 the
+   The AEAD algorithm AES-CCM-16-64-128 defined in Section 10.2 of
+   [RFC8152] is mandatory to implement.  For AES-CCM-16-64-128 the
    length of Sender Key and Recipient Key is 128 bits, the length of
-   nonce, Sender IV, and Recipient IV is 7 bytes.  The maximum Sender
+   nonce, Sender IV, and Recipient IV is 13 bytes.  The maximum Sender
    Sequence Number is specified in Section 11.
 
 
@@ -1885,10 +1885,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    An OSCOAP profile of ACE is described in
    [I-D.seitz-ace-oscoap-profile].
 
-   The mandatory-to-implement AEAD algorithm AES-CCM-64-64-128 is
-   selected for broad applicability in terms of message size (2^64
-   blocks) and maximum number of messages (2^56).  Compatibility with
-   CCM* is achieved by using the algorithm AES-CCM-16-64-128 [RFC8152].
+   The mandatory-to-implement AEAD algorithm AES-CCM-16-64-128 is
+   selected for compatibility with CCM*.
 
    Most AEAD algorithms require a unique nonce for each message, for
    which the sender sequence numbers in the COSE message field "Partial
@@ -1898,6 +1896,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    defined that only messages with sequence number which are equal to
    previous sequence number + 1 are accepted.  The alternatives to
    sequence numbers have their issues: very constrained devices may not
+   be able to support accurate time, or to generate and store large
+   numbers of random nonces.  The requirement to change key at counter
 
 
 
@@ -1906,8 +1906,6 @@ Selander, et al.         Expires March 22, 2018                [Page 34]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
-   be able to support accurate time, or to generate and store large
-   numbers of random nonces.  The requirement to change key at counter
    wrap is a complication, but it also forces the user of this
    specification to think about implementing key renewal.
 
@@ -1953,6 +1951,8 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    reduced by means of OSCOAP.  End-to-end integrity protection and
    encryption of CoAP payload and all options that are not used for
    proxy operations, provide mitigation against attacks on sensor and
+   actuator communication, which may have a direct impact on the
+   personal sphere.
 
 
 
@@ -1961,9 +1961,6 @@ Selander, et al.         Expires March 22, 2018                [Page 35]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
-
-   actuator communication, which may have a direct impact on the
-   personal sphere.
 
    The unprotected options (Figure 4) may reveal privacy sensitive
    information.  In particular Uri-Host SHOULD NOT contain privacy
@@ -2009,6 +2006,9 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
    The following individuals provided input to this document: Christian
    Amsuess, Tobias Andersson, Carsten Bormann, Joakim Brorsson, Thomas
+   Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Dave Thaler,
+   Marco Tiloca, and Malisa Vu&#269;ini&#263;.
+
 
 
 
@@ -2017,9 +2017,6 @@ Selander, et al.         Expires March 22, 2018                [Page 36]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
-
-   Fossati, Martin Gunnarsson, Klaus Hartke, Jim Schaad, Dave Thaler,
-   Marco Tiloca, and Malisa Vu&#269;ini&#263;.
 
    Ludwig Seitz and Goeran Selander worked on this document as part of
    the CelticPlus project CyberWI, with funding from Vinnova.
@@ -2065,7 +2062,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
               DOI 10.17487/RFC7959, August 2016,
               <https://www.rfc-editor.org/info/rfc7959>.
 
-
+   [RFC8132]  van der Stok, P., Bormann, C., and A. Sehgal, "PATCH and
+              FETCH Methods for the Constrained Application Protocol
+              (CoAP)", RFC 8132, DOI 10.17487/RFC8132, April 2017,
+              <https://www.rfc-editor.org/info/rfc8132>.
 
 
 
@@ -2073,11 +2073,6 @@ Selander, et al.         Expires March 22, 2018                [Page 37]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
-
-   [RFC8132]  van der Stok, P., Bormann, C., and A. Sehgal, "PATCH and
-              FETCH Methods for the Constrained Application Protocol
-              (CoAP)", RFC 8132, DOI 10.17487/RFC8132, April 2017,
-              <https://www.rfc-editor.org/info/rfc8132>.
 
    [RFC8152]  Schaad, J., "CBOR Object Signing and Encryption (COSE)",
               RFC 8152, DOI 10.17487/RFC8152, July 2017,
@@ -2121,6 +2116,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
               mattsson-core-coap-actuators-02 (work in progress),
               November 2016.
 
+   [I-D.seitz-ace-oscoap-profile]
+              Seitz, L., Palombini, F., and M. Gunnarsson, "OSCOAP
+              profile of the Authentication and Authorization for
+              Constrained Environments Framework", draft-seitz-ace-
+              oscoap-profile-04 (work in progress), July 2017.
 
 
 
@@ -2129,12 +2129,6 @@ Selander, et al.         Expires March 22, 2018                [Page 38]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
-
-   [I-D.seitz-ace-oscoap-profile]
-              Seitz, L., Palombini, F., and M. Gunnarsson, "OSCOAP
-              profile of the Authentication and Authorization for
-              Constrained Environments Framework", draft-seitz-ace-
-              oscoap-profile-04 (work in progress), July 2017.
 
    [I-D.tiloca-core-multicast-oscoap]
               Tiloca, M., Selander, G., and F. Palombini, "Secure group
@@ -2178,6 +2172,12 @@ Appendix B.  Examples
    examples only indicate the content of the messages without going into
    detail of the COSE message format.
 
+B.1.  Secure Access to Sensor
+
+   This example targets the scenario in Section 3.1 of
+   [I-D.hartke-core-e2e-security-reqs] and illustrates a client
+   requesting the alarm status from a server.
+
 
 
 
@@ -2185,12 +2185,6 @@ Selander, et al.         Expires March 22, 2018                [Page 39]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
-
-B.1.  Secure Access to Sensor
-
-   This example targets the scenario in Section 3.1 of
-   [I-D.hartke-core-e2e-security-reqs] and illustrates a client
-   requesting the alarm status from a server.
 
       Client  Proxy  Server
         |       |       |
@@ -2234,6 +2228,12 @@ B.1.  Secure Access to Sensor
    The server verifies that the Partial IV has not been received before.
    The client verifies that the response is bound to the request.
 
+B.2.  Secure Subscribe to Sensor
+
+   This example targets the scenario in Section 3.2 of
+   [I-D.hartke-core-e2e-security-reqs] and illustrates a client
+   requesting subscription to a blood sugar measurement resource (GET
+
 
 
 
@@ -2242,11 +2242,6 @@ Selander, et al.         Expires March 22, 2018                [Page 40]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
-B.2.  Secure Subscribe to Sensor
-
-   This example targets the scenario in Section 3.2 of
-   [I-D.hartke-core-e2e-security-reqs] and illustrates a client
-   requesting subscription to a blood sugar measurement resource (GET
    /glucose), first receiving the value 220 mg/dl and then a second
    value 180 mg/dl.
 
@@ -2290,6 +2285,11 @@ B.2.  Secure Subscribe to Sensor
         |       |       |         Observe: 8
         |       |       | Object-Security: -
         |       |       |         Payload: [Partial IV:36,
+        |       |       |                  {Code:2.05,
+        |       |       |                   Content-Format:0, "180"}]
+        |       |       |
+        |<------+       |            Code: 2.05 (Content)
+        |  2.05 |       |           Token: 0x83
 
 
 
@@ -2298,11 +2298,6 @@ Selander, et al.         Expires March 22, 2018                [Page 41]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
-        |       |       |                  {Code:2.05,
-        |       |       |                   Content-Format:0, "180"}]
-        |       |       |
-        |<------+       |            Code: 2.05 (Content)
-        |  2.05 |       |           Token: 0x83
         |       |       |         Observe: 8
         |       |       | Object-Security: -
         |       |       |         Payload: [Partial IV:36,
@@ -2343,6 +2338,11 @@ Authors' Addresses
    Email: john.mattsson@ericsson.com
 
 
+   Francesca Palombini
+   Ericsson AB
+
+   Email: francesca.palombini@ericsson.com
+
 
 
 
@@ -2354,16 +2354,16 @@ Selander, et al.         Expires March 22, 2018                [Page 42]
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
 
-   Francesca Palombini
-   Ericsson AB
-
-   Email: francesca.palombini@ericsson.com
-
-
    Ludwig Seitz
    SICS Swedish ICT
 
    Email: ludwig@sics.se
+
+
+
+
+
+
 
 
 
