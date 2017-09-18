@@ -304,7 +304,8 @@ address {
 <link href="#rfc.section.7.5" rel="Chapter" title="7.5 Nonce generation examples">
 <link href="#rfc.section.8" rel="Chapter" title="8 OSCOAP Compression">
 <link href="#rfc.section.8.1" rel="Chapter" title="8.1 Encoding of the OSCOAP Payload">
-<link href="#rfc.section.8.2" rel="Chapter" title="8.2 Compression Examples">
+<link href="#rfc.section.8.2" rel="Chapter" title="8.2 Auxilliary Data">
+<link href="#rfc.section.8.3" rel="Chapter" title="8.3 Compression Examples">
 <link href="#rfc.section.9" rel="Chapter" title="9 Web Linking">
 <link href="#rfc.section.10" rel="Chapter" title="10 Proxy Operations">
 <link href="#rfc.section.10.1" rel="Chapter" title="10.1 CoAP-to-CoAP Forwarding Proxy">
@@ -452,7 +453,9 @@ address {
 </li>
 <ul><li>8.1.   <a href="#rfc.section.8.1">Encoding of the OSCOAP Payload</a>
 </li>
-<li>8.2.   <a href="#rfc.section.8.2">Compression Examples</a>
+<li>8.2.   <a href="#rfc.section.8.2">Auxilliary Data</a>
+</li>
+<li>8.3.   <a href="#rfc.section.8.3">Compression Examples</a>
 </li>
 </ul><li>9.   <a href="#rfc.section.9">Web Linking</a>
 </li>
@@ -1093,13 +1096,16 @@ external_aad = [
 <ul>
 <li>The first byte (Flag Byte, see <a href="#fig-flag-byte" class="xref">Figure 6</a>) encodes a set of flags and the length of the Partial IV parameter.  <ul>
 <li>The three least significant bits encode the Partial IV length, n. If n = 0 then the Partial IV is not present in the compressed COSE object.</li>
-<li>The fourth least significant bit k is the kid flag: it is set to 1 if the kid is present in the compressed COSE object.</li>
-<li>The fifth-eighth least significant bits are reserved and SHALL be set to zero when not in use.</li>
+<li>The fourth least significant bit is the kid flag, k: it is set to 1 if the kid is present in the compressed COSE object.</li>
+<li>The fifth least significant bit is the auxilliary data flag, a: it is set to 1 if the compressed COSE object contains auxilliary data, see <a href="#auxilliary-data" class="xref">Section 8.2</a>.</li>
+<li>The sixth-eighth least significant bits are reserved and SHALL be set to zero when not in use.</li>
 </ul>
 </li>
 <li>The following n bytes encode the value of the Partial IV, if the Partial IV is present (n &gt; 0).</li>
 <li>The following 1 byte encodes the length of the kid, m, if the kid flag is set (k = 1).</li>
 <li>The following m bytes encode the value of the kid, if the kid flag is set (k = 1).</li>
+<li>The following 1 byte encode the length of the auxilliary data, l, if the auxilliary data flag is set (a = 1).</li>
+<li>The following l bytes encode the auxilliary data, if the auxilliary data flag is set (a = 1).</li>
 <li>The remaining bytes encode the ciphertext.</li>
 </ul>
 <div id="rfc.figure.6"></div>
@@ -1109,10 +1115,11 @@ external_aad = [
 +-+-+-+-+-+-+-+-+
 |  Flag Byte    |                       
 +-+-+-+-+-+-+-+-+
-|  n  |k|0|0 0 0|    
+|  n  |k|a|0 0 0|    
 +-+-+-+-+-+-+-+-+
 n: Partial IV length (3 bits)
 k: kid flag bit
+a: auxilliary data flag bit
 </pre>
 <p class="figure">Figure 6: Flag Byte for OSCOAP Compression</p>
 <p id="rfc.section.8.1.p.3">The presence of Partial IV and kid in requests and responses is specified in <a href="#cose-object" class="xref">Section 5</a>, and summarized in <a href="#fig-byte-flag" class="xref">Figure 7</a>.</p>
@@ -1129,13 +1136,24 @@ k: kid flag bit
 </pre>
 <p class="figure">Figure 7: Presence of data fields in compressed OSCOAP header</p>
 <h1 id="rfc.section.8.2">
-<a href="#rfc.section.8.2">8.2.</a> <a href="#compression-examples" id="compression-examples">Compression Examples</a>
+<a href="#rfc.section.8.2">8.2.</a> <a href="#auxilliary-data" id="auxilliary-data">Auxilliary Data</a>
 </h1>
-<p id="rfc.section.8.2.p.1">This section provides examples of COSE Objects before and after OSCOAP compression.</p>
-<h1 id="rfc.section.8.2.1">
-<a href="#rfc.section.8.2.1">8.2.1.</a> <a href="#example-request" id="example-request">Example: Request</a>
+<p id="rfc.section.8.2.p.1">For certain use cases, it is necessary or favorable for the sending endpoint to provide some auxilliary data in order for the receiving endpoint to retrieve the recipient context. One use case is if the same kid is used with multiple master keys, in which case some other identifier can be included as auxilliary data to enable the receiving endpoint to find the right security context. The auxilliary data is not protected, and so may be eavesdropped or manipulated in transfer. Applications need to make the appropriate security and privacy considerations of sending auxilliary data.</p>
+<p id="rfc.section.8.2.p.2">Examples:</p>
+<p></p>
+
+<ul>
+<li>If the sending endpoint has an identifier in some other namespace which can be used to retrive or establish the security context, then that identifier can be used as auxilliary data.</li>
+<li>In case of a group communication scenario <a href="#I-D.tiloca-core-multicast-oscoap" class="xref">[I-D.tiloca-core-multicast-oscoap]</a>, if the sender endpoint belongs to multiple groups involving the same endpoints, then a group identifier can be used as auxilliary data to enable the receiving endpoint to find the right group security context.</li>
+</ul>
+<h1 id="rfc.section.8.3">
+<a href="#rfc.section.8.3">8.3.</a> <a href="#compression-examples" id="compression-examples">Compression Examples</a>
 </h1>
-<p id="rfc.section.8.2.1.p.1">Before compression:</p>
+<p id="rfc.section.8.3.p.1">This section provides examples of COSE Objects before and after OSCOAP compression.</p>
+<h1 id="rfc.section.8.3.1">
+<a href="#rfc.section.8.3.1">8.3.1.</a> <a href="#example-request" id="example-request">Example: Request</a>
+</h1>
+<p id="rfc.section.8.3.1.p.1">Before compression:</p>
 <pre>
 [
 h'',
@@ -1146,16 +1164,16 @@ h'aea0155667924dff8a24e4cb35b9'
 0x83 40 a2 04 41 25 06 41 05 4e ae a0 15 56 67 92
 4d ff 8a 24 e4 cb 35 b9 (24 bytes)
 </pre>
-<p id="rfc.section.8.2.1.p.2">After compression:</p>
-<p id="rfc.section.8.2.1.p.3">First byte: 0b00001001 = 0x09</p>
+<p id="rfc.section.8.3.1.p.2">After compression:</p>
+<p id="rfc.section.8.3.1.p.3">First byte: 0b00001001 = 0x09</p>
 <pre>
 0x09 05 01 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
 35 b9 (18 bytes)
 </pre>
-<h1 id="rfc.section.8.2.2">
-<a href="#rfc.section.8.2.2">8.2.2.</a> <a href="#example-response-without-observe" id="example-response-without-observe">Example: Response (without Observe)</a>
+<h1 id="rfc.section.8.3.2">
+<a href="#rfc.section.8.3.2">8.3.2.</a> <a href="#example-response-without-observe" id="example-response-without-observe">Example: Response (without Observe)</a>
 </h1>
-<p id="rfc.section.8.2.2.p.1">Before compression:</p>
+<p id="rfc.section.8.3.2.p.1">Before compression:</p>
 <pre>
 [
 h'',
@@ -1166,16 +1184,16 @@ h'aea0155667924dff8a24e4cb35b9'
 0x83 40 a0 4e ae a0 15 56 67 92 4d ff 8a 24 e4 cb
 35 b9 (18 bytes)
 </pre>
-<p id="rfc.section.8.2.2.p.2">After compression:</p>
-<p id="rfc.section.8.2.2.p.3">First byte: 0b00000000 = 0x00</p>
+<p id="rfc.section.8.3.2.p.2">After compression:</p>
+<p id="rfc.section.8.3.2.p.3">First byte: 0b00000000 = 0x00</p>
 <pre>
 0x00 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
 (15 bytes)
 </pre>
-<h1 id="rfc.section.8.2.3">
-<a href="#rfc.section.8.2.3">8.2.3.</a> <a href="#example-response-with-observe" id="example-response-with-observe">Example: Response (with Observe)</a>
+<h1 id="rfc.section.8.3.3">
+<a href="#rfc.section.8.3.3">8.3.3.</a> <a href="#example-response-with-observe" id="example-response-with-observe">Example: Response (with Observe)</a>
 </h1>
-<p id="rfc.section.8.2.3.p.1">Before compression:</p>
+<p id="rfc.section.8.3.3.p.1">Before compression:</p>
 <pre>
 [
 h'',
@@ -1186,8 +1204,8 @@ h'aea0155667924dff8a24e4cb35b9'
 0x83 40 a1 06 41 07 4e ae a0 15 56 67 92 4d ff
 8a 24 e4 cb 35 b9 (21 bytes)
 </pre>
-<p id="rfc.section.8.2.3.p.2">After compression:</p>
-<p id="rfc.section.8.2.3.p.3">First byte: 0b00000001 = 0x01</p>
+<p id="rfc.section.8.3.3.p.2">After compression:</p>
+<p id="rfc.section.8.3.3.p.3">First byte: 0b00000001 = 0x01</p>
 <pre>
 0x01 07 ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9
 (16 bytes)
