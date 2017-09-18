@@ -303,7 +303,7 @@ address {
 <link href="#rfc.section.7.4" rel="Chapter" title="7.4 Verifying the Response">
 <link href="#rfc.section.7.5" rel="Chapter" title="7.5 Nonce generation examples">
 <link href="#rfc.section.8" rel="Chapter" title="8 OSCOAP Compression">
-<link href="#rfc.section.8.1" rel="Chapter" title="8.1 Encoding of the Object-Security Option">
+<link href="#rfc.section.8.1" rel="Chapter" title="8.1 Encoding of the OSCOAP Payload">
 <link href="#rfc.section.8.2" rel="Chapter" title="8.2 Compression Examples">
 <link href="#rfc.section.9" rel="Chapter" title="9 Web Linking">
 <link href="#rfc.section.10" rel="Chapter" title="10 Proxy Operations">
@@ -450,7 +450,7 @@ address {
 </li>
 </ul><li>8.   <a href="#rfc.section.8">OSCOAP Compression</a>
 </li>
-<ul><li>8.1.   <a href="#rfc.section.8.1">Encoding of the Object-Security Option</a>
+<ul><li>8.1.   <a href="#rfc.section.8.1">Encoding of the OSCOAP Payload</a>
 </li>
 <li>8.2.   <a href="#rfc.section.8.2">Compression Examples</a>
 </li>
@@ -545,7 +545,7 @@ Client                                            Server
    C = Critical,  U = Unsafe,  N = NoCacheKey,  R = Repeatable   
 </pre>
 <p class="figure">Figure 2: The Object-Security Option</p>
-<p id="rfc.section.2.p.2">The Object-Security option SHALL be empty (length zero), and the compressed COSE object is the payload of the OSCOAP message. An endpoint receiving a non-empty Object-Security option SHALL treat it as malformed and reject it. An endpoint receiving a CoAP message without payload, that also contains an Object-Security option SHALL treat it as malformed and reject it. A successful response to a request with the Object-Security option SHALL contain the Object-Security option.</p>
+<p id="rfc.section.2.p.2">The Object-Security option SHALL be empty (length zero), and the payload of the OSCOAP message is the compressed COSE object. An endpoint receiving a non-empty Object-Security option SHALL treat it as malformed and reject it. An endpoint receiving a CoAP message without payload, that also contains an Object-Security option SHALL treat it as malformed and reject it. A successful response to a request with the Object-Security option SHALL contain the Object-Security option.</p>
 <p id="rfc.section.2.p.3">Since the payload and most options are encrypted <a href="#protected-fields" class="xref">Section 4</a>, and the corresponding plain text message fields of the original are not included in the OSCOAP message, the processing of these fields does not expand the total message size.</p>
 <p id="rfc.section.2.p.4">A CoAP proxy SHOULD NOT cache a response to a request with an Object-Security option, since the response is only applicable to the original client&#8217;s request, see <a href="#coap-coap-proxy" class="xref">Section 10.1</a>. As the compressed COSE Object is included in the cache key, messages with the Object-Security option will never generate cache hits. For Max-Age processing, see <a href="#max-age" class="xref">Section 4.2.3.1</a>.</p>
 <h1 id="rfc.section.3">
@@ -1085,31 +1085,38 @@ external_aad = [
 </h1>
 <p id="rfc.section.8.p.1">The Concise Binary Object Representation (CBOR) <a href="#RFC7049" class="xref">[RFC7049]</a> combines very small message sizes with extensibility. The CBOR Object Signing and Encryption (COSE) <a href="#RFC8152" class="xref">[RFC8152]</a> uses CBOR to create compact encoding of signed and encrypted data. COSE is however constructed to support a large number of different stateless use cases, and is not fully optimized for use as a stateful security protocol, leading to a larger than necessary message expansion. In this section, we define a simple stateless compression mechanism for OSCOAP, which significantly reduces the per-packet overhead.</p>
 <h1 id="rfc.section.8.1">
-<a href="#rfc.section.8.1">8.1.</a> <a href="#encoding-of-the-object-security-option" id="encoding-of-the-object-security-option">Encoding of the Object-Security Option</a>
+<a href="#rfc.section.8.1">8.1.</a> <a href="#encoding-of-the-oscoap-payload" id="encoding-of-the-oscoap-payload">Encoding of the OSCOAP Payload</a>
 </h1>
-<p id="rfc.section.8.1.p.1">The value of the Object-Security option SHALL be encoded as follows:</p>
+<p id="rfc.section.8.1.p.1">The payload of the OSCOAP message SHALL contain the compressed COSE object which is encoded as follows:</p>
 <p></p>
 
 <ul>
-<li>The first byte encodes a set of flags and the length of the Partial IV parameter.  <ul>
-<li>The three least significant bits encode the Partial IV size n. If their value is 0, the Partial IV is not present in the compressed message.</li>
-<li>The fourth least significant bit k is set to 1 if the kid is present in the compressed message.</li>
+<li>The first byte (Flag Byte, see <a href="#fig-flag-byte" class="xref">Figure 6</a>) encodes a set of flags and the length of the Partial IV parameter.  <ul>
+<li>The three least significant bits encode the Partial IV length, n. If their value is 0, the Partial IV is not present in the compressed COSE object.</li>
+<li>The fourth least significant bit k is set to 1 if the kid is present in the compressed COSE object.</li>
 <li>The fifth-eighth least significant bits (= most significant half-byte) are reserved and SHALL be set to zero when not in use.</li>
 </ul>
 </li>
 <li>The following n bytes encode the value of the Partial IV, if the Partial IV is present (n &gt; 0).</li>
-<li>The following 1 byte encodes the kid size m, if the kid is present (k = 1).</li>
+<li>The following 1 byte encodes the length of the kid, if the kid is present (k = 1).</li>
 <li>The following m bytes encode the value of the kid, if the kid is present (k = 1).</li>
 <li>The remaining bytes encode the ciphertext.</li>
 </ul>
-<pre>
- 7 6 5 4 3 2 1 0   
-+-+-+-+-+-+-+-+-+  k: kid flag bit
-|0 0 0 0|k|  n  |  n: Partial IV size (3 bits)
-+-+-+-+-+-+-+-+-+
-</pre>
-<p id="rfc.section.8.1.p.3">The presence of Partial IV and kid in requests and responses is specified in <a href="#cose-object" class="xref">Section 5</a>, and summarized in <a href="#fig-byte-flag" class="xref">Figure 6</a>.</p>
 <div id="rfc.figure.6"></div>
+<div id="fig-flag-byte"></div>
+<pre>
+ 0 1 2 3 4 5 6 7 
++-+-+-+-+-+-+-+-+
+|  Flag Byte    |                       
++-+-+-+-+-+-+-+-+
+|  n  |k|0|0 0 0|    
++-+-+-+-+-+-+-+-+
+n: Partial IV length (3 bits)
+k: kid flag bit
+</pre>
+<p class="figure">Figure 6: Flag Byte for OSCOAP Compression</p>
+<p id="rfc.section.8.1.p.3">The presence of Partial IV and kid in requests and responses is specified in <a href="#cose-object" class="xref">Section 5</a>, and summarized in <a href="#fig-byte-flag" class="xref">Figure 7</a>.</p>
+<div id="rfc.figure.7"></div>
 <div id="fig-byte-flag"></div>
 <pre>
 +--------------------------+-----+-----+
@@ -1120,7 +1127,7 @@ external_aad = [
 | Response with Observe    |  0  | &gt; 0 |
 +--------------------------+-----+-----+
 </pre>
-<p class="figure">Figure 6: Flag byte for OSCOAP compression</p>
+<p class="figure">Figure 7: Presence of data fields in compressed OSCOAP header</p>
 <h1 id="rfc.section.8.2">
 <a href="#rfc.section.8.2">8.2.</a> <a href="#compression-examples" id="compression-examples">Compression Examples</a>
 </h1>
@@ -1435,7 +1442,7 @@ h'aea0155667924dff8a24e4cb35b9'
 <a href="#rfc.appendix.B.1">B.1.</a> <a href="#secure-access-to-sensor" id="secure-access-to-sensor">Secure Access to Sensor</a>
 </h1>
 <p id="rfc.section.B.1.p.1">This example targets the scenario in Section 3.1 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting the alarm status from a server.</p>
-<div id="rfc.figure.7"></div>
+<div id="rfc.figure.8"></div>
 <div id="fig-alarm"></div>
 <pre>
 Client  Proxy  Server
@@ -1465,7 +1472,7 @@ Client  Proxy  Server
   |       |       |         Payload: [{Code:2.05, "OFF"}]
   |       |       |
 </pre>
-<p class="figure">Figure 7: Secure Access to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
+<p class="figure">Figure 8: Secure Access to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
 <p id="rfc.section.B.1.p.2">The request/response Codes are encrypted by OSCOAP and only dummy Codes (POST/Changed) are visible in the header of the OSCOAP message. The option Uri-Path (&#8220;alarm_status&#8221;) and payload (&#8220;OFF&#8221;) are encrypted.</p>
 <p id="rfc.section.B.1.p.3">The COSE header of the request contains an identifier (5f), indicating which security context was used to protect the message and a Partial IV (42).</p>
 <p id="rfc.section.B.1.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the response is bound to the request.</p>
@@ -1473,7 +1480,7 @@ Client  Proxy  Server
 <a href="#rfc.appendix.B.2">B.2.</a> <a href="#secure-subscribe-to-sensor" id="secure-subscribe-to-sensor">Secure Subscribe to Sensor</a>
 </h1>
 <p id="rfc.section.B.2.p.1">This example targets the scenario in Section 3.2 of <a href="#I-D.hartke-core-e2e-security-reqs" class="xref">[I-D.hartke-core-e2e-security-reqs]</a> and illustrates a client requesting subscription to a blood sugar measurement resource (GET /glucose), first receiving the value 220 mg/dl and then a second value 180 mg/dl.</p>
-<div id="rfc.figure.8"></div>
+<div id="rfc.figure.9"></div>
 <div id="fig-blood-sugar"></div>
 <pre>
 Client  Proxy  Server
@@ -1528,7 +1535,7 @@ Client  Proxy  Server
   |       |       |                   Content-Format:0, "180"}]
   |       |       |
 </pre>
-<p class="figure">Figure 8: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
+<p class="figure">Figure 9: Secure Subscribe to Sensor. Square brackets [ ... ] indicate a COSE object. Curly brackets { ... } indicate encrypted data.</p>
 <p id="rfc.section.B.2.p.2">The request/response Codes are encrypted by OSCOAP and only dummy Codes (FETCH/Content) are visible in the header of the OSCOAP message. The options Content-Format (0) and the payload (&#8220;220&#8221; and &#8220;180&#8221;), are encrypted.</p>
 <p id="rfc.section.B.2.p.3">The COSE header of the request contains an identifier (ca), indicating the security context used to protect the message and a Partial IV (15). The COSE headers of the responses contains Partial IVs (32 and 36).</p>
 <p id="rfc.section.B.2.p.4">The server verifies that the Partial IV has not been received before. The client verifies that the responses are bound to the request and that the Partial IVs are greater than any Partial IV previously received in a response bound to the request.</p>

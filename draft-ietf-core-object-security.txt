@@ -96,7 +96,7 @@ Table of Contents
      7.4.  Verifying the Response  . . . . . . . . . . . . . . . . .  26
      7.5.  Nonce generation examples . . . . . . . . . . . . . . . .  27
    8.  OSCOAP Compression  . . . . . . . . . . . . . . . . . . . . .  29
-     8.1.  Encoding of the Object-Security Option  . . . . . . . . .  29
+     8.1.  Encoding of the OSCOAP Payload  . . . . . . . . . . . . .  29
      8.2.  Compression Examples  . . . . . . . . . . . . . . . . . .  30
    9.  Web Linking . . . . . . . . . . . . . . . . . . . . . . . . .  31
    10. Proxy Operations  . . . . . . . . . . . . . . . . . . . . . .  32
@@ -267,7 +267,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
                    Figure 2: The Object-Security Option
 
    The Object-Security option SHALL be empty (length zero), and the
-   compressed COSE object is the payload of the OSCOAP message.  An
+   payload of the OSCOAP message is the compressed COSE object.  An
    endpoint receiving a non-empty Object-Security option SHALL treat it
    as malformed and reject it.  An endpoint receiving a CoAP message
    without payload, that also contains an Object-Security option SHALL
@@ -1591,19 +1591,20 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    a simple stateless compression mechanism for OSCOAP, which
    significantly reduces the per-packet overhead.
 
-8.1.  Encoding of the Object-Security Option
+8.1.  Encoding of the OSCOAP Payload
 
-   The value of the Object-Security option SHALL be encoded as follows:
+   The payload of the OSCOAP message SHALL contain the compressed COSE
+   object which is encoded as follows:
 
-   o  The first byte encodes a set of flags and the length of the
-      Partial IV parameter.
+   o  The first byte (Flag Byte, see Figure 6) encodes a set of flags
+      and the length of the Partial IV parameter.
 
-      *  The three least significant bits encode the Partial IV size n.
-         If their value is 0, the Partial IV is not present in the
-         compressed message.
+      *  The three least significant bits encode the Partial IV length,
+         n.  If their value is 0, the Partial IV is not present in the
+         compressed COSE object.
 
       *  The fourth least significant bit k is set to 1 if the kid is
-         present in the compressed message.
+         present in the compressed COSE object.
 
       *  The fifth-eighth least significant bits (= most significant
          half-byte) are reserved and SHALL be set to zero when not in
@@ -1612,12 +1613,11 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    o  The following n bytes encode the value of the Partial IV, if the
       Partial IV is present (n > 0).
 
-   o  The following 1 byte encodes the kid size m, if the kid is present
-      (k = 1).
+   o  The following 1 byte encodes the length of the kid, if the kid is
+      present (k = 1).
 
    o  The following m bytes encode the value of the kid, if the kid is
       present (k = 1).
-
 
 
 
@@ -1628,13 +1628,19 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
    o  The remaining bytes encode the ciphertext.
 
-    7 6 5 4 3 2 1 0
-   +-+-+-+-+-+-+-+-+  k: kid flag bit
-   |0 0 0 0|k|  n  |  n: Partial IV size (3 bits)
-   +-+-+-+-+-+-+-+-+
+                        0 1 2 3 4 5 6 7
+                       +-+-+-+-+-+-+-+-+
+                       |  Flag Byte    |
+                       +-+-+-+-+-+-+-+-+
+                       |  n  |k|0|0 0 0|
+                       +-+-+-+-+-+-+-+-+
+                       n: Partial IV length (3 bits)
+                       k: kid flag bit
+
+                Figure 6: Flag Byte for OSCOAP Compression
 
    The presence of Partial IV and kid in requests and responses is
-   specified in Section 5, and summarized in Figure 6.
+   specified in Section 5, and summarized in Figure 7.
 
                  +--------------------------+-----+-----+
                  |                          |  k  |  n  |
@@ -1644,7 +1650,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
                  | Response with Observe    |  0  | > 0 |
                  +--------------------------+-----+-----+
 
-                Figure 6: Flag byte for OSCOAP compression
+       Figure 7: Presence of data fields in compressed OSCOAP header
 
 8.2.  Compression Examples
 
@@ -1668,12 +1674,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
    First byte: 0b00001001 = 0x09
 
-   0x09 05 01 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
-   35 b9 (18 bytes)
-
-
-
-
 
 
 
@@ -1681,6 +1681,9 @@ Selander, et al.         Expires March 22, 2018                [Page 30]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   0x09 05 01 25 ae a0 15 56 67 92 4d ff 8a 24 e4 cb
+   35 b9 (18 bytes)
 
 8.2.2.  Example: Response (without Observe)
 
@@ -1727,9 +1730,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    The use of OSCOAP MAY be indicated by a target attribute "osc" in a
    web link [RFC5988] to a CoAP resource.  This attribute is a hint
    indicating that the destination of that link is to be accessed using
-   OSCOAP.  Note that this is simply a hint, it does not include any
-   security context material or any other information required to run
-   OSCOAP.
 
 
 
@@ -1737,6 +1737,10 @@ Selander, et al.         Expires March 22, 2018                [Page 31]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   OSCOAP.  Note that this is simply a hint, it does not include any
+   security context material or any other information required to run
+   OSCOAP.
 
    A value MUST NOT be given for the "osc" attribute; any present value
    MUST be ignored by parsers.  The "osc" attribute MUST NOT appear more
@@ -1782,10 +1786,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
    The presence of the Object-Security option, both in requests and
    responses, is expressed in a HTTP header field named Object-Security
-   in the mapped request or response.  The value of the field is the
-   compressed COSE Object of the OSCOAP message in base64url encoding
-   without padding (see [RFC7515] Appendix C for implementation notes
-   for this encoding).
 
 
 
@@ -1793,6 +1793,11 @@ Selander, et al.         Expires March 22, 2018                [Page 32]
 
 Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
 
+
+   in the mapped request or response.  The value of the field is the
+   compressed COSE Object of the OSCOAP message in base64url encoding
+   without padding (see [RFC7515] Appendix C for implementation notes
+   for this encoding).
 
    Example:
 
@@ -1837,11 +1842,6 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    in the last message is the mapping of the CoAP Code 2.05 (Content),
    encrypted within the compressed COSE object carried in the Body of
    the HTTP response.
-
-
-
-
-
 
 
 
@@ -2219,7 +2219,7 @@ B.1.  Secure Access to Sensor
         |       |       |         Payload: [{Code:2.05, "OFF"}]
         |       |       |
 
-   Figure 7: Secure Access to Sensor.  Square brackets [ ... ] indicate
+   Figure 8: Secure Access to Sensor.  Square brackets [ ... ] indicate
       a COSE object.  Curly brackets { ... } indicate encrypted data.
 
    The request/response Codes are encrypted by OSCOAP and only dummy
@@ -2310,7 +2310,7 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
         |       |       |                   Content-Format:0, "180"}]
         |       |       |
 
-      Figure 8: Secure Subscribe to Sensor.  Square brackets [ ... ]
+      Figure 9: Secure Subscribe to Sensor.  Square brackets [ ... ]
     indicate a COSE object.  Curly brackets { ... } indicate encrypted
                                    data.
 
