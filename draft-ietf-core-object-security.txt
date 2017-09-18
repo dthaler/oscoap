@@ -1629,10 +1629,10 @@ Internet-Draft      Object Security of CoAP (OSCOAP)      September 2017
    o  The following m bytes encode the value of the kid, if the kid flag
       is set (k = 1).
 
-   o  The following 1 byte encode the length of the auxilliary data, l,
+   o  The following 1 byte encode the length of the auxilliary data, s,
       if the auxilliary data flag is set (a = 1).
 
-   o  The following l bytes encode the auxilliary data, if the
+   o  The following s bytes encode the auxilliary data, if the
       auxilliary data flag is set (a = 1).
 
    o  The remaining bytes encode the ciphertext.
