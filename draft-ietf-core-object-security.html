@@ -326,7 +326,7 @@ address {
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.8.0 - https://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.8.1 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Selander, G., Mattsson, J., Palombini, F., and L. Seitz" />
@@ -1092,14 +1092,14 @@ external_aad = [
 
 <ul>
 <li>The first byte (Flag Byte, see <a href="#fig-flag-byte" class="xref">Figure 6</a>) encodes a set of flags and the length of the Partial IV parameter.  <ul>
-<li>The three least significant bits encode the Partial IV length, n. If their value is 0, the Partial IV is not present in the compressed COSE object.</li>
-<li>The fourth least significant bit k is set to 1 if the kid is present in the compressed COSE object.</li>
-<li>The fifth-eighth least significant bits (= most significant half-byte) are reserved and SHALL be set to zero when not in use.</li>
+<li>The three least significant bits encode the Partial IV length, n. If n = 0 then the Partial IV is not present in the compressed COSE object.</li>
+<li>The fourth least significant bit k is the kid flag: it is set to 1 if the kid is present in the compressed COSE object.</li>
+<li>The fifth-eighth least significant bits are reserved and SHALL be set to zero when not in use.</li>
 </ul>
 </li>
 <li>The following n bytes encode the value of the Partial IV, if the Partial IV is present (n &gt; 0).</li>
-<li>The following 1 byte encodes the length of the kid, if the kid is present (k = 1).</li>
-<li>The following m bytes encode the value of the kid, if the kid is present (k = 1).</li>
+<li>The following 1 byte encodes the length of the kid, m, if the kid flag is set (k = 1).</li>
+<li>The following m bytes encode the value of the kid, if the kid flag is set (k = 1).</li>
 <li>The remaining bytes encode the ciphertext.</li>
 </ul>
 <div id="rfc.figure.6"></div>
