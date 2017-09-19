@@ -640,9 +640,9 @@ Verify request with   |                       |
 </ul>
 <p id="rfc.section.3.2.p.5">All input parameters need to be known to and agreed on by both endpoints, but the replay window may be different in the two endpoints. The replay window type and size is used by the client in the processing of the Request-Tag <a href="#I-D.amsuess-core-repeat-request-tag" class="xref">[I-D.amsuess-core-repeat-request-tag]</a>. How the input parameters are pre-established, is application specific. The ACE framework may be used to establish the necessary input parameters <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>.</p>
 <h1 id="rfc.section.3.2.1">
-<a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#derivation-of-sender-keyiv-recipient-keyiv" id="derivation-of-sender-keyiv-recipient-keyiv">Derivation of Sender Key/IV, Recipient Key/IV</a>
+<a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#derivation-of-sender-key-recipient-key-and-context-iv" id="derivation-of-sender-key-recipient-key-and-context-iv">Derivation of Sender Key, Recipient Key, and Context IV</a>
 </h1>
-<p id="rfc.section.3.2.1.p.1">The KDF MUST be one of the HMAC based HKDF <a href="#RFC5869" class="xref">[RFC5869]</a> algorithms defined in COSE. HKDF SHA-256 is mandatory to implement. The security context parameters Sender Key/IV and Recipient Key/IV SHALL be derived from the input parameters using the HKDF, which consists of the composition of the HKDF-Extract and HKDF-Expand steps (<a href="#RFC5869" class="xref">[RFC5869]</a>):</p>
+<p id="rfc.section.3.2.1.p.1">The KDF MUST be one of the HMAC based HKDF <a href="#RFC5869" class="xref">[RFC5869]</a> algorithms defined in COSE. HKDF SHA-256 is mandatory to implement. The security context parameters Sender Key, Recipient Key, and Context IV SHALL be derived from the input parameters using the HKDF, which consists of the composition of the HKDF-Extract and HKDF-Expand steps (<a href="#RFC5869" class="xref">[RFC5869]</a>):</p>
 <pre>
    output parameter = HKDF(salt, IKM, info, L) 
 </pre>
@@ -656,21 +656,21 @@ Verify request with   |                       |
 </ul>
 <pre>
    info = [
-       id : bstr,
+       id : bstr / nil,
        alg : int,
        type : tstr,
        L : int
    ]
 </pre>
 <pre>
-   * id is the Sender ID or Recipient ID
+   * id is the Sender ID or Recipient ID when deriving keys and nil when deriving the Context IV.
 
    * type is "Key" or "IV"
 </pre>
 <p></p>
 
 <ul><li>L is the size of the key/IV for the AEAD algorithm used, in octets.</li></ul>
-<p id="rfc.section.3.2.1.p.5">For example, if the algorithm AES-CCM-16-64-128 (see Section 10.2 in <a href="#RFC8152" class="xref">[RFC8152]</a>) is used, the value for L is 16 for keys and 13 for IVs.</p>
+<p id="rfc.section.3.2.1.p.5">For example, if the algorithm AES-CCM-16-64-128 (see Section 10.2 in <a href="#RFC8152" class="xref">[RFC8152]</a>) is used, the value for L is 16 for keys and 13 for the Context IV.</p>
 <h1 id="rfc.section.3.2.2">
 <a href="#rfc.section.3.2.2">3.2.2.</a> <a href="#initial-replay" id="initial-replay">Initial Sequence Numbers and Replay Window</a>
 </h1>
@@ -822,8 +822,8 @@ Verify request with   |                       |
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#cose-object" id="cose-object">The COSE Object</a>
 </h1>
-<p id="rfc.section.5.p.1">This section defines how to use COSE <a href="#RFC8152" class="xref">[RFC8152]</a> to wrap and protect data in the original CoAP message. OSCOAP uses the untagged COSE_Encrypt0 structure with an Authenticated Encryption with Additional Data (AEAD) algorithm. The key lengths, IV lengths, nonce length, and maximum Sender Sequence Number are algorithm dependent.</p>
-<p id="rfc.section.5.p.2">The AEAD algorithm AES-CCM-16-64-128 defined in Section 10.2 of <a href="#RFC8152" class="xref">[RFC8152]</a> is mandatory to implement. For AES-CCM-16-64-128 the length of Sender Key and Recipient Key is 128 bits, the length of nonce, Sender IV, and Recipient IV is 13 bytes. The maximum Sender Sequence Number is specified in <a href="#sec-considerations" class="xref">Section 11</a>.</p>
+<p id="rfc.section.5.p.1">This section defines how to use COSE <a href="#RFC8152" class="xref">[RFC8152]</a> to wrap and protect data in the original CoAP message. OSCOAP uses the untagged COSE_Encrypt0 structure with an Authenticated Encryption with Additional Data (AEAD) algorithm. The key lengths, IV length, nonce length, and maximum Sender Sequence Number are algorithm dependent.</p>
+<p id="rfc.section.5.p.2">The AEAD algorithm AES-CCM-16-64-128 defined in Section 10.2 of <a href="#RFC8152" class="xref">[RFC8152]</a> is mandatory to implement. For AES-CCM-16-64-128 the length of Sender Key and Recipient Key is 128 bits, the length of nonce and Context IV is 13 bytes. The maximum Sender Sequence Number is specified in <a href="#sec-considerations" class="xref">Section 11</a>.</p>
 <p id="rfc.section.5.p.3">We denote by Plaintext the data that is encrypted and integrity protected, and by Additional Authenticated Data (AAD) the data that is integrity protected only.</p>
 <p id="rfc.section.5.p.4">The COSE Object SHALL be a COSE_Encrypt0 object with fields defined as follows</p>
 <p></p>
