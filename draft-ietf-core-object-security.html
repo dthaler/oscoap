@@ -841,7 +841,7 @@ Verify request with   |                       |
 <h1 id="rfc.section.5.1">
 <a href="#rfc.section.5.1">5.1.</a> <a href="#nonce" id="nonce">Nonce</a>
 </h1>
-<p id="rfc.section.5.1.p.1">The nonce is constructed as described in Section 3.1 of <a href="#RFC8152" class="xref">[RFC8152]</a>, i.e. by padding the partial IV (in network byte order) with zeroes and XORing it with the Context IV (Sender IV or Recipient IV), with the following addition: The most significant bit in the first byte of the Context IV SHALL be flipped for responses, in case there is a single response (i.e. not in the case of Observe). In this way, the partial IV can be reused for the corresponding responses, which reduces the size of the response. For detailed processing instructions, see <a href="#processing" class="xref">Section 7</a>.</p>
+<p id="rfc.section.5.1.p.1">The nonce is constructed as described in Section 3.1 of <a href="#RFC8152" class="xref">[RFC8152]</a>, i.e. by padding the partial IV (in network byte order) with zeroes and XORing it with the Context IV, with the following addition: The most significant bit in the first byte of the Context IV SHALL be flipped for responses, in case there is a single response (i.e. not in the case of Observe). In this way, the partial IV can be reused for the corresponding responses, which reduces the size of the response. For detailed processing instructions, see <a href="#processing" class="xref">Section 7</a>.</p>
 <h1 id="rfc.section.5.2">
 <a href="#rfc.section.5.2">5.2.</a> <a href="#plaintext" id="plaintext">Plaintext</a>
 </h1>
@@ -955,7 +955,7 @@ external_aad = [
 <ol>
 <li>Retrieve the Sender Context associated with the target resource.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
-<li>Compute the AEAD nonce by XORing the Context IV (Sender IV) with the partial IV (Sender Sequence Number in network byte order). Then (in one atomic operation, see <a href="#nonce-uniqueness" class="xref">Section 6.2</a>) increment the Sender Sequence Number by one.</li>
+<li>Compute the AEAD nonce by XORing the Context IV with the partial IV (Sender Sequence Number in network byte order). Then (in one atomic operation, see <a href="#nonce-uniqueness" class="xref">Section 6.2</a>) increment the Sender Sequence Number by one.</li>
 <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
 <li>Format the OSCOAP message according to <a href="#protected-fields" class="xref">Section 4</a>. The Object-Security option is added, see <a href="#outer-options" class="xref">Section 4.2.2</a>.</li>
 <li>Store the association Token - Security Context. The client SHALL be able to find the Recipient Context from the Token in the response.</li>
@@ -976,7 +976,7 @@ external_aad = [
 </li>
 <li>Verify the &#8216;Partial IV&#8217; parameter using the Replay Window, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
-<li>Compute the AEAD nonce by XORing the Context IV (Recipient IV) with the padded &#8216;Partial IV&#8217; parameter, received in the COSE Object.</li>
+<li>Compute the AEAD nonce by XORing the Context IV with the padded &#8216;Partial IV&#8217; parameter, received in the COSE Object.</li>
 <li>Decrypt the COSE object using the Recipient Key.  <ul>
 <li>If decryption fails, the server MUST stop processing the request and, if the request is a CON message, the server MUST respond with a 4.00 Bad Request error message. The diagnostic payload MAY contain the &#8220;Decryption failed&#8221; string.</li>
 <li>If decryption succeeds, update the Replay Window, as described in <a href="#sequence-numbers" class="xref">Section 6</a>.</li>
@@ -997,8 +997,8 @@ external_aad = [
 <li>Retrieve the Sender Context in the Security Context used to verify the request.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compute the AEAD nonce  <ul>
-<li>If Observe is not used, compute the AEAD nonce by XORing the Context IV (Sender IV with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
-<li>If Observe is used, compute the AEAD nonce by XORing the Context IV (Sender IV) with the Partial IV of the response (Sender Sequence Number in network byte order). Then (in one atomic operation, see <a href="#nonce-uniqueness" class="xref">Section 6.2</a>) increment the Sender Sequence Number by one.</li>
+<li>If Observe is not used, compute the AEAD nonce by XORing the Context IV (with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
+<li>If Observe is used, compute the AEAD nonce by XORing the Context IV with the Partial IV of the response (Sender Sequence Number in network byte order). Then (in one atomic operation, see <a href="#nonce-uniqueness" class="xref">Section 6.2</a>) increment the Sender Sequence Number by one.</li>
 </ul>
 </li>
 <li>Encrypt the COSE object using the Sender Key. Compress the COSE Object as specified in <a href="#compression" class="xref">Section 8</a>.</li>
@@ -1017,8 +1017,8 @@ external_aad = [
 <li>For Observe notifications, verify the received &#8216;Partial IV&#8217; parameter against the corresponding Notification Number as described in <a href="#sequence-numbers" class="xref">Section 6</a>. If the client receives a notification for which no Observe request was sent, then go to 11.</li>
 <li>Compose the Additional Authenticated Data, as described in <a href="#cose-object" class="xref">Section 5</a>.</li>
 <li>Compute the AEAD nonce  <ul>
-<li>If the Observe option is not present in the response, compute the AEAD nonce by XORing the Context IV (Recipient IV with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
-<li>If the Observe option is present in the response, compute the AEAD nonce by XORing the Context IV (Recipient IV) with the padded Partial IV parameter from the response.</li>
+<li>If the Observe option is not present in the response, compute the AEAD nonce by XORing the Context IV (with the most significant bit in the first byte flipped) with the padded Partial IV parameter from the request.</li>
+<li>If the Observe option is present in the response, compute the AEAD nonce by XORing the Context IV with the padded Partial IV parameter from the response.</li>
 </ul>
 </li>
 <li>Decrypt the COSE object using the Recipient Key.  <ul>
