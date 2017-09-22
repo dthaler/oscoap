@@ -759,7 +759,7 @@ Verify request with   |                       |
 <a href="#rfc.section.4.2.3.1">4.2.3.1.</a> <a href="#max-age" id="max-age">Max-Age</a>
 </h1>
 <p id="rfc.section.4.2.3.1.p.1">The Inner Max-Age option is used to specify the freshness (as defined in <a href="#RFC7252" class="xref">[RFC7252]</a>) of the resource, end-to-end from the server to the client, taking into account that the option is not accessible to proxies. The Inner Max-Age SHALL be processed by OSCOAP as specified in <a href="#inner-options" class="xref">Section 4.2.1</a>.</p>
-<p id="rfc.section.4.2.3.1.p.2">The Outer Max-Age option is used to avoid unnecessary caching of OSCOAP responses at OSCOAP unaware intermediary nodes. A server MAY set a Class U Max-Age option with value zero to OSCOAP responses (see Section 5.6.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>) and process it according to <a href="#outer-options" class="xref">Section 4.2.2</a>. The Outer Max-Age option value SHALL be discarded by the OSCOAP client.</p>
+<p id="rfc.section.4.2.3.1.p.2">The Outer Max-Age option is used to avoid unnecessary caching of OSCOAP responses at OSCOAP unaware intermediary nodes. A server MAY set a Class U Max-Age option with value zero to Observe responses (see Section 5.6.1 of <a href="#RFC7252" class="xref">[RFC7252]</a>) and process it according to <a href="#outer-options" class="xref">Section 4.2.2</a>. The Outer Max-Age option value SHALL be discarded by the OSCOAP client.</p>
 <h1 id="rfc.section.4.2.3.2">
 <a href="#rfc.section.4.2.3.2">4.2.3.2.</a> <a href="#block-options" id="block-options">The Block Options</a>
 </h1>
